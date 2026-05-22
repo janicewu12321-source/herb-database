@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>药食同源中药数据库 · 宠物食品应用</title>
+<style>
+:root {
+  --bg: #f5f2eb;
+  --card-bg: #ffffff;
+  --text: #2c2416;
+  --text-secondary: #6b5e4f;
+  --border: #e0d5c1;
+  --accent: #5b8c5a;
+  --accent-light: #e8f2e4;
+  --warm: #c4783b;
+  --warm-light: #fdf0e4;
+  --cold: #4a7c8b;
+  --cold-light: #edf4f7;
+  --caution: #d4943a;
+  --avoid: #c0392b;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+/* Header */
+.header {
+  background: linear-gradient(135deg, #3a5a3a 0%, #5b8c5a 50%, #6d9b5a 100%);
+  color: #fff;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.header h1 { font-size: 2em; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
+.header p { opacity: 0.9; font-size: 0.95em; }
+/* Stats bar */
+.stats-bar {
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  padding: 20px 24px; max-width: 1400px; margin: 0 auto;
+}
+.stat-card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 14px 22px;
+  box-shadow: var(--shadow); text-align: center; min-width: 100px; flex: 1;
+  border-left: 4px solid var(--accent);
+}
+.stat-card.warn { border-left-color: var(--caution); }
+.stat-card.danger { border-left-color: var(--avoid); }
+.stat-card .num { font-size: 1.6em; font-weight: 700; color: var(--accent); }
+.stat-card.warn .num { color: var(--caution); }
+.stat-card.danger .num { color: var(--avoid); }
+.stat-card .label { font-size: 0.8em; color: var(--text-secondary); margin-top: 2px; }
+/* Main layout */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px; }
+/* Search & filter */
+.search-bar {
+  display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.search-input {
+  flex: 1; min-width: 240px; padding: 12px 18px;
+  border: 2px solid var(--border); border-radius: var(--radius);
+  font-size: 1em; background: var(--card-bg); transition: 0.2s;
+}
+.search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.filter-group {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.filter-chip {
+  padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: var(--card-bg); cursor: pointer; font-size: 0.85em;
+  transition: all 0.2s; white-space: nowrap; user-select: none;
+}
+.filter-chip:hover { border-color: var(--accent); background: var(--accent-light); }
+.filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.filter-chip.pet-dog.active { background: #5b8c5a; border-color: #5b8c5a; }
+.filter-chip.pet-cat.active { background: #4a7c8b; border-color: #4a7c8b; }
+.filter-chip.safe-chip.active { background: #3a7d44; border-color: #3a7d44; }
+.filter-chip.caution-chip.active { background: #d4943a; border-color: #d4943a; }
+.filter-chip.avoid-chip.active { background: #c0392b; border-color: #c0392b; }
+.filter-label {
+  font-size: 0.8em; font-weight: 700; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 1px; margin-right: 2px;
+  display: flex; align-items: center; padding: 7px 0;
+}
+.filter-section { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Results */
+.result-info {
+  font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
+}
+.herb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.herb-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden; cursor: pointer;
+  transition: all 0.25s; position: relative;
+}
+.herb-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+.herb-card .card-img {
+  height: 180px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; background: #e8e0d5;
+}
+.herb-card .card-img img {
+  width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;
+}
+.herb-card:hover .card-img img { transform: scale(1.05); }
+.herb-card .card-img .img-fallback {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  font-size: 3.5em; color: #fff; font-weight: 700;
+}
+.herb-card .card-badge {
+  position: absolute; top: 8px; right: 8px; padding: 3px 10px;
+  border-radius: 12px; font-size: 0.7em; font-weight: 700; color: #fff;
+}
+.badge-used { background: #3a7d44; }
+.badge-caution { background: #d4943a; }
+.badge-avoid { background: #c0392b; }
+.herb-card .card-body { padding: 14px 16px; }
+.herb-card .card-name { font-size: 1.15em; font-weight: 700; margin-bottom: 2px; }
+.herb-card .card-latin { font-size: 0.75em; font-style: italic; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.herb-card .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  padding: 2px 10px; border-radius: 10px; font-size: 0.7em;
+  font-weight: 600; white-space: nowrap;
+}
+.tag-efficacy { background: var(--accent-light); color: var(--accent); }
+.tag-family { background: var(--cold-light); color: var(--cold); }
+.tag-part { background: var(--warm-light); color: var(--warm); }
+/* Detail modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 1000; justify-content: center; align-items: center; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card-bg); border-radius: 16px;
+  max-width: 620px; width: 100%; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25); position: relative;
+}
+.modal-close {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; font-size: 1.6em;
+  cursor: pointer; color: var(--text-secondary); z-index: 10;
+  width: 36px; height: 36px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; transition: 0.2s;
+}
+.modal-close:hover { background: var(--bg); }
+.modal-img {
+  height: 250px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; background: #e8e0d5;
+}
+.modal-img img { width: 100%; height: 100%; object-fit: cover; }
+.modal-img .img-fallback {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  font-size: 6em; color: #fff; font-weight: 700;
+}
+.modal-body { padding: 24px 28px 28px; }
+.modal-body h2 { font-size: 1.6em; margin-bottom: 4px; }
+.modal-body .latin-name { font-style: italic; color: var(--text-secondary); font-size: 0.95em; margin-bottom: 16px; }
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;
+}
+.detail-item {
+  background: #f9f7f2; padding: 10px 14px; border-radius: 8px;
+}
+.detail-item .d-label { font-size: 0.7em; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+.detail-item .d-value { font-size: 0.95em; font-weight: 600; margin-top: 2px; }
+.pet-section {
+  margin-top: 16px; padding: 16px; border-radius: var(--radius);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.pet-col { padding: 12px; border-radius: 8px; }
+.pet-col.dog { background: #f0f7f2; border: 1px solid #c8e0c8; }
+.pet-col.cat { background: #f2f5f8; border: 1px solid #c8d8e0; }
+.pet-col h4 { margin-bottom: 6px; font-size: 0.95em; display: flex; align-items: center; gap: 6px; }
+.pet-icon { font-size: 1.4em; }
+.pet-status { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.75em; font-weight: 700; margin-bottom: 6px; }
+.pet-status.recommended { background: #3a7d44; color: #fff; }
+.pet-status.available { background: #5b8c5a; color: #fff; }
+.pet-status.caution { background: #d4943a; color: #fff; }
+.pet-status.avoid { background: #c0392b; color: #fff; }
+.pet-note { font-size: 0.8em; color: var(--text-secondary); line-height: 1.5; }
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 60px 20px; color: var(--text-secondary);
+}
+.empty-state .icon { font-size: 3em; margin-bottom: 12px; }
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.4em; }
+  .herb-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .detail-grid { grid-template-columns: 1fr; }
+  .pet-section { grid-template-columns: 1fr; }
+  .stats-bar { gap: 8px; }
+  .stat-card { min-width: 70px; padding: 10px 14px; }
+  .stat-card .num { font-size: 1.2em; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌿 药食同源中药数据库</h1>
+  <p>基于卫健委106种食药物质目录 · 宠物猫狗食品应用参考</p>
+</div>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="container">
+  <!-- Search -->
+  <div class="search-bar">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索名称、拉丁名、科属、功效...">
+  </div>
+
+  <!-- Pet type filter -->
+  <div class="filter-section" style="margin-bottom:8px;">
+    <span class="filter-label">🐾 宠物类型</span>
+    <span class="filter-chip" data-filter="pet" data-val="all">全部</span>
+    <span class="filter-chip pet-dog" data-filter="pet" data-val="dog">🐕 犬</span>
+    <span class="filter-chip pet-cat" data-filter="pet" data-val="cat">🐈 猫</span>
+  </div>
+
+  <!-- Pet safety filter -->
+  <div class="filter-section" style="margin-bottom:8px;">
+    <span class="filter-label">⚠️ 安全性</span>
+    <span class="filter-chip" data-filter="safety" data-val="all">全部</span>
+    <span class="filter-chip safe-chip" data-filter="safety" data-val="recommended">✅ 已用于宠物食品</span>
+    <span class="filter-chip safe-chip" data-filter="safety" data-val="available">👍 可使用</span>
+    <span class="filter-chip caution-chip" data-filter="safety" data-val="caution">⚠️ 慎用</span>
+    <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
+  </div>
+
+  <!-- Efficacy filter -->
+  <div class="filter-section" style="margin-bottom:8px;">
+    <span class="filter-label">📋 功效分类</span>
+    <span class="filter-chip active" data-filter="efficacy" data-val="all">全部</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="补气">补气</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="补血">补血</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="补阴">补阴</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="补阳">补阳</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="理气">理气</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="消食">消食</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="利水渗湿">利水渗湿</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="清热">清热</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="解表">解表</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="化痰止咳">化痰止咳</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="安神">安神</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="收涩">收涩</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="活血">活血</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="止血">止血</span>
+    <span class="filter-chip" data-filter="efficacy" data-val="温里">温里</span>
+  </div>
+
+  <!-- Family filter -->
+  <div class="filter-section" style="margin-bottom:20px;">
+    <span class="filter-label">🔬 科属</span>
+    <span class="filter-chip active" data-filter="family" data-val="all">全部</span>
+    <span class="filter-chip" data-filter="family" data-val="豆科">豆科</span>
+    <span class="filter-chip" data-filter="family" data-val="蔷薇科">蔷薇科</span>
+    <span class="filter-chip" data-filter="family" data-val="唇形科">唇形科</span>
+    <span class="filter-chip" data-filter="family" data-val="姜科">姜科</span>
+    <span class="filter-chip" data-filter="family" data-val="菊科">菊科</span>
+    <span class="filter-chip" data-filter="family" data-val="芸香科">芸香科</span>
+    <span class="filter-chip" data-filter="family" data-val="百合科">百合科</span>
+    <span class="filter-chip" data-filter="family" data-val="禾本科">禾本科</span>
+    <span class="filter-chip" data-filter="family" data-val="伞形科">伞形科</span>
+    <span class="filter-chip" data-filter="family" data-val="睡莲科">睡莲科</span>
+    <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
+    <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
+  </div>
+
+  <!-- Results -->
+  <div class="result-info" id="resultInfo"></div>
+  <div class="herb-grid" id="herbGrid"></div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const HERBS = [
+  // === 第一批 果实种子类 ===
+  {id:1,name:"八角茴香",latin:"Illicium verum Hook.f.",family:"木兰科",part:"成熟果实",efficacy:["温里"],batch:1,imgGrad:["#d4442a","#8b1a1a"],pet:{dog:"available",cat:"available",dogNote:"作为香辛料调味使用，适量安全",catNote:"仅作调味少量使用，挥发油对猫需控制剂量"}},
+  {id:2,name:"刀豆",latin:"Canavalia gladiata (Jacq.) DC.",family:"豆科",part:"成熟种子",efficacy:["温里"],batch:1,imgGrad:["#6b8e4a","#3d5a1a"],pet:{dog:"available",cat:"available",dogNote:"需充分加热处理，生的含凝集素",catNote:"需充分加热处理，生的含凝集素"}},
+  {id:3,name:"小茴香",latin:"Foeniculum vulgare Mill.",family:"伞形科",part:"成熟果实",efficacy:["温里"],batch:1,imgGrad:["#8b9a3a","#5a6a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全，适量助消化",catNote:"含挥发油，猫代谢能力弱，仅可极少量调味"}},
+  {id:4,name:"山楂",latin:"Crataegus pinnatifida Bge.",family:"蔷薇科",part:"成熟果实",efficacy:["消食","活血"],batch:1,imgGrad:["#c4443a","#8b1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健胃消食，已用于宠物口腔/消化产品",catNote:"健胃消食，大威宠口腔宝等产品已使用"}},
+  {id:5,name:"乌梅",latin:"Prunus mume (Sieb.) Sieb. et Zucc.",family:"蔷薇科",part:"近成熟果实",efficacy:["收涩"],batch:1,imgGrad:["#3a3a3a","#1a1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"肠胃调理，麦富迪霸弗猫粮已使用",catNote:"麦富迪霸弗猫粮核心成分，调理肠胃"}},
+  {id:6,name:"木瓜",latin:"Chaenomeles speciosa (Sweet) Nakai",family:"蔷薇科",part:"近成熟果实",efficacy:["祛风湿"],batch:1,imgGrad:["#d4943a","#b06a1a"],pet:{dog:"available",cat:"available",dogNote:"可作功能性添加，助消化",catNote:"适量使用安全"}},
+  {id:7,name:"火麻仁",latin:"Cannabis sativa L.",family:"桑科",part:"成熟种子",efficacy:["润下"],batch:1,imgGrad:["#8b9a5a","#5a6a3a"],pet:{dog:"caution",cat:"caution",dogNote:"含少量大麻素，需严格控制剂量",catNote:"含少量大麻素，猫对此更敏感，需极谨慎"}},
+  {id:8,name:"龙眼肉",latin:"Dimocarpus longan Lour.",family:"无患子科",part:"假种皮",efficacy:["补血","安神"],batch:1,imgGrad:["#c4945a","#8b6a3a"],pet:{dog:"available",cat:"available",dogNote:"适量食用安全，滋补安神",catNote:"适量食用安全，糖分较高注意控制量"}},
+  {id:9,name:"决明子",latin:"Cassia obtusifolia L. / C. tora L.",family:"豆科",part:"成熟种子",efficacy:["清热"],batch:1,imgGrad:["#5a6b3a","#3a4a1a"],pet:{dog:"caution",cat:"caution",dogNote:"含蒽醌类成分，大量可致腹泻，华生维克护眼产品使用（小剂量）",catNote:"含蒽醌类，猫肠道敏感，需严格控制剂量"}},
+  {id:10,name:"肉豆蔻",latin:"Myristica fragrans Houtt.",family:"肉豆蔻科",part:"种仁",efficacy:["温里"],batch:1,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味少量使用安全",catNote:"含肉豆蔻醚等挥发油，猫代谢差，慎用"}},
+  {id:11,name:"余甘子",latin:"Phyllanthus emblica L.",family:"大戟科",part:"成熟果实",efficacy:["清热"],batch:1,imgGrad:["#7b9a3a","#4a6a1a"],pet:{dog:"available",cat:"available",dogNote:"富含维生素C，抗氧化",catNote:"适量使用安全"}},
+  {id:12,name:"佛手",latin:"Citrus medica L. var. sarcodactylis Swingle",family:"芸香科",part:"果实",efficacy:["理气"],batch:1,imgGrad:["#d4b03a","#a0801a"],pet:{dog:"available",cat:"caution",dogNote:"理气和胃，适量安全",catNote:"芸香科精油对猫有刺激性，少量慎用"}},
+  {id:13,name:"杏仁",latin:"Prunus armeniaca L. / P. sibirica L.",family:"蔷薇科",part:"成熟种子",efficacy:["化痰止咳"],batch:1,imgGrad:["#c4a06a","#8b7a4a"],pet:{dog:"caution",cat:"avoid",dogNote:"甜杏仁少量安全；苦杏仁含氰苷，需严格脱毒处理",catNote:"苦杏仁含氰苷，猫解毒能力极弱，应避免使用"}},
+  {id:14,name:"沙棘",latin:"Hippophae rhamnoides L.",family:"胡颓子科",part:"成熟果实",efficacy:["补阴"],batch:1,imgGrad:["#d4903a","#a0601a"],pet:{dog:"available",cat:"available",dogNote:"富含维生素和抗氧化物质",catNote:"富含维生素，适量安全"}},
+  {id:15,name:"芡实",latin:"Euryale ferox Salisb.",family:"睡莲科",part:"成熟种仁",efficacy:["收涩"],batch:1,imgGrad:["#8b8b7a","#5a5a4a"],pet:{dog:"available",cat:"available",dogNote:"健脾祛湿，可作功能性辅料",catNote:"健脾祛湿，适量安全"}},
+  {id:16,name:"花椒",latin:"Zanthoxylum bungeanum Maxim.",family:"芸香科",part:"成熟果皮",efficacy:["温里"],batch:1,imgGrad:["#8b3a2a","#5a1a0a"],pet:{dog:"caution",cat:"avoid",dogNote:"刺激性较强，仅极少量调味，大量刺激肠胃",catNote:"含精油成分对猫刺激性大，应避免使用"}},
+  {id:17,name:"赤小豆",latin:"Vigna umbellata (Thunb.) Ohwi et Ohashi",family:"豆科",part:"成熟种子",efficacy:["利水渗湿"],batch:1,imgGrad:["#b44a3a","#7a2a1a"],pet:{dog:"available",cat:"available",dogNote:"利水消肿，适量安全",catNote:"适量安全"}},
+  {id:18,name:"麦芽",latin:"Hordeum vulgare L.",family:"禾本科",part:"发芽颖果",efficacy:["消食"],batch:1,imgGrad:["#c4b04a","#8b7a2a"],pet:{dog:"available",cat:"available",dogNote:"助消化，可用于宠物食品",catNote:"助消化，幼猫适用"}},
+  {id:19,name:"枣",latin:"Ziziphus jujuba Mill.",family:"鼠李科",part:"成熟果实",efficacy:["补气"],batch:1,imgGrad:["#b44a2a","#7a2a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"补气血，拉菲护心片等已使用",catNote:"补气血，市售宠物营养品常用"}},
+  {id:20,name:"罗汉果",latin:"Siraitia grosvenorii (Swingle) C.Jeffrey",family:"葫芦科",part:"果实",efficacy:["化痰止咳"],batch:1,imgGrad:["#6b8b5a","#3a5a3a"],pet:{dog:"available",cat:"available",dogNote:"天然甜味剂，清肺润肠",catNote:"天然甜味来源，猫喜甜味可作为适口性改良"}},
+  {id:21,name:"郁李仁",latin:"Prunus humilis Bge. / P. japonica Thunb.",family:"蔷薇科",part:"成熟种子",efficacy:["润下"],batch:1,imgGrad:["#9b7a5a","#6b4a3a"],pet:{dog:"caution",cat:"caution",dogNote:"含苦杏仁苷，需炮制后少量使用",catNote:"含氰苷前体，猫敏感，慎用"}},
+  {id:22,name:"青果",latin:"Canarium album Raeusch.",family:"橄榄科",part:"成熟果实",efficacy:["清热"],batch:1,imgGrad:["#7b9a4a","#4a6a2a"],pet:{dog:"available",cat:"available",dogNote:"清肺利咽，适量安全",catNote:"适量安全"}},
+  {id:23,name:"枳椇子",latin:"Hovenia dulcis Thunb.",family:"鼠李科",part:"成熟种子",efficacy:["利水渗湿"],batch:1,imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"解酒毒、利水，适量安全",catNote:"适量安全"}},
+  {id:24,name:"枸杞子",latin:"Lycium barbarum L.",family:"茄科",part:"成熟果实",efficacy:["补阴"],batch:1,imgGrad:["#d44a2a","#a01a0a"],pet:{dog:"recommended",cat:"recommended",dogNote:"护眼明目、免疫调节，华生维克、拉菲等已使用",catNote:"护眼、泪痕管理，华生维克护眼产品核心成分"}},
+  {id:25,name:"栀子",latin:"Gardenia jasminoides Ellis",family:"茜草科",part:"成熟果实",efficacy:["清热"],batch:1,imgGrad:["#d4902a","#a0601a"],pet:{dog:"available",cat:"caution",dogNote:"清热凉血，适量安全",catNote:"含栀子苷，猫肝代谢能力有限，慎用"}},
+  {id:26,name:"砂仁",latin:"Amomum villosum Lour.",family:"姜科",part:"成熟果实",efficacy:["理气"],batch:1,imgGrad:["#6b5a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"行气和胃，适量调味安全",catNote:"少量调味安全"}},
+  {id:27,name:"胖大海",latin:"Sterculia lychnophora Hance",family:"梧桐科",part:"成熟种子",efficacy:["化痰止咳"],batch:1,imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"润肺利咽，适量安全",catNote:"适量安全"}},
+  {id:28,name:"桃仁",latin:"Prunus persica (L.) Batsch / P. davidiana Franch.",family:"蔷薇科",part:"成熟种子",efficacy:["活血"],batch:1,imgGrad:["#c4a07a","#8b7a5a"],pet:{dog:"caution",cat:"avoid",dogNote:"含苦杏仁苷，需严格控制剂量和炮制",catNote:"含氰苷前体，猫解毒能力弱，应避免使用"}},
+  {id:29,name:"桑椹",latin:"Morus alba L.",family:"桑科",part:"果穗",efficacy:["补血","补阴"],batch:1,imgGrad:["#7a2a7a","#4a0a4a"],pet:{dog:"recommended",cat:"recommended",dogNote:"补血养阴，拉菲护心片已使用",catNote:"滋补营养，宠物功能零食可用"}},
+  {id:30,name:"益智仁",latin:"Alpinia oxyphylla Miq.",family:"姜科",part:"成熟果实",efficacy:["补阳"],batch:1,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"available",dogNote:"温肾固精，老年犬可用",catNote:"老年猫可少量使用"}},
+  {id:31,name:"莱菔子",latin:"Raphanus sativus L.",family:"十字花科",part:"成熟种子",efficacy:["消食"],batch:1,imgGrad:["#8b8b5a","#5a5a3a"],pet:{dog:"available",cat:"available",dogNote:"消食除胀，适量安全",catNote:"适量安全，助消化"}},
+  {id:32,name:"莲子",latin:"Nelumbo nucifera Gaertn.",family:"睡莲科",part:"成熟种子",efficacy:["收涩"],batch:1,imgGrad:["#c4b08b","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"健脾安神，适量安全",catNote:"适量安全"}},
+  {id:33,name:"黄芥子",latin:"Brassica juncea (L.) Czern. et Coss.",family:"十字花科",part:"成熟种子",efficacy:["化痰止咳"],batch:1,imgGrad:["#c4b04a","#8b7a2a"],pet:{dog:"caution",cat:"caution",dogNote:"辛辣刺激，仅极少量调味",catNote:"辛辣刺激性强，猫胃肠道敏感，慎用"}},
+  {id:34,name:"紫苏籽",latin:"Perilla frutescens (L.) Britt.",family:"唇形科",part:"成熟果实",efficacy:["化痰止咳"],batch:1,imgGrad:["#5a4a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"富含Omega-3，可用于宠物食品",catNote:"不挥发油部分安全，籽比叶更安全"}},
+  {id:35,name:"黑芝麻",latin:"Sesamum indicum L.",family:"脂麻科",part:"成熟种子",efficacy:["补阴"],batch:1,imgGrad:["#2a2a2a","#0a0a0a"],pet:{dog:"available",cat:"available",dogNote:"滋补肝肾，美毛",catNote:"美毛功效，适量安全"}},
+  {id:36,name:"黑胡椒",latin:"Piper nigrum L.",family:"胡椒科",part:"近成熟果实",efficacy:["温里"],batch:1,imgGrad:["#3a3a3a","#1a1a1a"],pet:{dog:"caution",cat:"avoid",dogNote:"辛辣刺激，仅极少量调味",catNote:"含胡椒碱等刺激性成分，猫应避免"}},
+  {id:37,name:"槐米",latin:"Sophora japonica L.",family:"豆科",part:"花蕾",efficacy:["止血"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"含芦丁，适量安全",catNote:"适量安全"}},
+  {id:38,name:"榧子",latin:"Torreya grandis Fort.",family:"红豆杉科",part:"成熟种子",efficacy:["驱虫"],batch:1,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"caution",cat:"caution",dogNote:"驱虫作用，但需控制剂量，不可长期使用",catNote:"驱虫成分对猫的神经毒性风险更高，慎用"}},
+  {id:39,name:"酸枣仁",latin:"Ziziphus jujuba Mill. var. spinosa (Bunge) Hu",family:"鼠李科",part:"成熟种子",efficacy:["安神"],batch:1,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"安神助眠，老年犬功能性冻干已有应用",catNote:"安神助眠，老年猫适用"}},
+  {id:40,name:"薏苡仁",latin:"Coix lacryma-jobi L. var. ma-yuen (Roman.) Stapf",family:"禾本科",part:"成熟种仁",efficacy:["利水渗湿"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"recommended",cat:"recommended",dogNote:"利水渗湿，多品牌处方粮使用",catNote:"利尿消肿，猫泌尿配方可用"}},
+  {id:41,name:"覆盆子",latin:"Rubus chingii Hu",family:"蔷薇科",part:"果实",efficacy:["收涩"],batch:1,imgGrad:["#b44a4a","#7a2a2a"],pet:{dog:"available",cat:"available",dogNote:"补肾固精，适量安全",catNote:"适量安全"}},
+  {id:42,name:"橘皮",latin:"Citrus reticulata Blanco",family:"芸香科",part:"成熟果皮",efficacy:["理气"],batch:1,imgGrad:["#d4902a","#a0601a"],pet:{dog:"recommended",cat:"caution",dogNote:"理气健脾，幼犬促生长添加剂已使用",catNote:"含柠檬烯等挥发油，猫肝脏代谢差，仅可极少量使用"}},
+
+  // === 第一批 花叶草类 ===
+  {id:43,name:"丁香",latin:"Eugenia caryophyllata Thunb.",family:"桃金娘科",part:"花蕾",efficacy:["温里"],batch:1,imgGrad:["#5a3a3a","#2a1a1a"],pet:{dog:"caution",cat:"avoid",dogNote:"含丁香油酚，少量调味可，大量刺激肠胃",catNote:"高酚类挥发油，猫缺乏葡萄糖醛酸转移酶，应避免使用"}},
+  {id:44,name:"小蓟",latin:"Cirsium setosum (Willd.) MB.",family:"菊科",part:"地上部分",efficacy:["止血"],batch:1,imgGrad:["#7a4a7a","#4a2a4a"],pet:{dog:"available",cat:"available",dogNote:"凉血止血，适量安全",catNote:"适量安全"}},
+  {id:45,name:"马齿苋",latin:"Portulaca oleracea L.",family:"马齿苋科",part:"地上部分",efficacy:["清热"],batch:1,imgGrad:["#5a8b4a","#3a5a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"调理肠胃，麦富迪霸弗猫粮已使用",catNote:"麦富迪霸弗核心成分，天然肠胃调理"}},
+  {id:46,name:"代代花",latin:"Citrus aurantium L. var. amara Engl.",family:"芸香科",part:"花蕾",efficacy:["理气"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"available",cat:"caution",dogNote:"理气和胃，少量使用安全",catNote:"芸香科花蕾含挥发油，猫慎用"}},
+  {id:47,name:"白扁豆花",latin:"Lablab purpureus (L.) Sweet",family:"豆科",part:"花",efficacy:["解表"],batch:1,imgGrad:["#c4b0c4","#8b7a8b"],pet:{dog:"available",cat:"available",dogNote:"解暑化湿，适量安全",catNote:"适量安全"}},
+  {id:48,name:"鱼腥草",latin:"Houttuynia cordata Thunb.",family:"三白草科",part:"全草/地上部分",efficacy:["清热"],batch:1,imgGrad:["#4a7a4a","#2a4a2a"],pet:{dog:"available",cat:"available",dogNote:"清热解毒，适量安全",catNote:"适量安全"}},
+  {id:49,name:"薄荷",latin:"Mentha haplocalyx Briq.",family:"唇形科",part:"地上部分",efficacy:["解表"],batch:1,imgGrad:["#4a8b4a","#2a5a2a"],pet:{dog:"available",cat:"avoid",dogNote:"清新口气，少量使用安全",catNote:"含薄荷醇等萜类挥发油，猫缺乏代谢酶，可致中毒（肝损伤、神经症状）"}},
+  {id:50,name:"金银花",latin:"Lonicera japonica Thunb.",family:"忍冬科",part:"花蕾/初开花",efficacy:["清热"],batch:1,imgGrad:["#c4b04a","#8b7a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"清热去火，彩峰斯凉茶片、WUI鲜食罐已使用",catNote:"清热，WUI与你鲜食罐已使用"}},
+  {id:51,name:"香薷",latin:"Mosla chinensis Maxim.",family:"唇形科",part:"地上部分",efficacy:["解表"],batch:1,imgGrad:["#5a7a4a","#3a4a2a"],pet:{dog:"available",cat:"caution",dogNote:"发汗解表，适量安全",catNote:"唇形科含挥发油，猫慎用"}},
+  {id:52,name:"桑叶",latin:"Morus alba L.",family:"桑科",part:"叶",efficacy:["解表"],batch:1,imgGrad:["#5a8b4a","#3a5a2a"],pet:{dog:"available",cat:"available",dogNote:"疏散风热，美毛配方辅料",catNote:"适量安全，美毛概念可用"}},
+  {id:53,name:"荷叶",latin:"Nelumbo nucifera Gaertn.",family:"睡莲科",part:"叶",efficacy:["清热"],batch:1,imgGrad:["#4a8b5a","#2a5a3a"],pet:{dog:"available",cat:"available",dogNote:"清热利湿，可作功能性辅料",catNote:"适量安全"}},
+  {id:54,name:"淡竹叶",latin:"Lophatherum gracile Brongn.",family:"禾本科",part:"茎叶",efficacy:["清热"],batch:1,imgGrad:["#5a8b4a","#3a5a2a"],pet:{dog:"available",cat:"available",dogNote:"清热利尿，适量安全",catNote:"适量安全，猫泌尿配方辅料"}},
+  {id:55,name:"菊花",latin:"Chrysanthemum morifolium Ramat.",family:"菊科",part:"头状花序",efficacy:["清热"],batch:1,imgGrad:["#d4b02a","#a0801a"],pet:{dog:"recommended",cat:"recommended",dogNote:"护眼明目、泪痕管理，华生维克、彩峰斯已使用",catNote:"泪痕管理、清热，猫用护眼产品核心成分"}},
+  {id:56,name:"槐花",latin:"Sophora japonica L.",family:"豆科",part:"开放花朵",efficacy:["止血","清热"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"含芦丁，适量安全",catNote:"适量安全"}},
+  {id:57,name:"蒲公英",latin:"Taraxacum mongolicum Hand.-Mazz.",family:"菊科",part:"全草",efficacy:["清热"],batch:1,imgGrad:["#d4b02a","#a0801a"],pet:{dog:"recommended",cat:"recommended",dogNote:"清热消炎、口腔清洁，大威宠口腔宝已使用",catNote:"天然口腔清洁，宠物口腔护理产品可用"}},
+  {id:58,name:"藿香",latin:"Pogostemon cablin (Blanco) Benth. / Agastache rugosus",family:"唇形科",part:"地上部分",efficacy:["解表"],batch:1,imgGrad:["#5a7a5a","#3a4a3a"],pet:{dog:"available",cat:"caution",dogNote:"芳香化湿，适量安全",catNote:"含挥发油，猫代谢能力有限，少量使用"}},
+  {id:59,name:"紫苏",latin:"Perilla frutescens (L.) Britt.",family:"唇形科",part:"叶/嫩枝",efficacy:["解表"],batch:1,imgGrad:["#7a4a5a","#4a2a3a"],pet:{dog:"available",cat:"caution",dogNote:"解表散寒，紫苏叶少量安全",catNote:"含挥发油，猫慎用；紫苏籽更安全"}},
+
+  // === 第一批 根茎类 ===
+  {id:60,name:"山药",latin:"Dioscorea opposita Thunb.",family:"薯蓣科",part:"根茎",efficacy:["补气"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"recommended",cat:"recommended",dogNote:"护肠养胃、修复胃肠黏膜，促排毛（猫用突出），麦富迪霸弗已使用",catNote:"护肠养胃、促排毛，麦富迪霸弗核心成分，临床显示粪便成型度改善73%"}},
+  {id:61,name:"玉竹",latin:"Polygonatum odoratum (Mill.) Druce",family:"百合科",part:"根茎",efficacy:["补阴"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润燥，适量安全",catNote:"适量安全"}},
+  {id:62,name:"甘草",latin:"Glycyrrhiza uralensis Fisch.",family:"豆科",part:"根和根茎",efficacy:["补气"],batch:1,imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"调和诸药、护心，拉菲护心片已使用（四君子汤化裁）",catNote:"拉菲护心片成分，调和药性，适用于心脏养护配方"}},
+  {id:63,name:"白芷",latin:"Angelica dahurica (Fisch. ex Hoffm.) Benth. et Hook.f.",family:"伞形科",part:"根",efficacy:["解表"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"caution",dogNote:"祛风解表，适量安全",catNote:"含香豆素类成分，猫肝脏代谢需注意"}},
+  {id:64,name:"百合",latin:"Lilium lancifolium Thunb. / L. brownii / L. pumilum DC.",family:"百合科",part:"肉质鳞叶",efficacy:["补阴","安神"],batch:1,imgGrad:["#c4b0b0","#8b7a7a"],pet:{dog:"available",cat:"avoid",dogNote:"润肺安神，适量安全",catNote:"⚠️ 百合科多种植物对猫有肾毒性（复活节百合、虎斑百合等），虽卷丹/百合与观赏百合不同，但猫对百合科普遍敏感——安全起见应避免"}},
+  {id:65,name:"肉桂",latin:"Cinnamomum cassia Presl",family:"樟科",part:"树皮",efficacy:["温里"],batch:1,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"recommended",cat:"caution",dogNote:"温中散寒、关节抗炎，关节配方已使用",catNote:"含肉桂醛等挥发油，少量调味可，大量猫肝脏负担重"}},
+  {id:66,name:"姜",latin:"Zingiber officinale Rosc.",family:"姜科",part:"根茎",efficacy:["解表"],batch:1,imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"available",cat:"available",dogNote:"温中止呕，适量安全",catNote:"少量使用安全"}},
+  {id:67,name:"桔梗",latin:"Platycodon grandiflorum (Jacq.) A.DC.",family:"桔梗科",part:"根",efficacy:["化痰止咳"],batch:1,imgGrad:["#c4b0b0","#8b7a7a"],pet:{dog:"available",cat:"available",dogNote:"宣肺祛痰，宠物呼吸道配方可用",catNote:"适量安全"}},
+  {id:68,name:"高良姜",latin:"Alpinia officinarum Hance",family:"姜科",part:"根茎",efficacy:["温里"],batch:1,imgGrad:["#8b4a3a","#5a2a1a"],pet:{dog:"available",cat:"caution",dogNote:"温中散寒，调味少量安全",catNote:"姜科挥发油，猫敏感，极少量调味"}},
+  {id:69,name:"黄精",latin:"Polygonatum sibiricum Delar. ex Redouté / P. kingianum / P. cyrtonema",family:"百合科",part:"根茎",efficacy:["补阴"],batch:1,imgGrad:["#5a3a2a","#3a1a0a"],pet:{dog:"available",cat:"available",dogNote:"老年犬精准营养方案（+软骨素），补肾益精",catNote:"适量安全，老年猫滋补可用"}},
+  {id:70,name:"葛根",latin:"Pueraria lobata (Willd.) Ohwi",family:"豆科",part:"根",efficacy:["解表"],batch:1,imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"解肌退热，美毛配方使药可用",catNote:"适量安全"}},
+  {id:71,name:"薤白",latin:"Allium macrostemon Bge.",family:"百合科",part:"鳞茎",efficacy:["理气"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"caution",cat:"avoid",dogNote:"葱属植物，含硫化物，大量可致溶血，少量风险低",catNote:"⚠️ 葱属（Allium）对猫可致海因茨体贫血，应避免使用"}},
+  {id:72,name:"桔红",latin:"Citrus reticulata Blanco",family:"芸香科",part:"外层果皮",efficacy:["化痰止咳"],batch:1,imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气化痰，少量使用安全",catNote:"柑橘属果皮含挥发油，猫慎用"}},
+  {id:73,name:"鲜白茅根",latin:"Imperata cylindrica (L.) Beauv. var. major (Nees) C.E.Hubb.",family:"禾本科",part:"新鲜根茎",efficacy:["止血"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"available",cat:"available",dogNote:"凉血止血，适量安全",catNote:"适量安全"}},
+  {id:74,name:"鲜芦根",latin:"Phragmites communis Trin.",family:"禾本科",part:"新鲜根茎",efficacy:["清热"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"available",cat:"available",dogNote:"清热生津，适量安全",catNote:"适量安全"}},
+
+  // === 第一批 菌藻类 ===
+  {id:75,name:"昆布",latin:"Laminaria japonica Aresch.",family:"海带科",part:"叶状体",efficacy:["利水渗湿"],batch:1,imgGrad:["#4a6b5a","#2a3a3a"],pet:{dog:"available",cat:"available",dogNote:"软坚散结，富含碘，适量安全",catNote:"含碘高，甲亢猫需控制量"}},
+  {id:76,name:"茯苓",latin:"Poria cocos (Schw.) Wolf",family:"多孔菌科",part:"菌核",efficacy:["利水渗湿"],batch:1,imgGrad:["#c4b0a0","#8b7a6a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健脾祛湿、调节肠道菌群，麦富迪霸弗、拉菲护心片已使用；临床显示季节性过敏发生率下降40%",catNote:"麦富迪霸弗核心成分，调理肠胃、祛湿，猫泌尿配方常用"}},
+  {id:77,name:"淡豆豉",latin:"Glycine max (L.) Merr.",family:"豆科",part:"大豆发酵加工品",efficacy:["解表"],batch:1,imgGrad:["#5a4a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"发酵豆制品，适量安全",catNote:"适量安全，注意豆类过敏"}},
+
+  // === 第一批 动物类 ===
+  {id:78,name:"乌梢蛇",latin:"Ptyas dhumnades (Cantor)",family:"游蛇科",part:"干燥体",efficacy:["祛风湿"],batch:1,imgGrad:["#5a5a5a","#2a2a2a"],pet:{dog:"available",cat:"available",dogNote:"传统祛风通络，宠物关节配方可用",catNote:"适量使用安全"}},
+  {id:79,name:"牡蛎",latin:"Crassostrea gigas (Thunberg)",family:"牡蛎科",part:"贝壳",efficacy:["安神"],batch:1,imgGrad:["#c4c0b0","#8b8b7a"],pet:{dog:"available",cat:"available",dogNote:"富含钙质，安神，宠物皮毛管理可用",catNote:"钙质来源，适量安全"}},
+  {id:80,name:"阿胶",latin:"Equus asinus L.",family:"马科",part:"驴皮熬制固体胶",efficacy:["补血"],batch:1,imgGrad:["#3a1a1a","#1a0a0a"],pet:{dog:"available",cat:"available",dogNote:"补血滋阴，高蛋白，宠物滋补品可用",catNote:"高蛋白，适量安全"}},
+  {id:81,name:"鸡内金",latin:"Gallus gallus domesticus Brisson",family:"雉科",part:"沙囊内壁",efficacy:["消食"],batch:1,imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健胃消食，宠物泌尿/消化配方常用",catNote:"助消化，猫泌尿系统配方可用"}},
+  {id:82,name:"蜂蜜",latin:"Apis cerana Fabricius / A. mellifera Linnaeus",family:"蜜蜂科",part:"蜂蜜",efficacy:["补气"],batch:1,imgGrad:["#d4a02a","#a0701a"],pet:{dog:"available",cat:"available",dogNote:"天然甜味剂和营养补充",catNote:"适量安全，注意糖分控制"}},
+  {id:83,name:"蝮蛇",latin:"Agkistrodon acutus (Güenther)",family:"蝰科",part:"干燥体",efficacy:["祛风湿"],batch:1,imgGrad:["#4a4a4a","#1a1a1a"],pet:{dog:"caution",cat:"caution",dogNote:"有毒蛇类，需专业炮制，宠物食品中较少使用",catNote:"有毒蛇类，猫食品中应谨慎"}},
+
+  // === 第一批 其他 ===
+  {id:84,name:"白果",latin:"Ginkgo biloba L.",family:"银杏科",part:"成熟种子",efficacy:["化痰止咳"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"avoid",cat:"avoid",dogNote:"⚠️ 含银杏酸和银杏毒素（MPN），可致呕吐、腹泻、惊厥，犬猫均应避免",catNote:"⚠️ 含银杏毒素，猫对此高度敏感，可致癫痫样发作，应严格避免"}},
+  {id:85,name:"白扁豆",latin:"Lablab purpureus (L.) Sweet",family:"豆科",part:"成熟种子",efficacy:["解表"],batch:1,imgGrad:["#c4b0a0","#8b7a6a"],pet:{dog:"available",cat:"available",dogNote:"健脾化湿，需煮熟后使用（生的含凝集素）",catNote:"需煮熟使用，生的含凝集素"}},
+  {id:86,name:"菊苣",latin:"Cichorium intybus L.",family:"菊科",part:"地上部分/根",efficacy:["清热"],batch:1,imgGrad:["#5a7a8b","#2a4a5a"],pet:{dog:"available",cat:"available",dogNote:"清肝利胆，适量安全",catNote:"适量安全"}},
+  {id:87,name:"香橼",latin:"Citrus medica L. / C. wilsonii Tanaka",family:"芸香科",part:"成熟果实",efficacy:["理气"],batch:1,imgGrad:["#d4b04a","#a0802a"],pet:{dog:"available",cat:"caution",dogNote:"理气和胃，适量安全",catNote:"柑橘属含挥发油，猫慎用"}},
+
+  // === 第二批 ===
+  {id:88,name:"当归",latin:"Angelica sinensis (Oliv.) Diels",family:"伞形科",part:"根",efficacy:["补血","活血"],batch:2,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"recommended",cat:"available",dogNote:"补血活血，朗诺五珍系列已使用，香辛料用途常规",catNote:"适量安全，可作为香辛料少量使用"}},
+  {id:89,name:"山柰",latin:"Kaempferia galanga L.",family:"姜科",part:"根茎",efficacy:["温里"],batch:2,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味可，需控制"}},
+  {id:90,name:"西红花",latin:"Crocus sativus L.",family:"鸢尾科",part:"柱头",efficacy:["活血"],batch:2,imgGrad:["#c42a2a","#8b0a0a"],pet:{dog:"caution",cat:"caution",dogNote:"名贵药材，活血作用强，宠物食品极少用，仅微量调味可能",catNote:"活血作用强，猫不建议常规使用"}},
+  {id:91,name:"草果",latin:"Amomum tsao-ko Crevost et Lemaire",family:"姜科",part:"果实",efficacy:["温里"],batch:2,imgGrad:["#6b4a3a","#3a2a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味"}},
+  {id:92,name:"姜黄",latin:"Curcuma longa L.",family:"姜科",part:"根茎",efficacy:["活血"],batch:2,imgGrad:["#d4802a","#a0501a"],pet:{dog:"recommended",cat:"available",dogNote:"抗炎、关节养护，大威宠软骨素已使用",catNote:"抗炎成分，猫关节配方可少量使用"}},
+  {id:93,name:"荜茇",latin:"Piper longum L.",family:"胡椒科",part:"果穗",efficacy:["温里"],batch:2,imgGrad:["#4a3a2a","#2a1a0a"],pet:{dog:"available",cat:"avoid",dogNote:"调味少量安全",catNote:"胡椒科刺激性成分，猫应避免"}},
+
+  // === 第三批 ===
+  {id:94,name:"党参",latin:"Codonopsis pilosula (Franch.) Nannf.",family:"桔梗科",part:"根",efficacy:["补气"],batch:3,imgGrad:["#c4a07a","#8b6a5a"],pet:{dog:"recommended",cat:"recommended",dogNote:"补中益气、改善虚弱，多品牌营养膏/处方粮使用",catNote:"补气健脾，WUI与你鲜食罐已使用"}},
+  {id:95,name:"肉苁蓉",latin:"Cistanche deserticola Y.C.Ma",family:"列当科",part:"肉质茎",efficacy:["补阳"],batch:3,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"available",dogNote:"补肾阳，老年犬滋补可用",catNote:"老年猫滋补概念可用"}},
+  {id:96,name:"铁皮石斛",latin:"Dendrobium officinale Kimura et Migo",family:"兰科",part:"茎",efficacy:["补阴"],batch:3,imgGrad:["#5a8b4a","#2a5a2a"],pet:{dog:"available",cat:"available",dogNote:"滋阴、肠胃黏膜修复，概念阶段",catNote:"滋阴养胃，猫肠胃调理概念可用"}},
+  {id:97,name:"西洋参",latin:"Panax quinquefolium L.",family:"五加科",part:"根",efficacy:["补气","补阴"],batch:3,imgGrad:["#c4a05a","#8b6a3a"],pet:{dog:"available",cat:"available",dogNote:"补气养阴（偏凉补），适合热性体质犬，心脏配方概念",catNote:"凉补，猫较犬更适合（猫偏热性体质较多）"}},
+  {id:98,name:"黄芪",latin:"Astragalus membranaceus (Fisch.) Bge. var. mongholicus (Bge.) Hsiao",family:"豆科",part:"根",efficacy:["补气"],batch:3,imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"免疫调节、补气利水，最核心的宠物中药成分，多品牌营养膏/主粮使用",catNote:"免疫调节核心成分，多品牌猫粮已使用；含黄芪多糖，增强免疫力"}},
+  {id:99,name:"灵芝",latin:"Ganoderma lucidum (Leyss. ex Fr.) Karst.",family:"多孔菌科",part:"子实体",efficacy:["安神"],batch:3,imgGrad:["#6b3a3a","#3a1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"免疫调节，朗诺五珍系列已使用",catNote:"免疫调节、安神，猫免疫配方可用"}},
+  {id:100,name:"山茱萸",latin:"Cornus officinalis Sieb. et Zucc.",family:"山茱萸科",part:"果肉",efficacy:["收涩"],batch:3,imgGrad:["#b42a2a","#7a1a1a"],pet:{dog:"available",cat:"available",dogNote:"补益肝肾，泌尿配方概念",catNote:"猫泌尿配方概念可用"}},
+  {id:101,name:"天麻",latin:"Gastrodia elata Bl.",family:"兰科",part:"块茎",efficacy:["祛风"],batch:3,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"平肝息风，老年犬神经/关节养护可用",catNote:"适量安全，老年猫可用"}},
+  {id:102,name:"杜仲叶",latin:"Eucommia ulmoides Oliv.",family:"杜仲科",part:"叶",efficacy:["补阳"],batch:3,imgGrad:["#5a7a4a","#3a4a2a"],pet:{dog:"recommended",cat:"available",dogNote:"骨骼关节养护，WUI与你壮骨护节冻干已使用",catNote:"关节养护，猫可用"}},
+
+  // === 第四批 ===
+  {id:103,name:"地黄",latin:"Rehmannia glutinosa Libosch.",family:"玄参科",part:"块根（鲜地黄/生地黄/熟地黄）",efficacy:["清热","补血"],batch:4,imgGrad:["#3a2a2a","#1a0a0a"],pet:{dog:"available",cat:"available",dogNote:"鲜/生地清热凉血，熟地补血，肝肾管理概念",catNote:"猫肝肾管理概念可用"}},
+  {id:104,name:"麦冬",latin:"Ophiopogon japonicus (L.f) Ker-Gawl.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润肺，心脏配方概念",catNote:"养阴生津，心脏管理概念可用"}},
+  {id:105,name:"天冬",latin:"Asparagus cochinchinensis (Lour.) Merr.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润燥，与麦冬类似",catNote:"滋阴，适量安全"}},
+  {id:106,name:"化橘红",latin:"Citrus grandis 'Tomentosa'",family:"芸香科",part:"未成熟/近成熟外层果皮",efficacy:["理气","化痰止咳"],batch:4,imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气化痰，呼吸道健康概念",catNote:"柑橘属果皮含挥发油，猫慎用"}}
+];
+
+// ==================== APP STATE ====================
+const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '' };
+
+// ==================== HELPERS ====================
+const EFFICACY_COLORS = {
+  "补气":"#5b8c5a","补血":"#c44a3a","补阴":"#4a7c8b","补阳":"#d4943a","理气":"#6b9a4a",
+  "消食":"#c4803a","利水渗湿":"#4a8b9a","清热":"#4a9a5a","解表":"#8b7a8b","化痰止咳":"#8b9a6b",
+  "安神":"#7a5a9b","收涩":"#6b5a4a","活血":"#c42a4a","止血":"#9b4a4a","温里":"#d45a2a",
+  "润下":"#8b7a4a","祛风湿":"#7a6b4a","驱虫":"#5a5a3a","祛风":"#6b8b5a"
+};
+
+function getCardGradient(h) {
+  return `linear-gradient(135deg, ${h.imgGrad[0]}, ${h.imgGrad[1]})`;
+}
+
+// 图片路径：优先本地 images/ 文件夹，由 download_images.py 脚本下载
+function getImagePath(h) {
+  return `images/${String(h.id).padStart(3,'0')}_${h.name}.jpg`;
+}
+
+// 外部植物照片参考链接
+function getExternalLinks(h) {
+  const latinEnc = encodeURIComponent(h.latin.split(' ').slice(0,2).join(' '));
+  const nameEnc = encodeURIComponent(h.name);
+  return {
+    iplant: `https://www.iplant.cn/info/${latinEnc}?t=n`,
+    ppbc: `https://ppbc.iplant.cn/search19?q=${nameEnc}`,
+    wikimedia: `https://commons.wikimedia.org/w/index.php?search=${nameEnc}+${latinEnc}&title=Special:MediaSearch&type=image`,
+    inaturalist: `https://www.inaturalist.org/search?q=${latinEnc}&source=species`,
+  };
+}
+
+function renderCardImage(h) {
+  const imgPath = getImagePath(h);
+  const gradient = getCardGradient(h);
+  return `
+    <img src="${imgPath}" alt="${h.name}" loading="lazy"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+      onload="this.style.display='block';">
+    <div class="img-fallback" style="display:none;background:${gradient};">${h.name[0]}</div>`;
+}
+
+function renderModalImage(h) {
+  const imgPath = getImagePath(h);
+  const gradient = getCardGradient(h);
+  return `
+    <img src="${imgPath}" alt="${h.name}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+      onload="this.style.display='block';">
+    <div class="img-fallback" style="display:none;background:${gradient};font-size:5em;">${h.name}</div>`;
+}
+
+function getPetStatus(h, petType) {
+  if (petType === 'dog') return h.pet.dog;
+  return h.pet.cat;
+}
+
+function getPetNote(h, petType) {
+  if (petType === 'dog') return h.pet.dogNote;
+  return h.pet.catNote;
+}
+
+const STATUS_LABELS = {
+  recommended: '✅ 已用于宠物食品',
+  available: '👍 可使用',
+  caution: '⚠️ 慎用',
+  avoid: '🚫 避免使用'
+};
+
+const STATUS_ORDER = { recommended: 0, available: 1, caution: 2, avoid: 3 };
+
+// ==================== FILTERING ====================
+function matchesFilter(h) {
+  // Search text
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    const haystack = [h.name, h.latin, h.family, h.part, ...h.efficacy].join(' ').toLowerCase();
+    if (!haystack.includes(q)) return false;
+  }
+  // Efficacy
+  if (state.efficacy !== 'all' && !h.efficacy.includes(state.efficacy)) return false;
+  // Family
+  if (state.family !== 'all') {
+    if (state.family === '其他科属') {
+      const majorFamilies = ['豆科','蔷薇科','唇形科','姜科','菊科','芸香科','百合科','禾本科','伞形科','睡莲科','多孔菌科'];
+      if (majorFamilies.includes(h.family)) return false;
+    } else if (h.family !== state.family) return false;
+  }
+  // Pet type + Safety
+  if (state.pet !== 'all') {
+    const status = getPetStatus(h, state.pet);
+    if (state.safety !== 'all' && status !== state.safety) return false;
+  } else if (state.safety !== 'all') {
+    // If no pet selected but safety filter is active, match if either dog or cat has that status
+    if (h.pet.dog !== state.safety && h.pet.cat !== state.safety) return false;
+  }
+  return true;
+}
+
+function getFilteredHerbs() {
+  return HERBS.filter(matchesFilter);
+}
+
+// ==================== RENDER ====================
+function updateStats() {
+  const filtered = getFilteredHerbs();
+  const total = HERBS.length;
+  const dogRec = HERBS.filter(h => h.pet.dog === 'recommended').length;
+  const catRec = HERBS.filter(h => h.pet.cat === 'recommended').length;
+  const dogAvoid = HERBS.filter(h => h.pet.dog === 'avoid').length;
+  const catAvoid = HERBS.filter(h => h.pet.cat === 'avoid').length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="label">药食同源总数</div></div>
+    <div class="stat-card"><div class="num">${filtered.length}</div><div class="label">当前筛选结果</div></div>
+    <div class="stat-card"><div class="num">${dogRec}</div><div class="label">🐕 犬已用品种</div></div>
+    <div class="stat-card"><div class="num">${catRec}</div><div class="label">🐈 猫已用品种</div></div>
+    <div class="stat-card warn"><div class="num">${dogAvoid + catAvoid}</div><div class="label">⚠️ 需避免品种</div></div>
+  `;
+}
+
+function renderCards() {
+  const herbs = getFilteredHerbs();
+  const grid = document.getElementById('herbGrid');
+  const info = document.getElementById('resultInfo');
+  info.textContent = `共找到 ${herbs.length} 种药食同源中药`;
+
+  if (herbs.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>没有找到匹配的结果，请调整筛选条件</p></div>`;
+    updateStats();
+    return;
+  }
+
+  const activePet = state.pet;
+  grid.innerHTML = herbs.map(h => {
+    const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join('');
+    let badgeHtml = '';
+    if (activePet !== 'all') {
+      const status = getPetStatus(h, activePet);
+      if (status === 'recommended') badgeHtml = '<span class="card-badge badge-used">已应用</span>';
+      else if (status === 'caution') badgeHtml = '<span class="card-badge badge-caution">慎用</span>';
+      else if (status === 'avoid') badgeHtml = '<span class="card-badge badge-avoid">避免</span>';
+    }
+    return `
+      <div class="herb-card" onclick="openDetail(${h.id})">
+        <div class="card-img">${renderCardImage(h)}</div>
+        ${badgeHtml}
+        <div class="card-body">
+          <div class="card-name">${h.name}</div>
+          <div class="card-latin">${h.latin}</div>
+          <div class="card-tags">
+            ${efficacyTags}
+            <span class="tag tag-family">${h.family}</span>
+            <span class="tag tag-part">${h.part}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  updateStats();
+}
+
+function openDetail(id) {
+  const h = HERBS.find(x => x.id === id);
+  if (!h) return;
+  const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join(' ');
+  const links = getExternalLinks(h);
+
+  const dogStatus = h.pet.dog;
+  const catStatus = h.pet.cat;
+
+  document.getElementById('modalBox').innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-img">${renderModalImage(h)}</div>
+    <div class="modal-body">
+      <h2>${h.name}</h2>
+      <p class="latin-name">${h.latin}</p>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="d-label">科名</div><div class="d-value">${h.family}</div></div>
+        <div class="detail-item"><div class="d-label">使用部位</div><div class="d-value">${h.part}</div></div>
+        <div class="detail-item"><div class="d-label">功效分类</div><div class="d-value">${efficacyTags}</div></div>
+        <div class="detail-item"><div class="d-label">批次</div><div class="d-value">第${h.batch}批 (${[2002,2002,2019,2023,2024][h.batch]}年)</div></div>
+      </div>
+      <div class="pet-section">
+        <div class="pet-col dog">
+          <h4><span class="pet-icon">🐕</span> 犬</h4>
+          <span class="pet-status ${dogStatus}">${STATUS_LABELS[dogStatus]}</span>
+          <p class="pet-note">${h.pet.dogNote}</p>
+        </div>
+        <div class="pet-col cat">
+          <h4><span class="pet-icon">🐈</span> 猫</h4>
+          <span class="pet-status ${catStatus}">${STATUS_LABELS[catStatus]}</span>
+          <p class="pet-note">${h.pet.catNote}</p>
+        </div>
+      </div>
+      <div style="margin-top:18px;padding:14px;background:#f9f7f2;border-radius:10px;">
+        <h4 style="margin:0 0 8px;font-size:0.9em;">📷 查看植物照片</h4>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <a href="${links.iplant}" target="_blank" rel="noopener" style="padding:6px 14px;background:#5b8c5a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🌿 iPlant 植物智</a>
+          <a href="${links.ppbc}" target="_blank" rel="noopener" style="padding:6px 14px;background:#4a7c8b;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">📸 PPBC 图像库</a>
+          <a href="${links.wikimedia}" target="_blank" rel="noopener" style="padding:6px 14px;background:#6b5e4f;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🖼️ Wikimedia</a>
+          <a href="${links.inaturalist}" target="_blank" rel="noopener" style="padding:6px 14px;background:#3a7d44;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🦎 iNaturalist</a>
+        </div>
+        <p style="font-size:0.72em;color:var(--text-secondary);margin-top:8px;">本地图片由 download_images.py 脚本下载。若未显示图片，请运行脚本或点击上方链接查看外部数据库照片。</p>
+      </div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// ==================== EVENT HANDLERS ====================
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  state.search = e.target.value.trim();
+  renderCards();
+});
+
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    const filterType = this.dataset.filter;
+    const filterVal = this.dataset.val;
+    state[filterType] = filterVal;
+    // Update active states for this filter group
+    document.querySelectorAll(`.filter-chip[data-filter="${filterType}"]`).forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    renderCards();
+  });
+});
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ==================== INIT ====================
+renderCards();
+</script>
+</body>
+</html>
