@@ -244,6 +244,20 @@ body {
     <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
   </div>
 
+  <!-- Pet food function filter -->
+  <div class="filter-section" style="margin-bottom:8px;">
+    <span class="filter-label">🛒 宠物食品功能</span>
+    <span class="filter-chip active" data-filter="foodFunc" data-val="all">全部</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="肠胃调理">肠胃调理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="免疫提升">免疫提升</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="心脏管理">心脏管理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="关节养护">关节养护</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
+  </div>
+
   <!-- Efficacy filter -->
   <div class="filter-section" style="margin-bottom:8px;">
     <span class="filter-label">📋 功效分类</span>
@@ -453,8 +467,24 @@ const HERBS_76 = [
   {id:134,name:"积雪草",latin:"Centella asiatica (L.) Urb.",family:"伞形科",part:"干燥全草",efficacy:["清热"],imgGrad:["#4a7a4a","#2a4a2a"],pet:{dog:"available",cat:"available",dogNote:"清热利湿，宠物皮肤修复配方可用",catNote:"适量安全，皮肤修复"}},
 ];
 
+// ==================== 宠物食品产品数据 ====================
+const PET_FOODS = [
+  {id:1,brand:"麦富迪",product:"霸弗猫粮",herbs:["乌梅","白术","马齿苋","茯苓","山药"],type:"主粮",func:"肠胃调理",pet:"猫"},
+  {id:2,brand:"比乐（福贝）",product:"乌鸡红参猫粮",herbs:["党参"],type:"主粮",func:"免疫提升",pet:"猫"},
+  {id:3,brand:"拉菲宠物",product:"沙丁鱼护心片",herbs:["甘草","白术","茯苓","桑椹","枸杞子"],type:"营养补充剂",func:"心脏管理",pet:"犬猫通用"},
+  {id:4,brand:"大威宠",product:"蛋壳膜鲨鱼软骨素",herbs:["姜黄","骨碎补"],type:"营养补充剂",func:"关节养护",pet:"犬猫通用"},
+  {id:5,brand:"大威宠",product:"仙气口腔宝",herbs:["蒲公英","山楂"],type:"营养补充剂",func:"口腔护理",pet:"犬猫通用"},
+  {id:6,brand:"华生维克",product:"宠物护眼膳食补充剂",herbs:["决明子","菊花","枸杞子"],type:"营养补充剂",func:"护眼明目",pet:"犬猫通用"},
+  {id:7,brand:"彩峰斯",product:"凉茶片",herbs:["金银花","菊花","薄荷"],type:"零食",func:"清热降火",pet:"犬猫通用"},
+  {id:8,brand:"WUI与你",product:"鲜食罐/冻干粒",herbs:["金银花","山楂","党参","杜仲叶"],type:"鲜食",func:"综合调理",pet:"犬猫通用"},
+  {id:9,brand:"朗诺",product:"五珍系列冻干",herbs:["灵芝","当归"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用"},
+  {id:10,brand:"虞央",product:"功能性冻干",herbs:["枸杞子"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用"},
+  {id:11,brand:"WUI与你",product:"壮骨护节冻干",herbs:["杜仲叶"],type:"冻干零食",func:"关节养护",pet:"犬"},
+  {id:12,brand:"宠喜饭",product:"七日鲜粮",herbs:["黄芪","山药","茯苓","枸杞子"],type:"鲜食",func:"综合调理",pet:"犬猫通用"},
+];
+
 // ==================== APP STATE ====================
-const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all' };
+const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
 
 // ==================== HELPERS ====================
 const EFFICACY_COLORS = {
@@ -543,6 +573,12 @@ function matchesFilter(h) {
       const majorFamilies = ['豆科','蔷薇科','唇形科','姜科','菊科','芸香科','百合科','禾本科','伞形科','睡莲科','多孔菌科'];
       if (majorFamilies.includes(h.family)) return false;
     } else if (h.family !== state.family) return false;
+  }
+  // Pet food function filter
+  if (state.foodFunc !== 'all') {
+    const foods = PET_FOODS.filter(f => f.func === state.foodFunc);
+    const herbNames = [...new Set(foods.flatMap(f => f.herbs))];
+    if (!herbNames.includes(h.name)) return false;
   }
   // Pet type + Safety
   if (state.pet !== 'all') {
@@ -664,6 +700,23 @@ function openDetail(id) {
           <p class="pet-note">${h.pet.catNote}</p>
         </div>
       </div>
+      ${(()=>{
+        const foods = PET_FOODS.filter(f => f.herbs.includes(h.name));
+        if (foods.length === 0) return '';
+        return `
+        <div style="margin-top:16px;padding:14px;background:#f0f7ed;border-radius:10px;border:1px solid #c8e0c8;">
+          <h4 style="margin:0 0 10px;font-size:0.9em;">🛒 含${h.name}的宠物食品（${foods.length}款）</h4>
+          ${foods.map(f => `
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #d8e8d8;">
+              <span style="font-weight:700;font-size:0.85em;min-width:70px;">${f.brand}</span>
+              <span style="flex:1;font-size:0.85em;">${f.product}</span>
+              <span style="font-size:0.7em;background:#5b8c5a;color:#fff;padding:2px 8px;border-radius:8px;">${f.pet}</span>
+              <span style="font-size:0.7em;background:#e8f2e4;color:#5b8c5a;padding:2px 8px;border-radius:8px;">${f.func}</span>
+              <span style="font-size:0.7em;color:var(--text-secondary);">${f.type}</span>
+            </div>
+          `).join('')}
+        </div>`;
+      })()}
       <div style="margin-top:18px;padding:14px;background:#f9f7f2;border-radius:10px;">
         <h4 style="margin:0 0 8px;font-size:0.9em;">📷 查看植物照片</h4>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
