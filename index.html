@@ -208,8 +208,7 @@ body {
 
 <div class="header">
   <h1>🌿 药食同源中药数据库</h1>
-  <p>基于卫健委106种食药物质目录 · 宠物猫狗食品应用参考</p>
-</div>
+  </div>
 
 <div class="stats-bar" id="statsBar"></div>
 
@@ -224,7 +223,7 @@ body {
     <span class="filter-label">📂 收录目录</span>
     <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
     <span class="filter-chip" data-filter="category" data-val="106only">药食同源目录（106种）</span>
-    <span class="filter-chip" data-filter="category" data-val="76only">饲料7.6独有（28种）</span>
+    <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
   </div>
 
   <!-- Pet type filter -->
@@ -422,7 +421,7 @@ const HERBS = [
   {id:106,name:"化橘红",latin:"Citrus grandis 'Tomentosa'",family:"芸香科",part:"未成熟/近成熟外层果皮",efficacy:["理气","化痰止咳"],batch:4,imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气化痰，呼吸道健康概念",catNote:"柑橘属果皮含挥发油，猫慎用"}}
 ];
 
-// ==================== 饲料目录7.6独有品种（非药食同源，28种）====================
+// ==================== 非药食同源植物（饲料目录7.6独有，28种）====================
 const HERBS_76 = [
   {id:107,name:"白术",latin:"Atractylodes macrocephala Koidz.",family:"菊科",part:"干燥根茎",efficacy:["补气","利水渗湿"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健脾祛湿，麦富迪霸弗猫粮已使用，7.6类核心品种",catNote:"健脾祛湿，猫肠胃调理配方常用"}},
   {id:108,name:"白芍",latin:"Paeonia lactiflora Pall.",family:"毛茛科",part:"干燥根",efficacy:["补血"],imgGrad:["#c4b0c4","#8b7a8b"],pet:{dog:"available",cat:"available",dogNote:"养血柔肝，复方添加辅料",catNote:"适量安全"}},
@@ -578,7 +577,7 @@ function updateStats() {
 
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="num">${HERBS.length}</div><div class="label">药食同源</div></div>
-    <div class="stat-card"><div class="num">${HERBS_76.length}</div><div class="label">饲料7.6独有</div></div>
+    <div class="stat-card"><div class="num">${HERBS_76.length}</div><div class="label">非药食同源</div></div>
     <div class="stat-card"><div class="num">${filtered.length}</div><div class="label">当前筛选结果</div></div>
     <div class="stat-card"><div class="num">${dogRec}</div><div class="label">🐕 犬已用</div></div>
     <div class="stat-card"><div class="num">${catRec}</div><div class="label">🐈 猫已用</div></div>
@@ -591,7 +590,7 @@ function renderCards() {
   const grid = document.getElementById('herbGrid');
   const info = document.getElementById('resultInfo');
   const is76 = state.category === '76only';
-  const label = is76 ? '饲料目录7.6独有品种（非药食同源）' : '植物';
+  const label = is76 ? '非药食同源植物（饲料目录7.6类收录）' : '药食同源植物';
   info.textContent = `共找到 ${herbs.length} 种${label}`;
 
   if (herbs.length === 0) {
@@ -605,7 +604,7 @@ function renderCards() {
     const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join('');
     let badgeHtml = '';
     if (h.id >= 107) {
-      badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">7.6独有</span>';
+      badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">非药食同源</span>';
     }
     if (activePet !== 'all') {
       const status = getPetStatus(h, activePet);
