@@ -222,7 +222,7 @@ body {
   <div class="filter-section" style="margin-bottom:8px;">
     <span class="filter-label">📂 收录目录</span>
     <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
-    <span class="filter-chip" data-filter="category" data-val="106only">药食同源目录（106种）</span>
+    <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
     <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
   </div>
 
@@ -631,7 +631,7 @@ function renderCards() {
 }
 
 function openDetail(id) {
-  const h = HERBS.find(x => x.id === id);
+  const h = HERBS.find(x => x.id === id) || HERBS_76.find(x => x.id === id);
   if (!h) return;
   const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join(' ');
   const links = getExternalLinks(h);
