@@ -219,6 +219,14 @@ body {
     <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索名称、拉丁名、科属、功效...">
   </div>
 
+  <!-- Source category filter -->
+  <div class="filter-section" style="margin-bottom:8px;">
+    <span class="filter-label">📂 收录目录</span>
+    <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
+    <span class="filter-chip" data-filter="category" data-val="106only">药食同源目录（106种）</span>
+    <span class="filter-chip" data-filter="category" data-val="76only">饲料7.6独有（28种）</span>
+  </div>
+
   <!-- Pet type filter -->
   <div class="filter-section" style="margin-bottom:8px;">
     <span class="filter-label">🐾 宠物类型</span>
@@ -414,8 +422,40 @@ const HERBS = [
   {id:106,name:"化橘红",latin:"Citrus grandis 'Tomentosa'",family:"芸香科",part:"未成熟/近成熟外层果皮",efficacy:["理气","化痰止咳"],batch:4,imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气化痰，呼吸道健康概念",catNote:"柑橘属果皮含挥发油，猫慎用"}}
 ];
 
+// ==================== 饲料目录7.6独有品种（非药食同源，28种）====================
+const HERBS_76 = [
+  {id:107,name:"白术",latin:"Atractylodes macrocephala Koidz.",family:"菊科",part:"干燥根茎",efficacy:["补气","利水渗湿"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健脾祛湿，麦富迪霸弗猫粮已使用，7.6类核心品种",catNote:"健脾祛湿，猫肠胃调理配方常用"}},
+  {id:108,name:"白芍",latin:"Paeonia lactiflora Pall.",family:"毛茛科",part:"干燥根",efficacy:["补血"],imgGrad:["#c4b0c4","#8b7a8b"],pet:{dog:"available",cat:"available",dogNote:"养血柔肝，复方添加辅料",catNote:"适量安全"}},
+  {id:109,name:"苍术",latin:"Atractylodes lancea (Thunb.) DC.",family:"菊科",part:"干燥根茎",efficacy:["利水渗湿"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"燥湿健脾，宠物肠胃调理可用",catNote:"适量安全"}},
+  {id:110,name:"川芎",latin:"Ligusticum chuanxiong Hort.",family:"伞形科",part:"干燥根茎",efficacy:["活血"],imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"available",cat:"caution",dogNote:"活血行气，适量使用安全",catNote:"活血作用较强，猫需控制剂量"}},
+  {id:111,name:"车前子",latin:"Plantago asiatica L.",family:"车前科",part:"干燥成熟种子",efficacy:["利水渗湿"],imgGrad:["#5a7a4a","#3a4a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"利尿通淋，犬猫泌尿健康核心品种，冻干粒/处方罐常用",catNote:"猫泌尿综合征配方核心成分，利尿排石"}},
+  {id:112,name:"车前草",latin:"Plantago asiatica L.",family:"车前科",part:"干燥全草",efficacy:["清热"],imgGrad:["#5a8b4a","#3a5a2a"],pet:{dog:"available",cat:"available",dogNote:"清热利尿，与车前子功效类似",catNote:"泌尿配方辅助成分"}},
+  {id:113,name:"补骨脂",latin:"Psoralea corylifolia L.",family:"豆科",part:"干燥成熟果实",efficacy:["补阳"],imgGrad:["#8b6a3a","#5a3a1a"],pet:{dog:"caution",cat:"caution",dogNote:"温肾助阳，含补骨脂素，需控制剂量",catNote:"含光敏成分，猫使用需谨慎"}},
+  {id:114,name:"刺五加",latin:"Acanthopanax senticosus (Rupr.et Maxim.) Harms",family:"五加科",part:"干燥根和根茎",efficacy:["补气"],imgGrad:["#6b8b5a","#3a5a3a"],pet:{dog:"available",cat:"available",dogNote:"益气健脾，宠物抗疲劳配方可用",catNote:"适应原样作用，老年猫可用"}},
+  {id:115,name:"骨碎补",latin:"Drynaria fortunei (Kunze) J.Sm.",family:"水龙骨科",part:"干燥根茎",efficacy:["补阳"],imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"recommended",cat:"available",dogNote:"补肾强骨，大威宠软骨素配方已使用",catNote:"宠物关节养护可用"}},
+  {id:116,name:"厚朴",latin:"Magnolia officinalis Rehd.et Wils.",family:"木兰科",part:"干燥干皮/根皮/枝皮",efficacy:["理气"],imgGrad:["#7a6a4a","#4a3a2a"],pet:{dog:"available",cat:"available",dogNote:"行气燥湿，宠物肠胃配方可用",catNote:"适量安全"}},
+  {id:117,name:"绞股蓝",latin:"Gynostemma pentaphyllum (Thunb.) Makino",family:"葫芦科",part:"干燥全草",efficacy:["补气"],imgGrad:["#4a7a4a","#2a4a2a"],pet:{dog:"available",cat:"available",dogNote:"免疫调节，宠物免疫配方概念",catNote:"含绞股蓝皂苷，免疫调节"}},
+  {id:118,name:"红景天",latin:"Rhodiola rosea L.",family:"景天科",part:"干燥根和根茎",efficacy:["补气"],imgGrad:["#7a4a4a","#4a2a2a"],pet:{dog:"available",cat:"available",dogNote:"抗疲劳，高原/运动犬可用",catNote:"适应原样作用，抗应激"}},
+  {id:119,name:"木香",latin:"Aucklandia lappa Decne.",family:"菊科",part:"干燥根",efficacy:["理气"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"caution",dogNote:"行气止痛，宠物消化配方可用",catNote:"含挥发油，猫需注意剂量"}},
+  {id:120,name:"女贞子",latin:"Ligustrum lucidum Ait.",family:"木犀科",part:"干燥成熟果实",efficacy:["补阴"],imgGrad:["#3a3a5a","#1a1a3a"],pet:{dog:"available",cat:"available",dogNote:"滋补肝肾，老年宠物可用",catNote:"适量安全"}},
+  {id:121,name:"五味子",latin:"Schisandra chinensis (Turcz.) Baill.",family:"木兰科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#c42a2a","#8b0a0a"],pet:{dog:"available",cat:"caution",dogNote:"收敛固涩，宠物止泻配方可用",catNote:"含木脂素类，猫需控制剂量"}},
+  {id:122,name:"泽泻",latin:"Alisma plantago-aquatica L.",family:"泽泻科",part:"干燥块茎",efficacy:["利水渗湿"],imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"利水渗湿，中兽医经典用药",catNote:"利尿，猫泌尿配方可用"}},
+  {id:123,name:"知母",latin:"Anemarrhena asphodeloides Bge.",family:"百合科",part:"干燥根茎",efficacy:["清热"],imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"清热泻火，宠物清热配方可用",catNote:"适量安全"}},
+  {id:124,name:"枳壳",latin:"Citrus aurantium L.",family:"芸香科",part:"干燥未成熟果实",efficacy:["理气"],imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气宽中，宠物消化配方可用",catNote:"柑橘属含挥发油，猫慎用"}},
+  {id:125,name:"茜草",latin:"Rubia cordifolia L.",family:"茜草科",part:"干燥根和根茎",efficacy:["止血"],imgGrad:["#8b2a2a","#5a0a0a"],pet:{dog:"available",cat:"available",dogNote:"凉血止血，宠物外伤/出血概念",catNote:"适量安全"}},
+  {id:126,name:"诃子",latin:"Terminalia chebula Retz.",family:"使君子科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#6b5a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"涩肠敛肺，宠物止泻配方可用",catNote:"宠物肠胃调理可用"}},
+  {id:127,name:"胡芦巴",latin:"Trigonella foenum-graecum L.",family:"豆科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#8b7a4a","#5a4a2a"],pet:{dog:"available",cat:"available",dogNote:"温肾祛寒，宠物代谢配方可用",catNote:"适量安全"}},
+  {id:128,name:"菟丝子",latin:"Cuscuta chinensis Lam.",family:"旋花科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"available",cat:"available",dogNote:"补肾固精，老年宠物滋补可用",catNote:"适量安全"}},
+  {id:129,name:"远志",latin:"Polygala tenuifolia Willd.",family:"远志科",part:"干燥根",efficacy:["安神"],imgGrad:["#5a4a7a","#3a2a4a"],pet:{dog:"available",cat:"caution",dogNote:"安神益智，老年犬认知配方可用",catNote:"含远志皂苷，猫需控制剂量"}},
+  {id:130,name:"益母草",latin:"Leonurus japonicus Houtt.",family:"唇形科",part:"干燥地上部分",efficacy:["活血"],imgGrad:["#7a4a7a","#4a2a4a"],pet:{dog:"available",cat:"caution",dogNote:"活血调经，母犬产后可用",catNote:"活血作用，猫需谨慎使用"}},
+  {id:131,name:"夏枯草",latin:"Prunella vulgaris L.",family:"唇形科",part:"干燥果穗",efficacy:["清热"],imgGrad:["#5a4a7a","#3a2a4a"],pet:{dog:"available",cat:"available",dogNote:"清肝明目，宠物眼部配方可用",catNote:"适量安全"}},
+  {id:132,name:"香附",latin:"Cyperus rotundus L.",family:"莎草科",part:"干燥根茎",efficacy:["理气"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"疏肝理气，宠物消化配方可用",catNote:"适量安全"}},
+  {id:133,name:"辛夷",latin:"Magnolia biondii Pamp.",family:"木兰科",part:"干燥花蕾",efficacy:["解表"],imgGrad:["#c4a0b0","#8b7a7a"],pet:{dog:"available",cat:"caution",dogNote:"散风寒，宠物呼吸道配方可用",catNote:"含挥发油，猫慎用"}},
+  {id:134,name:"积雪草",latin:"Centella asiatica (L.) Urb.",family:"伞形科",part:"干燥全草",efficacy:["清热"],imgGrad:["#4a7a4a","#2a4a2a"],pet:{dog:"available",cat:"available",dogNote:"清热利湿，宠物皮肤修复配方可用",catNote:"适量安全，皮肤修复"}},
+];
+
 // ==================== APP STATE ====================
-const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '' };
+const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all' };
 
 // ==================== HELPERS ====================
 const EFFICACY_COLORS = {
@@ -431,6 +471,9 @@ function getCardGradient(h) {
 
 // 图片路径：优先本地 images/ 文件夹，由 download_images.py 脚本下载
 function getImagePath(h) {
+  if (h.id >= 107) {
+    return `images/76_${String(h.id-106).padStart(3,'0')}_${h.name}.jpg`;
+  }
   return `images/${String(h.id).padStart(3,'0')}_${h.name}.jpg`;
 }
 
@@ -514,24 +557,32 @@ function matchesFilter(h) {
 }
 
 function getFilteredHerbs() {
-  return HERBS.filter(matchesFilter);
+  let allHerbs = HERBS;
+  if (state.category === '76only') {
+    allHerbs = HERBS_76;
+  } else if (state.category === 'all') {
+    allHerbs = HERBS.concat(HERBS_76);
+  }
+  return allHerbs.filter(matchesFilter);
 }
 
 // ==================== RENDER ====================
 function updateStats() {
   const filtered = getFilteredHerbs();
   const total = HERBS.length;
-  const dogRec = HERBS.filter(h => h.pet.dog === 'recommended').length;
-  const catRec = HERBS.filter(h => h.pet.cat === 'recommended').length;
-  const dogAvoid = HERBS.filter(h => h.pet.dog === 'avoid').length;
-  const catAvoid = HERBS.filter(h => h.pet.cat === 'avoid').length;
+  const allHerbs = HERBS.concat(HERBS_76);
+  const dogRec = allHerbs.filter(h => h.pet.dog === 'recommended').length;
+  const catRec = allHerbs.filter(h => h.pet.cat === 'recommended').length;
+  const dogAvoid = allHerbs.filter(h => h.pet.dog === 'avoid').length;
+  const catAvoid = allHerbs.filter(h => h.pet.cat === 'avoid').length;
 
   document.getElementById('statsBar').innerHTML = `
-    <div class="stat-card"><div class="num">${total}</div><div class="label">药食同源总数</div></div>
+    <div class="stat-card"><div class="num">${HERBS.length}</div><div class="label">药食同源</div></div>
+    <div class="stat-card"><div class="num">${HERBS_76.length}</div><div class="label">饲料7.6独有</div></div>
     <div class="stat-card"><div class="num">${filtered.length}</div><div class="label">当前筛选结果</div></div>
-    <div class="stat-card"><div class="num">${dogRec}</div><div class="label">🐕 犬已用品种</div></div>
-    <div class="stat-card"><div class="num">${catRec}</div><div class="label">🐈 猫已用品种</div></div>
-    <div class="stat-card warn"><div class="num">${dogAvoid + catAvoid}</div><div class="label">⚠️ 需避免品种</div></div>
+    <div class="stat-card"><div class="num">${dogRec}</div><div class="label">🐕 犬已用</div></div>
+    <div class="stat-card"><div class="num">${catRec}</div><div class="label">🐈 猫已用</div></div>
+    <div class="stat-card warn"><div class="num">${dogAvoid + catAvoid}</div><div class="label">⚠️ 避免</div></div>
   `;
 }
 
@@ -539,7 +590,9 @@ function renderCards() {
   const herbs = getFilteredHerbs();
   const grid = document.getElementById('herbGrid');
   const info = document.getElementById('resultInfo');
-  info.textContent = `共找到 ${herbs.length} 种药食同源中药`;
+  const is76 = state.category === '76only';
+  const label = is76 ? '饲料目录7.6独有品种（非药食同源）' : '植物';
+  info.textContent = `共找到 ${herbs.length} 种${label}`;
 
   if (herbs.length === 0) {
     grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>没有找到匹配的结果，请调整筛选条件</p></div>`;
@@ -551,11 +604,14 @@ function renderCards() {
   grid.innerHTML = herbs.map(h => {
     const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join('');
     let badgeHtml = '';
+    if (h.id >= 107) {
+      badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">7.6独有</span>';
+    }
     if (activePet !== 'all') {
       const status = getPetStatus(h, activePet);
-      if (status === 'recommended') badgeHtml = '<span class="card-badge badge-used">已应用</span>';
-      else if (status === 'caution') badgeHtml = '<span class="card-badge badge-caution">慎用</span>';
-      else if (status === 'avoid') badgeHtml = '<span class="card-badge badge-avoid">避免</span>';
+      if (status === 'recommended') badgeHtml += '<span class="card-badge badge-used">已应用</span>';
+      else if (status === 'caution') badgeHtml += '<span class="card-badge badge-caution">慎用</span>';
+      else if (status === 'avoid') badgeHtml += '<span class="card-badge badge-avoid">避免</span>';
     }
     return `
       <div class="herb-card" onclick="openDetail(${h.id})">
@@ -580,6 +636,7 @@ function openDetail(id) {
   if (!h) return;
   const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join(' ');
   const links = getExternalLinks(h);
+  const is76 = h.id >= 107;
 
   const dogStatus = h.pet.dog;
   const catStatus = h.pet.cat;
@@ -588,13 +645,13 @@ function openDetail(id) {
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-img">${renderModalImage(h)}</div>
     <div class="modal-body">
-      <h2>${h.name}</h2>
+      <h2>${h.name}${is76 ? ' <span style="font-size:0.6em;background:#7a5a9b;color:#fff;padding:2px 8px;border-radius:8px;vertical-align:middle;">非药食同源</span>' : ''}</h2>
       <p class="latin-name">${h.latin}</p>
       <div class="detail-grid">
         <div class="detail-item"><div class="d-label">科名</div><div class="d-value">${h.family}</div></div>
         <div class="detail-item"><div class="d-label">使用部位</div><div class="d-value">${h.part}</div></div>
         <div class="detail-item"><div class="d-label">功效分类</div><div class="d-value">${efficacyTags}</div></div>
-        <div class="detail-item"><div class="d-label">批次</div><div class="d-value">第${h.batch}批 (${[2002,2002,2019,2023,2024][h.batch]}年)</div></div>
+        <div class="detail-item"><div class="d-label">收录目录</div><div class="d-value">${is76 ? '饲料原料目录 7.6 类' : '药食同源 第'+h.batch+'批 ('+[2002,2002,2019,2023,2024][h.batch]+'年)'}</div></div>
       </div>
       <div class="pet-section">
         <div class="pet-col dog">

@@ -29,8 +29,8 @@ if IMAGES_DIR.exists():
             ext = f.suffix.lower().replace('.', '')
             if ext == 'jpg': ext = 'jpeg'
             mime = f'image/{ext}'
-            # key: "001_八角茴香"
-            key = f.stem  # e.g. "001_八角茴香"
+            # key: "001_八角茴香" or "76_001_白术"
+            key = f.stem
             image_cache[key] = f'data:{mime};base64,{data}'
             print(f'  ✓ {key} ({len(data)//1024}KB base64)')
 else:
@@ -51,9 +51,13 @@ const EMBEDDED_IMAGES = {
 };
 
 function getImagePath(h) {
+  if (h.id >= 107) {
+    const key = `76_${String(h.id-106).padStart(3,"0")}_${h.name}`;
+    if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
+    return `images/76_${String(h.id-106).padStart(3,"0")}_${h.name}.jpg`;
+  }
   const key = `${String(h.id).padStart(3,"0")}_${h.name}`;
   if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
-  // fallback: try to load from images/ folder
   return `images/${String(h.id).padStart(3,"0")}_${h.name}.jpg`;
 }'''
 
