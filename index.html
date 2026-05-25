@@ -626,7 +626,7 @@ function renderCards() {
   const grid = document.getElementById('herbGrid');
   const info = document.getElementById('resultInfo');
   const is76 = state.category === '76only';
-  const label = is76 ? '非药食同源植物（饲料目录7.6类收录）' : '药食同源植物';
+  const label = is76 ? '可食用植物（饲料目录7.6类收录）' : '可食用植物';
   info.textContent = `共找到 ${herbs.length} 种${label}`;
 
   if (herbs.length === 0) {
