@@ -418,7 +418,7 @@ const HERBS = [
   {id:89,name:"山柰",latin:"Kaempferia galanga L.",family:"姜科",part:"根茎",efficacy:["温里"],batch:2,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味可，需控制"}},
   {id:90,name:"西红花",latin:"Crocus sativus L.",family:"鸢尾科",part:"柱头",efficacy:["活血"],batch:2,imgGrad:["#c42a2a","#8b0a0a"],pet:{dog:"caution",cat:"caution",dogNote:"名贵药材，活血作用强，宠物食品极少用，仅微量调味可能",catNote:"活血作用强，猫不建议常规使用"}},
   {id:91,name:"草果",latin:"Amomum tsao-ko Crevost et Lemaire",family:"姜科",part:"果实",efficacy:["温里"],batch:2,imgGrad:["#6b4a3a","#3a2a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味"}},
-  {id:92,name:"姜黄",latin:"Curcuma longa L.",family:"姜科",part:"根茎",efficacy:["活血"],batch:2,imgGrad:["#d4802a","#a0501a"],pet:{dog:"recommended",cat:"available",dogNote:"抗炎、关节养护，大威宠软骨素已使用",catNote:"抗炎成分，猫关节配方可少量使用"}},
+  {id:92,name:"姜黄",latin:"Curcuma longa L.",family:"姜科",part:"根茎",efficacy:["活血"],batch:2,imgGrad:["#d4802a","#a0501a"],pet:{dog:"recommended",cat:"available",dogNote:"抗炎、关节养护，大威宠蛋壳膜软骨素已使用",catNote:"抗炎成分，猫关节配方可少量使用"}},
   {id:93,name:"荜茇",latin:"Piper longum L.",family:"胡椒科",part:"果穗",efficacy:["温里"],batch:2,imgGrad:["#4a3a2a","#2a1a0a"],pet:{dog:"available",cat:"avoid",dogNote:"调味少量安全",catNote:"胡椒科刺激性成分，猫应避免"}},
 
   // === 第三批 ===
@@ -486,12 +486,12 @@ const PET_FOODS = [
   {id:19,brand:"元更元",product:"十草顺泽系列低温烘焙猫粮",herbs:["党参","茯苓","白术","甘草"],type:"主粮",func:"皮毛管理",pet:"猫",buyURL:"https://world.taobao.com/item/802597508288.htm",buyLabel:"元更元淘宝商品页"},
   // --- 营养补充剂 ---
   {id:3,brand:"拉菲宠物",product:"沙丁鱼护心片",herbs:["甘草","白术","茯苓","桑椹","枸杞子"],type:"营养补充剂",func:"心脏管理",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖（原拉菲宠物品牌）"},
-  {id:4,brand:"大威宠",product:"蛋壳膜鲨鱼软骨素",herbs:["姜黄","骨碎补"],type:"营养补充剂",func:"关节养护",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖（仅见于行业文章报道）"},
-  {id:5,brand:"大威宠",product:"仙气口腔宝",herbs:["蒲公英","山楂"],type:"营养补充剂",func:"口腔护理",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖（仅见于行业文章报道）"},
-  {id:6,brand:"华生维克",product:"宠物护眼膳食补充剂",herbs:["决明子","菊花","枸杞子"],type:"营养补充剂",func:"护眼明目",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖"},
+  {id:4,brand:"大威宠",product:"蛋壳膜鲨鱼软骨素",herbs:["姜黄","骨碎补"],type:"营养补充剂",func:"关节养护",pet:"犬猫通用",buyURL:"https://haohuo.jinritemai.com/views/search?keyword=大威宠软骨素",buyLabel:"抖音商城搜索购买"},
+  {id:5,brand:"大威宠",product:"仙气口腔宝",herbs:["蒲公英","山楂"],type:"营养补充剂",func:"口腔护理",pet:"犬猫通用",buyURL:"https://haohuo.jinritemai.com/views/search?keyword=大威宠口腔宝",buyLabel:"抖音商城搜索购买"},
+  {id:6,brand:"华生维克",product:"宠物护眼膳食补充剂",herbs:["决明子","菊花","枸杞子"],type:"营养补充剂",func:"护眼明目",pet:"犬猫通用",buyURL:null,buyLabel:"京东/淘宝未找到，可尝试抖音/拼多多搜索"},
   // --- 功能性冻干 ---
   {id:9,brand:"朗诺",product:"五珍系列冻干",herbs:["灵芝","当归"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buyURL:null,buyLabel:"京东搜索「朗诺宠物食品京东自营旗舰店」"},
-  {id:10,brand:"虞央",product:"功能性冻干",herbs:["枸杞子"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖（新锐概念品牌）"},
+  {id:10,brand:"虞央",product:"功能性冻干",herbs:["枸杞子"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buyURL:null,buyLabel:"京东/淘宝未找到，可尝试抖音/拼多多搜索"},
   {id:11,brand:"WUI与你",product:"壮骨护节冻干",herbs:["杜仲叶"],type:"冻干零食",func:"关节养护",pet:"犬",buyURL:null,buyLabel:"线下: WUI与你宠物门店（武汉）"},
   {id:20,brand:"青岛农大",product:"谷语集功能冻干",herbs:["党参","茯苓","山药"],type:"冻干零食",func:"肠胃调理",pet:"犬猫通用",buyURL:null,buyLabel:"线下: 青岛农大教学动物医院 13001662680"},
   {id:21,brand:"青岛农大",product:"泌元舒功能冻干",herbs:["栀子","车前子","甘草"],type:"冻干零食",func:"泌尿管理",pet:"犬猫通用",buyURL:null,buyLabel:"线下: 青岛农大教学动物医院 13001662680"},
@@ -501,7 +501,7 @@ const PET_FOODS = [
   {id:25,brand:"青岛农大",product:"伴宠芯功能冻干",herbs:["党参","黄芪","酸枣仁"],type:"冻干零食",func:"心脏管理",pet:"犬猫通用",buyURL:null,buyLabel:"线下: 青岛农大教学动物医院 13001662680"},
   {id:26,brand:"宠之优品",product:"功能性冻干系列",herbs:["黄芪","党参","枸杞子","茯苓"],type:"冻干零食",func:"综合调理",pet:"犬猫通用",buyURL:null,buyLabel:"OEM代工厂（山东），非自有品牌零售"},
   // --- 零食/鲜食 ---
-  {id:7,brand:"彩峰斯",product:"凉茶片",herbs:["金银花","菊花","薄荷"],type:"零食",func:"清热降火",pet:"犬猫通用",buyURL:null,buyLabel:"线上暂无售卖"},
+  {id:7,brand:"彩峰斯",product:"凉茶片",herbs:["金银花","菊花","薄荷"],type:"零食",func:"清热降火",pet:"犬猫通用",buyURL:null,buyLabel:"京东/淘宝未找到，可尝试抖音/拼多多搜索"},
   {id:8,brand:"WUI与你",product:"鲜食罐/冻干粒",herbs:["金银花","山楂","党参","杜仲叶"],type:"鲜食",func:"综合调理",pet:"犬猫通用",buyURL:null,buyLabel:"线下: WUI与你宠物门店（武汉）"},
   {id:12,brand:"宠喜饭",product:"七日鲜粮",herbs:["黄芪","山药","茯苓","枸杞子"],type:"鲜食",func:"综合调理",pet:"犬猫通用",buyURL:"https://search.jd.com/Search?keyword=宠喜饭",buyLabel:"京东搜索「宠喜饭京东自营旗舰店」"},
   {id:27,brand:"华夏本草汉方",product:"中草药食疗狗粮",herbs:["黄芪","党参","茯苓","白术"],type:"主粮",func:"综合调理",pet:"犬",buyURL:null,buyLabel:"线下展销渠道（合汉方上海生物科技）"},
