@@ -255,6 +255,10 @@ body {
     <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
     <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
     <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="泌尿管理">泌尿管理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="肝脏管理">肝脏管理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="体重管理">体重管理</span>
+    <span class="filter-chip" data-filter="foodFunc" data-val="皮毛管理">皮毛管理</span>
     <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
   </div>
 
@@ -469,19 +473,40 @@ const HERBS_76 = [
 
 // ==================== 宠物食品产品数据 ====================
 const PET_FOODS = [
-  {id:1,brand:"麦富迪",product:"霸弗猫粮",herbs:["乌梅","白术","马齿苋","茯苓","山药"],type:"主粮",func:"肠胃调理",pet:"猫"},
-  {id:2,brand:"比乐（福贝）",product:"乌鸡红参猫粮",herbs:["党参"],type:"主粮",func:"免疫提升",pet:"猫"},
-  {id:3,brand:"拉菲宠物",product:"沙丁鱼护心片",herbs:["甘草","白术","茯苓","桑椹","枸杞子"],type:"营养补充剂",func:"心脏管理",pet:"犬猫通用"},
-  {id:4,brand:"大威宠",product:"蛋壳膜鲨鱼软骨素",herbs:["姜黄","骨碎补"],type:"营养补充剂",func:"关节养护",pet:"犬猫通用"},
-  {id:5,brand:"大威宠",product:"仙气口腔宝",herbs:["蒲公英","山楂"],type:"营养补充剂",func:"口腔护理",pet:"犬猫通用"},
-  {id:6,brand:"华生维克",product:"宠物护眼膳食补充剂",herbs:["决明子","菊花","枸杞子"],type:"营养补充剂",func:"护眼明目",pet:"犬猫通用"},
-  {id:7,brand:"彩峰斯",product:"凉茶片",herbs:["金银花","菊花","薄荷"],type:"零食",func:"清热降火",pet:"犬猫通用"},
-  {id:8,brand:"WUI与你",product:"鲜食罐/冻干粒",herbs:["金银花","山楂","党参","杜仲叶"],type:"鲜食",func:"综合调理",pet:"犬猫通用"},
-  {id:9,brand:"朗诺",product:"五珍系列冻干",herbs:["灵芝","当归"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用"},
-  {id:10,brand:"虞央",product:"功能性冻干",herbs:["枸杞子"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用"},
-  {id:11,brand:"WUI与你",product:"壮骨护节冻干",herbs:["杜仲叶"],type:"冻干零食",func:"关节养护",pet:"犬"},
-  {id:12,brand:"宠喜饭",product:"七日鲜粮",herbs:["黄芪","山药","茯苓","枸杞子"],type:"鲜食",func:"综合调理",pet:"犬猫通用"},
+  // --- 主粮类 ---
+  {id:1,brand:"麦富迪",product:"霸弗猫粮",herbs:["乌梅","白术","马齿苋","茯苓","山药"],type:"主粮",func:"肠胃调理",pet:"猫",buy:"搜索: 麦富迪霸弗猫粮"},
+  {id:2,brand:"比乐（福贝）",product:"乌鸡红参猫粮",herbs:["党参"],type:"主粮",func:"免疫提升",pet:"猫",buy:"搜索: 比乐乌鸡红参猫粮"},
+  {id:13,brand:"比瑞吉",product:"无谷草本茯苓车前子成猫粮",herbs:["茯苓","车前子","山楂","山药"],type:"主粮",func:"泌尿管理",pet:"猫",buy:"搜索: 比瑞吉草本泌尿道猫粮 京东自营"},
+  {id:14,brand:"比瑞吉",product:"草本去毛球成猫粮",herbs:["茯苓","山楂","山药"],type:"主粮",func:"肠胃调理",pet:"猫",buy:"搜索: 比瑞吉去毛球草本猫粮"},
+  {id:15,brand:"比瑞吉",product:"草本挑嘴成猫粮",herbs:["茯苓","荷叶","山楂","山药"],type:"主粮",func:"综合调理",pet:"猫",buy:"搜索: 比瑞吉无谷草本挑嘴猫粮"},
+  {id:16,brand:"比瑞吉",product:"草本体重管理成猫粮",herbs:["决明子","山楂","荷叶"],type:"主粮",func:"体重管理",pet:"猫",buy:"搜索: 比瑞吉草本室内猫粮"},
+  {id:17,brand:"比瑞吉",product:"冻干肉草本颗粒(山楂+荷叶)室内成猫粮",herbs:["山楂","荷叶"],type:"主粮",func:"体重管理",pet:"猫",buy:"搜索: 比瑞吉冻干草本颗粒山楂荷叶"},
+  {id:18,brand:"元更元",product:"七草运脾系列低温烘焙猫粮",herbs:["党参","茯苓","白术","甘草"],type:"主粮",func:"肠胃调理",pet:"猫",buy:"搜索: 元更元七草运脾猫粮 淘宝"},
+  {id:19,brand:"元更元",product:"十草顺泽系列低温烘焙猫粮",herbs:["党参","茯苓","白术","甘草"],type:"主粮",func:"皮毛管理",pet:"猫",buy:"搜索: 元更元十草顺泽猫粮 淘宝"},
+  // --- 营养补充剂 ---
+  {id:3,brand:"拉菲宠物",product:"沙丁鱼护心片",herbs:["甘草","白术","茯苓","桑椹","枸杞子"],type:"营养补充剂",func:"心脏管理",pet:"犬猫通用",buy:"搜索: 拉菲宠物沙丁鱼护心片"},
+  {id:4,brand:"大威宠",product:"蛋壳膜鲨鱼软骨素",herbs:["姜黄","骨碎补"],type:"营养补充剂",func:"关节养护",pet:"犬猫通用",buy:"搜索: 大威宠蛋壳膜软骨素"},
+  {id:5,brand:"大威宠",product:"仙气口腔宝",herbs:["蒲公英","山楂"],type:"营养补充剂",func:"口腔护理",pet:"犬猫通用",buy:"搜索: 大威宠仙气口腔宝"},
+  {id:6,brand:"华生维克",product:"宠物护眼膳食补充剂",herbs:["决明子","菊花","枸杞子"],type:"营养补充剂",func:"护眼明目",pet:"犬猫通用",buy:"搜索: 华生维克宠物护眼"},
+  // --- 功能性冻干 ---
+  {id:9,brand:"朗诺",product:"五珍系列冻干",herbs:["灵芝","当归"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buy:"搜索: 朗诺五珍冻干"},
+  {id:10,brand:"虞央",product:"功能性冻干",herbs:["枸杞子"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buy:"搜索: 虞央功能性冻干"},
+  {id:11,brand:"WUI与你",product:"壮骨护节冻干",herbs:["杜仲叶"],type:"冻干零食",func:"关节养护",pet:"犬",buy:"线下: WUI与你宠物门店"},
+  {id:20,brand:"青岛农大",product:"谷语集功能冻干",herbs:["党参","茯苓","山药"],type:"冻干零食",func:"肠胃调理",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:21,brand:"青岛农大",product:"泌元舒功能冻干",herbs:["栀子","车前子","甘草"],type:"冻干零食",func:"泌尿管理",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:22,brand:"青岛农大",product:"砾安晴功能冻干",herbs:["车前子","小蓟"],type:"冻干零食",func:"泌尿管理",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:23,brand:"青岛农大",product:"木宁舒功能冻干",herbs:["栀子","山楂"],type:"冻干零食",func:"肝脏管理",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:24,brand:"青岛农大",product:"元力集功能冻干",herbs:["黄芪","白术","当归"],type:"冻干零食",func:"免疫提升",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:25,brand:"青岛农大",product:"伴宠芯功能冻干",herbs:["党参","黄芪","酸枣仁"],type:"冻干零食",func:"心脏管理",pet:"犬猫通用",buy:"线下: 青岛农业大学教学动物医院"},
+  {id:26,brand:"宠之优品",product:"功能性冻干系列",herbs:["黄芪","党参","枸杞子","茯苓"],type:"冻干零食",func:"综合调理",pet:"犬猫通用",buy:"搜索: 宠之优品功能性冻干"},
+  // --- 零食/鲜食 ---
+  {id:7,brand:"彩峰斯",product:"凉茶片",herbs:["金银花","菊花","薄荷"],type:"零食",func:"清热降火",pet:"犬猫通用",buy:"搜索: 彩峰斯宠物凉茶片"},
+  {id:8,brand:"WUI与你",product:"鲜食罐/冻干粒",herbs:["金银花","山楂","党参","杜仲叶"],type:"鲜食",func:"综合调理",pet:"犬猫通用",buy:"线下: WUI与你宠物门店"},
+  {id:12,brand:"宠喜饭",product:"七日鲜粮",herbs:["黄芪","山药","茯苓","枸杞子"],type:"鲜食",func:"综合调理",pet:"犬猫通用",buy:"搜索: 宠喜饭七日鲜粮"},
+  {id:27,brand:"华夏本草汉方",product:"中草药食疗狗粮",herbs:["黄芪","党参","茯苓","白术"],type:"主粮",func:"综合调理",pet:"犬",buy:"搜索: 华夏本草汉方狗粮 淘宝"},
 ];
+// 功能分类列表（用于筛选芯片生成）
+const FOOD_FUNCS = ["肠胃调理","免疫提升","心脏管理","关节养护","口腔护理","护眼明目","清热降火","泌尿管理","肝脏管理","体重管理","皮毛管理","综合调理"];
 
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
@@ -706,15 +731,21 @@ function openDetail(id) {
         return `
         <div style="margin-top:16px;padding:14px;background:#f0f7ed;border-radius:10px;border:1px solid #c8e0c8;">
           <h4 style="margin:0 0 10px;font-size:0.9em;">🛒 含${h.name}的宠物食品（${foods.length}款）</h4>
-          ${foods.map(f => `
-            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #d8e8d8;">
-              <span style="font-weight:700;font-size:0.85em;min-width:70px;">${f.brand}</span>
-              <span style="flex:1;font-size:0.85em;">${f.product}</span>
-              <span style="font-size:0.7em;background:#5b8c5a;color:#fff;padding:2px 8px;border-radius:8px;">${f.pet}</span>
-              <span style="font-size:0.7em;background:#e8f2e4;color:#5b8c5a;padding:2px 8px;border-radius:8px;">${f.func}</span>
-              <span style="font-size:0.7em;color:var(--text-secondary);">${f.type}</span>
-            </div>
-          `).join('')}
+          ${foods.map(f => {
+            const isJD = f.buy && f.buy.includes('京东');
+            const isTB = f.buy && f.buy.includes('淘宝');
+            const buyLabel = f.buy ? f.buy.replace('搜索: ','').replace('线下: ','') : '';
+            const linkColor = f.buy && f.buy.startsWith('线下') ? '#d4943a' : '#5b8c5a';
+            return `
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #d8e8d8;flex-wrap:wrap;">
+              <span style="font-weight:700;font-size:0.82em;min-width:60px;">${f.brand}</span>
+              <span style="flex:1;min-width:140px;font-size:0.82em;">${f.product}</span>
+              <span style="font-size:0.65em;background:#5b8c5a;color:#fff;padding:2px 6px;border-radius:8px;">${f.pet}</span>
+              <span style="font-size:0.65em;background:#e8f2e4;color:#5b8c5a;padding:2px 6px;border-radius:8px;">${f.func}</span>
+              <span style="font-size:0.65em;color:var(--text-secondary);">${f.type}</span>
+              <span style="font-size:0.65em;background:${linkColor};color:#fff;padding:2px 8px;border-radius:8px;" title="${f.buy}">🛒 ${buyLabel}</span>
+            </div>`;
+          }).join('')}
         </div>`;
       })()}
       <div style="margin-top:18px;padding:14px;background:#f9f7f2;border-radius:10px;">
