@@ -115,6 +115,18 @@ body {
   width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
   font-size: 3.5em; color: #fff; font-weight: 700;
 }
+/* Image toggle button */
+.img-toggle {
+  position: absolute; bottom: 8px; right: 8px;
+  padding: 4px 10px; border-radius: 12px; font-size: 0.65em;
+  font-weight: 600; cursor: pointer; border: none; color: #fff;
+  background: rgba(0,0,0,0.55); z-index: 5;
+  transition: background 0.2s;
+}
+.img-toggle:hover { background: rgba(0,0,0,0.75); }
+.img-toggle.plant-mode { background: rgba(90,140,90,0.75); }
+.img-toggle.med-mode { background: rgba(180,120,60,0.75); }
+.modal-img .img-toggle { bottom: 12px; right: 12px; font-size: 0.75em; padding: 5px 14px; }
 .herb-card .card-badge {
   position: absolute; top: 8px; right: 8px; padding: 3px 10px;
   border-radius: 12px; font-size: 0.7em; font-weight: 700; color: #fff;
@@ -553,18 +565,35 @@ function getExternalLinks(h) {
   };
 }
 
-function renderCardImage(h) {
-  const imgPath = getImagePath(h);
+function getMedImagePath(h) {
+  if (h.id >= 107) {
+    return `images/med_76_${String(h.id-106).padStart(3,'0')}_${h.name}.jpg`;
+  }
+  return `images/med_${String(h.id).padStart(3,'0')}_${h.name}.jpg`;
+}
+
+function renderCardImage(h, showMed) {
+  const imgPath = showMed ? getMedImagePath(h) : getImagePath(h);
   const gradient = getCardGradient(h);
+  const fallbackLabel = showMed ? '药' : h.name[0];
+  const fallbackBg = showMed ? 'linear-gradient(135deg, #b4743a, #7a4a2a)' : gradient;
   return `
-    <img src="${imgPath}" alt="${h.name}" loading="lazy"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+    <img src="${imgPath}" alt="${h.name}" loading="lazy" data-med="${showMed?1:0}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';this.nextElementSibling.style.background='${fallbackBg}';"
       onload="this.style.display='block';">
     <div class="img-fallback" style="display:none;background:${gradient};">${h.name[0]}</div>`;
 }
 
-function renderModalImage(h) {
-  const imgPath = getImagePath(h);
+function renderModalImage(h, showMed) {
+  const imgPath = showMed ? getMedImagePath(h) : getImagePath(h);
+  const gradient = getCardGradient(h);
+  const fallbackBg = showMed ? 'linear-gradient(135deg, #b4743a, #7a4a2a)' : gradient;
+  return `
+    <img src="${imgPath}" alt="${h.name}" data-med="${showMed?1:0}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';this.nextElementSibling.style.background='${fallbackBg}';"
+      onload="this.style.display='block';">
+    <div class="img-fallback" style="display:none;background:${gradient};font-size:5em;">${showMed ? '药材' : h.name}</div>`;
+}
   const gradient = getCardGradient(h);
   return `
     <img src="${imgPath}" alt="${h.name}"
@@ -685,7 +714,7 @@ function renderCards() {
     }
     return `
       <div class="herb-card" onclick="openDetail(${h.id})">
-        <div class="card-img">${renderCardImage(h)}</div>
+        <div class="card-img">${renderCardImage(h,false)}<button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button></div>
         ${badgeHtml}
         <div class="card-body">
           <div class="card-name">${h.name}</div>
@@ -713,7 +742,7 @@ function openDetail(id) {
 
   document.getElementById('modalBox').innerHTML = `
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-img">${renderModalImage(h)}</div>
+    <div class="modal-img">${renderModalImage(h,false)}<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿</button></div>
     <div class="modal-body">
       <h2>${h.name}${is76 ? ' <span style="font-size:0.6em;background:#7a5a9b;color:#fff;padding:2px 8px;border-radius:8px;vertical-align:middle;">非药食同源</span>' : ''}</h2>
       <p class="latin-name">${h.latin}</p>
@@ -771,11 +800,55 @@ function openDetail(id) {
         <p style="font-size:0.72em;color:var(--text-secondary);margin-top:8px;">本地图片由 download_images.py 脚本下载。若未显示图片，请运行脚本或点击上方链接查看外部数据库照片。</p>
       </div>
     </div>`;
+  document.getElementById('modalOverlay')._currentHerb = h;
   document.getElementById('modalOverlay').classList.add('show');
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// 图片切换：植株 ↔ 药材
+function toggleCardImg(btn) {
+  const card = btn.closest('.herb-card');
+  const imgDiv = card.querySelector('.card-img');
+  const isPlant = btn.classList.contains('plant-mode');
+  // 从herb card的onclick获取herb id，通过重新渲染
+  const onclick = card.getAttribute('onclick');
+  const idMatch = onclick.match(/openDetail\((\d+)\)/);
+  if (!idMatch) return;
+  const id = parseInt(idMatch[1]);
+  const h = HERBS.find(x => x.id === id) || HERBS_76.find(x => x.id === id);
+  if (!h) return;
+
+  if (isPlant) {
+    btn.classList.remove('plant-mode'); btn.classList.add('med-mode');
+    btn.textContent = '🌱';
+    imgDiv.innerHTML = renderCardImage(h, true) + '<button class="img-toggle med-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌱</button>';
+  } else {
+    btn.classList.remove('med-mode'); btn.classList.add('plant-mode');
+    btn.textContent = '🌿';
+    imgDiv.innerHTML = renderCardImage(h, false) + '<button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button>';
+  }
+}
+
+function toggleModalImg(btn) {
+  const overlay = document.getElementById('modalOverlay');
+  const modalImg = overlay.querySelector('.modal-img');
+  const isPlant = btn.classList.contains('plant-mode');
+  // Get current herb from openDetail closure - we store it on the overlay
+  const h = overlay._currentHerb;
+  if (!h) return;
+
+  if (isPlant) {
+    btn.classList.remove('plant-mode'); btn.classList.add('med-mode');
+    btn.textContent = '🌱 药材';
+    modalImg.innerHTML = renderModalImage(h, true) + '<button class="img-toggle med-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌱 药材</button>';
+  } else {
+    btn.classList.remove('med-mode'); btn.classList.add('plant-mode');
+    btn.textContent = '🌿 植株';
+    modalImg.innerHTML = renderModalImage(h, false) + '<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿 植株</button>';
+  }
 }
 
 // ==================== EVENT HANDLERS ====================
