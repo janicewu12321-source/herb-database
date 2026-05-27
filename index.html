@@ -594,13 +594,6 @@ function renderModalImage(h, showMed) {
       onload="this.style.display='block';">
     <div class="img-fallback" style="display:none;background:${gradient};font-size:5em;">${showMed ? '药材' : h.name}</div>`;
 }
-  const gradient = getCardGradient(h);
-  return `
-    <img src="${imgPath}" alt="${h.name}"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-      onload="this.style.display='block';">
-    <div class="img-fallback" style="display:none;background:${gradient};font-size:5em;">${h.name}</div>`;
-}
 
 function getPetStatus(h, petType) {
   if (petType === 'dog') return h.pet.dog;
