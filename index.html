@@ -810,15 +810,27 @@ function toggleCardImg(btn) {
   const card = btn.closest('.herb-card');
   const imgDiv = card.querySelector('.card-img');
   const isPlant = btn.classList.contains('plant-mode');
+  const onclick = card.getAttribute('onclick');
+  const idMatch = onclick.match(/openDetail\((\d+)\)/);
+  if (!idMatch) return;
+  const id = parseInt(idMatch[1]);
+  const h = HERBS.find(x => x.id === id) || HERBS_76.find(x => x.id === id);
+  if (!h) return;
 
   if (isPlant) {
     btn.classList.remove('plant-mode'); btn.classList.add('med-mode');
     btn.textContent = '🌱';
-    btn.title = '药材形态照片→浸大数据库';
+    const baikeUrl = `https://baike.baidu.com/item/${encodeURIComponent(h.name)}`;
+    imgDiv.innerHTML = renderCardImage(h, false) +
+      '<a href=\"' + baikeUrl + '\" target=\"_blank\" rel=\"noopener\" onclick=\"event.stopPropagation()\" style=\"position:absolute;inset:0;background:rgba(0,0,0,0.65);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;text-decoration:none;z-index:3;font-size:0.7em;\">' +
+      '<span style=\"font-size:1.3em;\">药材形态</span>' +
+      '<span style=\"margin-top:4px;background:#b4743a;padding:4px 12px;border-radius:12px;\">📖 百度百科</span>' +
+      '</a>' +
+      '<button class=\"img-toggle med-mode\" onclick=\"event.stopPropagation();toggleCardImg(this)\" title=\"切换回植株\">🌱</button>';
   } else {
     btn.classList.remove('med-mode'); btn.classList.add('plant-mode');
     btn.textContent = '🌿';
-    btn.title = '切换植株/药材';
+    imgDiv.innerHTML = renderCardImage(h, false) + '<button class=\"img-toggle plant-mode\" onclick=\"event.stopPropagation();toggleCardImg(this)\" title=\"切换植株/药材\">🌿</button>';
   }
 }
 
