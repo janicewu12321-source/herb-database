@@ -560,7 +560,7 @@ function getExternalLinks(h) {
   return {
     iplant: `https://www.iplant.cn/info/${latinEnc}?t=n`,
     ppbc: `https://ppbc.iplant.cn/search19?q=${nameEnc}`,
-    hkbu: `https://sys01.lib.hkbu.edu.hk/cmed/mmid/search?searchType=name&name=${nameEnc}`,
+    baike: `https://baike.baidu.com/item/${nameEnc}`,
     wikimedia: `https://commons.wikimedia.org/w/index.php?search=${nameEnc}+${latinEnc}&title=Special:MediaSearch&type=image`,
     inaturalist: `https://www.inaturalist.org/search?q=${latinEnc}&source=species`,
   };
@@ -786,7 +786,7 @@ function openDetail(id) {
       <div style="margin-top:18px;padding:14px;background:#f9f7f2;border-radius:10px;">
         <h4 style="margin:0 0 8px;font-size:0.9em;">📷 查看图片（植株 / 药材）</h4>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
-          <a href="${links.hkbu}" target="_blank" rel="noopener" style="padding:6px 14px;background:#b4743a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🏺 浸大中药材图像数据库（饮片/药材）</a>
+          <a href="${links.baike}" target="_blank" rel="noopener" style="padding:6px 14px;background:#b4743a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">📖 百度百科（含药材/饮片形态照片）</a>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
           <a href="${links.iplant}" target="_blank" rel="noopener" style="padding:6px 14px;background:#5b8c5a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🌿 iPlant 植物智</a>
@@ -794,7 +794,7 @@ function openDetail(id) {
           <a href="${links.wikimedia}" target="_blank" rel="noopener" style="padding:6px 14px;background:#6b5e4f;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🖼️ Wikimedia</a>
           <a href="${links.inaturalist}" target="_blank" rel="noopener" style="padding:6px 14px;background:#3a7d44;color:#fff;border-radius:16px;text-decoration:none;font-size:0.8em;">🦎 iNaturalist</a>
         </div>
-        <p style="font-size:0.72em;color:var(--text-secondary);margin-top:8px;">植株照片来自 iNaturalist (CC授权)。药材饮片形态照片请点击上方「浸大数据库」链接查看，由香港浸会大学中医药学院提供，免费公开。</p>
+        <p style="font-size:0.72em;color:var(--text-secondary);margin-top:8px;">植株照片来自 iNaturalist (CC授权)。点击上方「百度百科」链接可查看该中药的药材/饮片形态照片。</p>
       </div>
     </div>`;
   document.getElementById('modalOverlay')._currentHerb = h;
@@ -833,13 +833,13 @@ function toggleModalImg(btn) {
   if (isPlant) {
     btn.classList.remove('plant-mode'); btn.classList.add('med-mode');
     btn.textContent = '🌱 药材';
-    // 药材图片采用植株图片+浸大数据库提示覆盖层
-    const hkbuUrl = `https://sys01.lib.hkbu.edu.hk/cmed/mmid/search?searchType=name&name=${encodeURIComponent(h.name)}`;
+    // 药材图片采用植株图片+百度百科提示覆盖层
+    const baikeUrl = `https://baike.baidu.com/item/${encodeURIComponent(h.name)}`;
     modalImg.innerHTML = renderModalImage(h, false) +
       '<div style=\"position:absolute;inset:0;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px;z-index:3;\">' +
-      '<div style=\"font-size:1.2em;margin-bottom:8px;\">药材形态照片</div>' +
-      '<a href=\"' + hkbuUrl + '\" target=\"_blank\" rel=\"noopener\" style=\"padding:8px 18px;background:#b4743a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.9em;\">点击查看：香港浸会大学<br>中药材图像数据库</a>' +
-      '<div style=\"font-size:0.7em;margin-top:8px;opacity:0.7;\">免费公开 · 含饮片/药材高清照片</div>' +
+      '<div style=\"font-size:1.2em;margin-bottom:8px;\">药材/饮片形态照片</div>' +
+      '<a href=\"' + baikeUrl + '\" target=\"_blank\" rel=\"noopener\" style=\"padding:8px 18px;background:#b4743a;color:#fff;border-radius:16px;text-decoration:none;font-size:0.9em;\">点击查看：百度百科<br>（含药材/饮片形态照片）</a>' +
+      '<div style=\"font-size:0.7em;margin-top:8px;opacity:0.7;\">百科页面展示该中药的药材外观形态</div>' +
       '</div>' +
       '<button class=\"img-toggle med-mode\" onclick=\"toggleModalImg(this)\" title=\"切换植株/药材\" style=\"z-index:4;\">🌱 药材</button>';
   } else {
