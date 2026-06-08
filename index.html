@@ -769,11 +769,14 @@ const STATUS_ORDER = { recommended: 0, available: 1, caution: 2, avoid: 3 };
 
 // ==================== FILTERING ====================
 function matchesFilter(h) {
-  // Search text
+  // Search text（含犬猫安全说明）
   if (state.search) {
     const q = state.search.toLowerCase();
-    const haystack = [h.name, h.latin, h.family, h.part, ...h.efficacy].join(' ').toLowerCase();
-    if (!haystack.includes(q)) return false;
+    // 支持"犬""猫""狗"+病症关键词组合搜索
+    let searchHaystack = [h.name, h.latin, h.family, h.part, ...h.efficacy, h.pet.dogNote, h.pet.catNote].join(' ');
+    // 匹配时：空格分隔的关键词需全部命中（AND逻辑）
+    const terms = q.split(/\s+/).filter(t => t.length > 0);
+    if (terms.some(t => !searchHaystack.toLowerCase().includes(t))) return false;
   }
   // Efficacy
   if (state.efficacy !== 'all' && !h.efficacy.includes(state.efficacy)) return false;
@@ -916,18 +919,6 @@ function openDetail(id) {
             <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${catStatus==='recommended'?'#3a7d44':catStatus==='available'?'#5b8c5a':catStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[catStatus]}</span>
             <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.catNote}</p>
           </div>
-        </div>
-      </div>
-      <div class="pet-section" style="margin-top:10px;">
-        <div class="pet-col dog">
-          <h4><span class="pet-icon">🐕</span> 犬 详细说明</h4>
-          <span class="pet-status ${dogStatus}">${STATUS_LABELS[dogStatus]}</span>
-          <p class="pet-note">${h.pet.dogNote}</p>
-        </div>
-        <div class="pet-col cat">
-          <h4><span class="pet-icon">🐈</span> 猫</h4>
-          <span class="pet-status ${catStatus}">${STATUS_LABELS[catStatus]}</span>
-          <p class="pet-note">${h.pet.catNote}</p>
         </div>
       </div>
       ${(()=>{
