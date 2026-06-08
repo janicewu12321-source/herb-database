@@ -768,15 +768,62 @@ const STATUS_LABELS = {
 const STATUS_ORDER = { recommended: 0, available: 1, caution: 2, avoid: 3 };
 
 // ==================== FILTERING ====================
+// 症状→功效语义映射（避免搜索"腹泻"时匹配到"可致腹泻"的药材）
+const SYMPTOM_MAP = {
+  '腹泻': ['收涩','肠胃调理','利水渗湿'],
+  '拉稀': ['收涩','肠胃调理'],
+  '软便': ['收涩','肠胃调理'],
+  '便秘': ['润下'],
+  '呕吐': ['理气','肠胃调理'],
+  '咳嗽': ['化痰止咳'],
+  '掉毛': ['皮毛管理','补阴'],
+  '尿血': ['泌尿管理','止血'],
+  '尿闭': ['泌尿管理','利水渗湿'],
+  '结石': ['泌尿管理','利水渗湿'],
+  '口臭': ['口腔护理','清热'],
+  '牙结石': ['口腔护理'],
+  '瘙痒': ['清热','祛风湿'],
+  '皮肤病': ['清热'],
+  '关节': ['关节养护','祛风湿'],
+  '跛行': ['关节养护'],
+  '免疫力': ['免疫提升','补气'],
+  '体弱': ['免疫提升','补气'],
+  '食欲不振': ['消食','肠胃调理'],
+  '肥胖': ['体重管理'],
+  '肝': ['肝脏管理'],
+  '心脏': ['心脏管理'],
+  '失眠': ['安神'],
+  '焦虑': ['安神'],
+  '上火': ['清热'],
+  '感冒': ['解表'],
+  '贫血': ['补血'],
+  '衰老': ['免疫提升','补气','补阴'],
+};
 function matchesFilter(h) {
-  // Search text（含犬猫安全说明）
+  // Search text with symptom→efficacy semantic mapping
   if (state.search) {
     const q = state.search.toLowerCase();
-    // 支持"犬""猫""狗"+病症关键词组合搜索
-    let searchHaystack = [h.name, h.latin, h.family, h.part, ...h.efficacy, h.pet.dogNote, h.pet.catNote].join(' ');
-    // 匹配时：空格分隔的关键词需全部命中（AND逻辑）
     const terms = q.split(/\s+/).filter(t => t.length > 0);
-    if (terms.some(t => !searchHaystack.toLowerCase().includes(t))) return false;
+    // 检查是否输入了症状关键词→匹配功效
+    let hasSymptomMatch = false;
+    for (const [symptom, efficacies] of Object.entries(SYMPTOM_MAP)) {
+      if (q.includes(symptom)) {
+        hasSymptomMatch = true;
+        if (efficacies.some(e => h.efficacy.includes(e))) {
+          // 该药材功效匹配症状→保留
+        } else {
+          // 功效不匹配，但仍允许文本一致时通过（如"车前子"含"止泻"）
+          const haystack = [h.name, h.latin, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
+          if (!terms.some(t => haystack.includes(t))) return false;
+        }
+        break;
+      }
+    }
+    // 无映射的症状关键词→普通文本匹配
+    if (!hasSymptomMatch) {
+      const haystack = [h.name, h.latin, h.family, h.part, ...h.efficacy, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
+      if (terms.some(t => !haystack.includes(t))) return false;
+    }
   }
   // Efficacy
   if (state.efficacy !== 'all' && !h.efficacy.includes(state.efficacy)) return false;
