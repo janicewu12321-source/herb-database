@@ -134,6 +134,13 @@ body {
 .badge-used { background: #3a7d44; }
 .badge-caution { background: #d4943a; }
 .badge-avoid { background: #c0392b; }
+/* Safety review badges */
+.safety-row { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; font-size: 0.7em; }
+.s-icon { display: inline-block; width: 18px; height: 18px; border-radius: 4px; font-size: 0.7em; font-weight: 700; text-align: center; line-height: 18px; color: #fff; }
+.s-rec { background: #3a7d44; }
+.s-ok { background: #5b8c5a; }
+.s-warn { background: #d4943a; }
+.s-no { background: #c0392b; }
 .herb-card .card-body { padding: 14px 16px; }
 .herb-card .card-name { font-size: 1.15em; font-weight: 700; margin-bottom: 2px; }
 .herb-card .card-latin { font-size: 0.75em; font-style: italic; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -227,7 +234,7 @@ body {
 <div class="container">
   <!-- Search -->
   <div class="search-bar">
-    <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索名称、拉丁名、科属、功效...">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍 兽医快速审查：输入药材名、病症或功效...（如：猫+腹泻、犬+皮肤、清热）">
   </div>
 
   <!-- Source category filter -->
@@ -841,6 +848,11 @@ function renderCards() {
   const activePet = state.pet;
   grid.innerHTML = herbs.map(h => {
     const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join('');
+    // 安全审查徽章：始终显示犬猫双标
+    const dogStatus = h.pet.dog; const catStatus = h.pet.cat;
+    const statusIcon = {recommended:'<span class="s-icon s-rec" title="犬已应用">D</span>',available:'<span class="s-icon s-ok" title="犬可用">D</span>',caution:'<span class="s-icon s-warn" title="犬慎用">D</span>',avoid:'<span class="s-icon s-no" title="犬避免">D</span>'};
+    const statusIconC = {recommended:'<span class="s-icon s-rec" title="猫已应用">C</span>',available:'<span class="s-icon s-ok" title="猫可用">C</span>',caution:'<span class="s-icon s-warn" title="猫慎用">C</span>',avoid:'<span class="s-icon s-no" title="猫避免">C</span>'};
+    const safetyBadges = `<span class="safety-row">🐕${statusIcon[dogStatus]||''} 🐈${statusIconC[catStatus]||''}</span>`;
     let badgeHtml = '';
     if (h.id >= 107) {
       badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">非药食同源</span>';
@@ -856,7 +868,7 @@ function renderCards() {
         <div class="card-img">${renderCardImage(h,false)}<button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button></div>
         ${badgeHtml}
         <div class="card-body">
-          <div class="card-name">${h.name}</div>
+          <div class="card-name">${h.name}${safetyBadges}</div>
           <div class="card-latin">${h.latin}</div>
           <div class="card-tags">
             ${efficacyTags}
@@ -891,9 +903,24 @@ function openDetail(id) {
         <div class="detail-item"><div class="d-label">功效分类</div><div class="d-value">${efficacyTags}</div></div>
         <div class="detail-item"><div class="d-label">收录目录</div><div class="d-value">${is76 ? '饲料原料目录 7.6 类' : '药食同源 第'+h.batch+'批 ('+[2002,2002,2019,2023,2024][h.batch]+'年)'}</div></div>
       </div>
-      <div class="pet-section">
+      <div style="margin-top:12px;padding:12px 14px;border-radius:10px;background:${dogStatus==='avoid'||catStatus==='avoid'?'#fdf0f0':dogStatus==='caution'||catStatus==='caution'?'#fef8f0':'#f0f7ed'};border:1px solid ${dogStatus==='avoid'||catStatus==='avoid'?'#e8c8c8':dogStatus==='caution'||catStatus==='caution'?'#e8d8c0':'#c8e0c8'};">
+        <h4 style="margin:0 0 8px;font-size:0.85em;">🔍 安全审查摘要</h4>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:120px;">
+            <span style="font-weight:700;">🐕 犬</span>
+            <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${dogStatus==='recommended'?'#3a7d44':dogStatus==='available'?'#5b8c5a':dogStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[dogStatus]}</span>
+            <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.dogNote}</p>
+          </div>
+          <div style="flex:1;min-width:120px;">
+            <span style="font-weight:700;">🐈 猫</span>
+            <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${catStatus==='recommended'?'#3a7d44':catStatus==='available'?'#5b8c5a':catStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[catStatus]}</span>
+            <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.catNote}</p>
+          </div>
+        </div>
+      </div>
+      <div class="pet-section" style="margin-top:10px;">
         <div class="pet-col dog">
-          <h4><span class="pet-icon">🐕</span> 犬</h4>
+          <h4><span class="pet-icon">🐕</span> 犬 详细说明</h4>
           <span class="pet-status ${dogStatus}">${STATUS_LABELS[dogStatus]}</span>
           <p class="pet-note">${h.pet.dogNote}</p>
         </div>
