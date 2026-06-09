@@ -88,6 +88,23 @@ body {
   display: flex; align-items: center; padding: 7px 0;
 }
 .filter-section { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Dropdown filter bar */
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; position: relative; z-index: 100; }
+.filter-dropdown { position: relative; }
+.dropdown-btn {
+  padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 20px;
+  background: var(--card-bg); cursor: pointer; font-size: 0.82em; font-weight: 600;
+  white-space: nowrap; transition: all 0.2s; color: var(--text);
+}
+.dropdown-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+.dropdown-btn.open { background: var(--accent); color: #fff; border-color: var(--accent); }
+.dropdown-panel {
+  display: none; position: absolute; top: 110%; left: 0; min-width: 200px; max-width: 360px;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12); padding: 10px 12px; z-index: 200;
+  display: none; flex-wrap: wrap; gap: 6px;
+}
+.dropdown-panel.show { display: flex; }
 /* Results */
 .result-info {
   font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
@@ -237,87 +254,91 @@ body {
     <input type="text" class="search-input" id="searchInput" placeholder="🔍 兽医快速审查：输入药材名、病症或功效...（如：猫+腹泻、犬+皮肤、清热）">
   </div>
 
-  <!-- Source category filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">📂 收录目录</span>
-    <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
-    <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
-    <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
-  </div>
-
-  <!-- Pet type filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">🐾 宠物类型</span>
-    <span class="filter-chip" data-filter="pet" data-val="all">全部</span>
-    <span class="filter-chip pet-dog" data-filter="pet" data-val="dog">🐕 犬</span>
-    <span class="filter-chip pet-cat" data-filter="pet" data-val="cat">🐈 猫</span>
-  </div>
-
-  <!-- Pet safety filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">⚠️ 安全性</span>
-    <span class="filter-chip" data-filter="safety" data-val="all">全部</span>
-    <span class="filter-chip safe-chip" data-filter="safety" data-val="recommended">✅ 已用于宠物食品</span>
-    <span class="filter-chip safe-chip" data-filter="safety" data-val="available">👍 可使用</span>
-    <span class="filter-chip caution-chip" data-filter="safety" data-val="caution">⚠️ 慎用</span>
-    <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
-  </div>
-
-  <!-- Pet food function filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">🛒 宠物食品功能</span>
-    <span class="filter-chip active" data-filter="foodFunc" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="肠胃调理">肠胃调理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="免疫提升">免疫提升</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="心脏管理">心脏管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="关节养护">关节养护</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="泌尿管理">泌尿管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="肝脏管理">肝脏管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="体重管理">体重管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="皮毛管理">皮毛管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
-  </div>
-
-  <!-- Efficacy filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">📋 功效分类</span>
-    <span class="filter-chip active" data-filter="efficacy" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补气">补气</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补血">补血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补阴">补阴</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补阳">补阳</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="理气">理气</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="消食">消食</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="利水渗湿">利水渗湿</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="清热">清热</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="解表">解表</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="化痰止咳">化痰止咳</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="安神">安神</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="收涩">收涩</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="活血">活血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="止血">止血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="温里">温里</span>
-  </div>
-
-  <!-- Family filter -->
-  <div class="filter-section" style="margin-bottom:20px;">
-    <span class="filter-label">🔬 科属</span>
-    <span class="filter-chip active" data-filter="family" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="family" data-val="豆科">豆科</span>
-    <span class="filter-chip" data-filter="family" data-val="蔷薇科">蔷薇科</span>
-    <span class="filter-chip" data-filter="family" data-val="唇形科">唇形科</span>
-    <span class="filter-chip" data-filter="family" data-val="姜科">姜科</span>
-    <span class="filter-chip" data-filter="family" data-val="菊科">菊科</span>
-    <span class="filter-chip" data-filter="family" data-val="芸香科">芸香科</span>
-    <span class="filter-chip" data-filter="family" data-val="百合科">百合科</span>
-    <span class="filter-chip" data-filter="family" data-val="禾本科">禾本科</span>
-    <span class="filter-chip" data-filter="family" data-val="伞形科">伞形科</span>
-    <span class="filter-chip" data-filter="family" data-val="睡莲科">睡莲科</span>
-    <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
-    <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
+  <!-- Dropdown filter bar -->
+  <div class="filter-bar">
+    <div class="filter-dropdown" id="dropdown-category">
+      <button class="dropdown-btn" onclick="toggleDropdown('category')">📂 收录目录 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
+        <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
+        <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-pet">
+      <button class="dropdown-btn" onclick="toggleDropdown('pet')">🐾 宠物类型 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip" data-filter="pet" data-val="all">全部</span>
+        <span class="filter-chip pet-dog" data-filter="pet" data-val="dog">🐕 犬</span>
+        <span class="filter-chip pet-cat" data-filter="pet" data-val="cat">🐈 猫</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-safety">
+      <button class="dropdown-btn" onclick="toggleDropdown('safety')">⚠️ 安全性 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip" data-filter="safety" data-val="all">全部</span>
+        <span class="filter-chip safe-chip" data-filter="safety" data-val="recommended">✅ 已用于宠物食品</span>
+        <span class="filter-chip safe-chip" data-filter="safety" data-val="available">👍 可使用</span>
+        <span class="filter-chip caution-chip" data-filter="safety" data-val="caution">⚠️ 慎用</span>
+        <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-foodFunc">
+      <button class="dropdown-btn" onclick="toggleDropdown('foodFunc')">🛒 宠物食品功能 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="foodFunc" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="肠胃调理">肠胃调理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="免疫提升">免疫提升</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="心脏管理">心脏管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="关节养护">关节养护</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="泌尿管理">泌尿管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="肝脏管理">肝脏管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="体重管理">体重管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="皮毛管理">皮毛管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-efficacy">
+      <button class="dropdown-btn" onclick="toggleDropdown('efficacy')">📋 功效分类 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="efficacy" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补气">补气</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补血">补血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补阴">补阴</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补阳">补阳</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="理气">理气</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="消食">消食</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="利水渗湿">利水渗湿</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="清热">清热</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="解表">解表</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="化痰止咳">化痰止咳</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="安神">安神</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="收涩">收涩</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="活血">活血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="止血">止血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="温里">温里</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-family">
+      <button class="dropdown-btn" onclick="toggleDropdown('family')">🔬 科属 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="family" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="family" data-val="豆科">豆科</span>
+        <span class="filter-chip" data-filter="family" data-val="蔷薇科">蔷薇科</span>
+        <span class="filter-chip" data-filter="family" data-val="唇形科">唇形科</span>
+        <span class="filter-chip" data-filter="family" data-val="姜科">姜科</span>
+        <span class="filter-chip" data-filter="family" data-val="菊科">菊科</span>
+        <span class="filter-chip" data-filter="family" data-val="芸香科">芸香科</span>
+        <span class="filter-chip" data-filter="family" data-val="百合科">百合科</span>
+        <span class="filter-chip" data-filter="family" data-val="禾本科">禾本科</span>
+        <span class="filter-chip" data-filter="family" data-val="伞形科">伞形科</span>
+        <span class="filter-chip" data-filter="family" data-val="睡莲科">睡莲科</span>
+        <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
+        <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
+      </div>
+    </div>
   </div>
 
   <!-- Results -->
@@ -1070,6 +1091,24 @@ function toggleModalImg(btn) {
     modalImg.innerHTML = renderModalImage(h, false) + '<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿 植株</button>';
   }
 }
+
+// ==================== DROPDOWN FILTER ====================
+function toggleDropdown(name) {
+  const panel = document.querySelector(`#dropdown-${name} .dropdown-panel`);
+  const btn = document.querySelector(`#dropdown-${name} .dropdown-btn`);
+  const isOpen = panel.classList.contains('show');
+  // Close all dropdowns
+  document.querySelectorAll('.dropdown-panel.show').forEach(p => p.classList.remove('show'));
+  document.querySelectorAll('.dropdown-btn.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { panel.classList.add('show'); btn.classList.add('open'); }
+}
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.filter-dropdown')) {
+    document.querySelectorAll('.dropdown-panel.show').forEach(p => p.classList.remove('show'));
+    document.querySelectorAll('.dropdown-btn.open').forEach(b => b.classList.remove('open'));
+  }
+});
 
 // ==================== EVENT HANDLERS ====================
 document.getElementById('searchInput').addEventListener('input', function(e) {
