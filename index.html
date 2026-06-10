@@ -293,7 +293,7 @@ body {
       <div class="dropdown-panel">
         <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
         <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
-        <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
+        <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（67种）</span>
       </div>
     </div>
     <div class="filter-dropdown" id="dropdown-pet">
@@ -537,10 +537,49 @@ const HERBS_76 = [
   {id:128,name:"菟丝子",latin:"Cuscuta chinensis Lam.",family:"旋花科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"available",cat:"available",dogNote:"补肾固精，老年宠物滋补可用",catNote:"适量安全"}},
   {id:129,name:"远志",latin:"Polygala tenuifolia Willd.",family:"远志科",part:"干燥根",efficacy:["安神"],imgGrad:["#5a4a7a","#3a2a4a"],pet:{dog:"available",cat:"caution",dogNote:"安神益智，老年犬认知配方可用",catNote:"含远志皂苷，猫需控制剂量"}},
   {id:130,name:"益母草",latin:"Leonurus japonicus Houtt.",family:"唇形科",part:"干燥地上部分",efficacy:["活血"],imgGrad:["#7a4a7a","#4a2a4a"],pet:{dog:"available",cat:"caution",dogNote:"活血调经，母犬产后可用",catNote:"活血作用，猫需谨慎使用"}},
-  {id:131,name:"夏枯草",latin:"Prunella vulgaris L.",family:"唇形科",part:"干燥果穗",efficacy:["清热"],imgGrad:["#5a4a7a","#3a2a4a"],pet:{dog:"available",cat:"available",dogNote:"清肝明目，宠物眼部配方可用",catNote:"适量安全"}},
   {id:132,name:"香附",latin:"Cyperus rotundus L.",family:"莎草科",part:"干燥根茎",efficacy:["理气"],imgGrad:["#8b7a5a","#5a4a3a"],pet:{dog:"available",cat:"available",dogNote:"疏肝理气，宠物消化配方可用",catNote:"适量安全"}},
-  {id:133,name:"辛夷",latin:"Magnolia biondii Pamp.",family:"木兰科",part:"干燥花蕾",efficacy:["解表"],imgGrad:["#c4a0b0","#8b7a7a"],pet:{dog:"available",cat:"caution",dogNote:"散风寒，宠物呼吸道配方可用",catNote:"含挥发油，猫慎用"}},
   {id:134,name:"积雪草",latin:"Centella asiatica (L.) Urb.",family:"伞形科",part:"干燥全草",efficacy:["清热"],imgGrad:["#4a7a4a","#2a4a2a"],pet:{dog:"available",cat:"available",dogNote:"清热利湿，宠物皮肤修复配方可用",catNote:"适量安全，皮肤修复"}},
+  {id:135,name:"白子菜",latin:"Gynura divaricata (L.) DC.",family:"菊科",part:"茎、叶",efficacy:["清热"],imgGrad:["#104685","#97b9c3"],pet:{dog:"available",cat:"available",dogNote:"白子菜，饲料目录7.6收录，宠物安全性待验证",catNote:"白子菜，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:136,name:"柏子仁",latin:"Platycladus orientalis (L.) Franco",family:"柏科",part:"干燥成熟种仁",efficacy:["安神"],imgGrad:["#965dbd","#f9c3a4"],pet:{dog:"available",cat:"available",dogNote:"柏子仁，饲料目录7.6收录，宠物安全性待验证",catNote:"柏子仁，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:137,name:"侧柏叶",latin:"Platycladus orientalis (L.) Franco",family:"柏科",part:"干燥枝梢和叶",efficacy:["止血"],imgGrad:["#12b3cb","#e6a360"],pet:{dog:"available",cat:"available",dogNote:"侧柏叶，饲料目录7.6收录，宠物安全性待验证",catNote:"侧柏叶，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:138,name:"赤芍",latin:"Paeonia lactiflora Pall.",family:"毛茛科",part:"干燥根",efficacy:["清热","活血"],imgGrad:["#571ecb","#25c6b7"],pet:{dog:"available",cat:"available",dogNote:"赤芍，饲料目录7.6收录，宠物安全性待验证",catNote:"赤芍，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:139,name:"大蓟",latin:"Cirsium japonicum Fisch. ex DC.",family:"菊科",part:"干燥地上部分",efficacy:["止血"],imgGrad:["#b2e5a0","#89ba35"],pet:{dog:"available",cat:"available",dogNote:"大蓟，饲料目录7.6收录，宠物安全性待验证",catNote:"大蓟，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:140,name:"地骨皮",latin:"Lycium chinense Mill.",family:"茄科",part:"干燥根皮",efficacy:["清热"],imgGrad:["#879722","#6209cc"],pet:{dog:"available",cat:"available",dogNote:"地骨皮，饲料目录7.6收录，宠物安全性待验证",catNote:"地骨皮，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:141,name:"杜仲",latin:"Eucommia ulmoides Oliv.",family:"杜仲科",part:"干燥树皮",efficacy:["补阳"],imgGrad:["#d14dea","#67bfe5"],pet:{dog:"available",cat:"available",dogNote:"杜仲，饲料目录7.6收录，宠物安全性待验证",catNote:"杜仲，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:142,name:"厚朴花",latin:"Magnolia officinalis Rehd. et Wils.",family:"木兰科",part:"干燥花蕾",efficacy:["理气"],imgGrad:["#1faa42","#3f886a"],pet:{dog:"available",cat:"available",dogNote:"厚朴花，饲料目录7.6收录，宠物安全性待验证",catNote:"厚朴花，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:143,name:"槐角",latin:"Sophora japonica L.",family:"豆科",part:"干燥成熟果实",efficacy:["止血"],imgGrad:["#2690a6","#78cf8d"],pet:{dog:"available",cat:"available",dogNote:"槐角，饲料目录7.6收录，宠物安全性待验证",catNote:"槐角，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:144,name:"金荞麦",latin:"Fagopyrum dibotrys (D. Don) Hara",family:"蓼科",part:"干燥根茎",efficacy:["清热"],imgGrad:["#705e49","#deb1bc"],pet:{dog:"available",cat:"available",dogNote:"金荞麦，饲料目录7.6收录，宠物安全性待验证",catNote:"金荞麦，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:145,name:"金樱子",latin:"Rosa laevigata Michx.",family:"蔷薇科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#307ae1","#22e3aa"],pet:{dog:"available",cat:"available",dogNote:"金樱子，饲料目录7.6收录，宠物安全性待验证",catNote:"金樱子，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:146,name:"韭菜子",latin:"Allium tuberosum Rottl. ex Spreng.",family:"百合科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#ecbeb0","#e156db"],pet:{dog:"available",cat:"available",dogNote:"葱属植物，犬大量可致溶血",catNote:"⚠️ 葱属对猫可致海因茨体贫血，应避免使用"}},
+  {id:147,name:"芦荟",latin:"Aloe barbadensis Miller",family:"百合科",part:"叶",efficacy:["润下"],imgGrad:["#ff9a8b","#5d1f44"],pet:{dog:"available",cat:"available",dogNote:"外用为主，内服需控制剂量",catNote:"猫慎内服"}},
+  {id:148,name:"玫瑰花",latin:"Rosa rugosa Thunb.",family:"蔷薇科",part:"干燥花蕾",efficacy:["理气"],imgGrad:["#ef4453","#0e006d"],pet:{dog:"available",cat:"available",dogNote:"玫瑰花，饲料目录7.6收录，宠物安全性待验证",catNote:"玫瑰花，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:149,name:"迷迭香",latin:"Rosmarinus officinalis",family:"唇形科",part:"干燥茎叶或花",efficacy:["解表"],imgGrad:["#562b3b","#bcd3e8"],pet:{dog:"available",cat:"available",dogNote:"适量安全，天然抗氧化剂",catNote:"含挥发油，猫代谢能力有限，少量慎用"}},
+  {id:150,name:"牛蒡子",latin:"Arctium lappa L.",family:"菊科",part:"干燥成熟果实",efficacy:["解表"],imgGrad:["#533667","#f7fce7"],pet:{dog:"available",cat:"available",dogNote:"牛蒡子，饲料目录7.6收录，宠物安全性待验证",catNote:"牛蒡子，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:151,name:"青皮",latin:"Citrus reticulata Blanco",family:"芸香科",part:"干燥幼果或未成熟果皮",efficacy:["理气"],imgGrad:["#715741","#56216c"],pet:{dog:"available",cat:"available",dogNote:"青皮，饲料目录7.6收录，宠物安全性待验证",catNote:"青皮，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:152,name:"人参",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥根及根茎",efficacy:["补气"],imgGrad:["#fa0b10","#ac2b55"],pet:{dog:"available",cat:"available",dogNote:"补气要药，犬可适量使用，已有红参猫粮产品（比乐）",catNote:"补气，已有产品实际使用（比乐红参猫粮），适量安全"}},
+  {id:153,name:"人参叶",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥叶",efficacy:["补气"],imgGrad:["#ed858b","#40bb3b"],pet:{dog:"available",cat:"available",dogNote:"人参叶，饲料目录7.6收录，宠物安全性待验证",catNote:"人参叶，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:154,name:"桑白皮",latin:"Morus alba L.",family:"桑科",part:"干燥根皮",efficacy:["化痰止咳"],imgGrad:["#9410cc","#df3382"],pet:{dog:"available",cat:"available",dogNote:"桑白皮，饲料目录7.6收录，宠物安全性待验证",catNote:"桑白皮，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:155,name:"桑枝",latin:"Morus alba L.",family:"桑科",part:"干燥嫩枝",efficacy:["祛风湿"],imgGrad:["#b32e1c","#b0c88b"],pet:{dog:"available",cat:"available",dogNote:"桑枝，饲料目录7.6收录，宠物安全性待验证",catNote:"桑枝，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:156,name:"升麻",latin:"Cimicifuga foetida L.",family:"毛茛科",part:"干燥根茎",efficacy:["解表"],imgGrad:["#fedd6b","#74e063"],pet:{dog:"available",cat:"available",dogNote:"升麻，饲料目录7.6收录，宠物安全性待验证",catNote:"升麻，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:157,name:"酸角",latin:"Tamarindus indica L.",family:"豆科",part:"果实",efficacy:["消食"],imgGrad:["#c28469","#4da74f"],pet:{dog:"available",cat:"available",dogNote:"酸角，饲料目录7.6收录，宠物安全性待验证",catNote:"酸角，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:158,name:"土茯苓",latin:"Smilax glabra Roxb.",family:"百合科",part:"干燥根茎",efficacy:["清热","利水渗湿"],imgGrad:["#267e25","#a945a3"],pet:{dog:"available",cat:"available",dogNote:"土茯苓，饲料目录7.6收录，宠物安全性待验证",catNote:"土茯苓，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:159,name:"五加皮",latin:"Acanthopanax gracilistylus W. W. Smith",family:"五加科",part:"干燥根皮",efficacy:["祛风湿"],imgGrad:["#311dca","#b95504"],pet:{dog:"available",cat:"available",dogNote:"五加皮，饲料目录7.6收录，宠物安全性待验证",catNote:"五加皮，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:160,name:"五指毛桃",latin:"Ficus hirta Vahl",family:"桑科",part:"根",efficacy:["补气"],imgGrad:["#cf3b7c","#833991"],pet:{dog:"available",cat:"available",dogNote:"五指毛桃，饲料目录7.6收录，宠物安全性待验证",catNote:"五指毛桃，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:161,name:"洋槐花",latin:"Robinia pseudoacacia L.",family:"豆科",part:"花",efficacy:["止血"],imgGrad:["#2b36a4","#7067be"],pet:{dog:"available",cat:"available",dogNote:"洋槐花，饲料目录7.6收录，宠物安全性待验证",catNote:"洋槐花，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:162,name:"野菊花",latin:"Dendranthema indicum L.",family:"菊科",part:"干燥头状花序",efficacy:["清热"],imgGrad:["#5c57eb","#b8add6"],pet:{dog:"available",cat:"available",dogNote:"清热解毒，适量安全",catNote:"适量安全"}},
+  {id:163,name:"银杏叶",latin:"Ginkgo biloba L.",family:"银杏科",part:"干燥叶",efficacy:["活血"],imgGrad:["#64f33a","#0c23d7"],pet:{dog:"available",cat:"available",dogNote:"银杏叶与白果不同，叶毒性较低。犬慎用",catNote:"猫慎用，白果对猫有明确毒性"}},
+  {id:164,name:"越橘",latin:"Vaccinium L.",family:"杜鹃花科",part:"果实或叶",efficacy:["利水渗湿"],imgGrad:["#f5334b","#48a97e"],pet:{dog:"available",cat:"available",dogNote:"越橘，饲料目录7.6收录，宠物安全性待验证",catNote:"越橘，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:165,name:"泽兰",latin:"Lycopus lucidus Turcz.",family:"唇形科",part:"干燥地上部分",efficacy:["活血"],imgGrad:["#d692a7","#2dafad"],pet:{dog:"available",cat:"available",dogNote:"泽兰，饲料目录7.6收录，宠物安全性待验证",catNote:"泽兰，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:166,name:"制何首乌",latin:"Polygonum multiflorum Thunb.",family:"蓼科",part:"炮制加工品",efficacy:["补血"],imgGrad:["#0d13cd","#259205"],pet:{dog:"available",cat:"available",dogNote:"炮制品毒性降低，犬需严格控制剂量",catNote:"猫肝代谢能力有限，慎用"}},
+  {id:167,name:"牛蒡根",latin:"Arctium lappa L.",family:"菊科",part:"根",efficacy:["清热"],imgGrad:["#3b5d2b","#f336e5"],pet:{dog:"available",cat:"available",dogNote:"牛蒡根，饲料目录7.6收录，宠物安全性待验证",catNote:"牛蒡根，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:168,name:"蒲黄",latin:"Typha angustifolia L.",family:"香蒲科",part:"干燥花粉",efficacy:["止血"],imgGrad:["#9d71d9","#c8e654"],pet:{dog:"available",cat:"available",dogNote:"蒲黄，饲料目录7.6收录，宠物安全性待验证",catNote:"蒲黄，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:169,name:"首乌藤",latin:"Polygonum multiflorum Thunb.",family:"蓼科",part:"干燥藤茎",efficacy:["安神"],imgGrad:["#9d23a2","#ace8a1"],pet:{dog:"available",cat:"available",dogNote:"首乌藤，饲料目录7.6收录，宠物安全性待验证",catNote:"首乌藤，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:170,name:"冬青科苦丁茶",latin:"Ilex kudingcha C. J. Tseng",family:"冬青科",part:"叶",efficacy:["清热"],imgGrad:["#470b79","#c86c60"],pet:{dog:"available",cat:"available",dogNote:"冬青科苦丁茶，饲料目录7.6收录，宠物安全性待验证",catNote:"冬青科苦丁茶，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:171,name:"玫瑰茄",latin:"Hibiscus sabdariffa",family:"锦葵科",part:"—",efficacy:["清热"],imgGrad:["#f79c94","#cb888b"],pet:{dog:"available",cat:"available",dogNote:"玫瑰茄，饲料目录7.6收录，宠物安全性待验证",catNote:"玫瑰茄，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:172,name:"粗壮女贞苦丁茶",latin:"Ligustrum robustum (Roxb.) Blum.",family:"木犀科",part:"幼芽、嫩叶",efficacy:["清热"],imgGrad:["#306d36","#7a6fcc"],pet:{dog:"available",cat:"available",dogNote:"粗壮女贞苦丁茶，饲料目录7.6收录，宠物安全性待验证",catNote:"粗壮女贞苦丁茶，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:173,name:"平卧菊三七",latin:"Gynura procumbens (Lour.) Merr.",family:"菊科",part:"嫩叶茎",efficacy:["清热"],imgGrad:["#e0edeb","#599e70"],pet:{dog:"available",cat:"available",dogNote:"平卧菊三七，饲料目录7.6收录，宠物安全性待验证",catNote:"平卧菊三七，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:174,name:"杨树花",latin:"Populus L.",family:"杨柳科",part:"花",efficacy:["清热"],imgGrad:["#5f72fa","#ddb8fe"],pet:{dog:"available",cat:"available",dogNote:"杨树花，饲料目录7.6收录，宠物安全性待验证",catNote:"杨树花，饲料目录7.6收录，宠物安全性待验证"}},
+  {id:175,name:"绿茶",latin:"Camellia sinensis",family:"山茶科",part:"叶",efficacy:["清热"],imgGrad:["#7e668e","#496ff4"],pet:{dog:"available",cat:"available",dogNote:"含咖啡因，需控制量",catNote:"猫对咖啡因敏感，避免使用"}},
 ];
 
 // ==================== 宠物食品产品数据 ====================
