@@ -388,12 +388,10 @@ body {
 const HERBS = [
   // === 第一批 果实种子类 ===
   {id:1,name:"八角茴香",latin:"Illicium verum Hook.f.",family:"木兰科",part:"成熟果实",efficacy:["温里"],batch:1,imgGrad:["#d4442a","#8b1a1a"],pet:{dog:"available",cat:"available",dogNote:"作为香辛料调味使用，适量安全",catNote:"仅作调味少量使用，挥发油对猫需控制剂量"}},
-  {id:2,name:"刀豆",latin:"Canavalia gladiata (Jacq.) DC.",family:"豆科",part:"成熟种子",efficacy:["温里"],batch:1,imgGrad:["#6b8e4a","#3d5a1a"],pet:{dog:"available",cat:"available",dogNote:"需充分加热处理，生的含凝集素",catNote:"需充分加热处理，生的含凝集素"}},
   {id:3,name:"小茴香",latin:"Foeniculum vulgare Mill.",family:"伞形科",part:"成熟果实",efficacy:["温里"],batch:1,imgGrad:["#8b9a3a","#5a6a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全，适量助消化",catNote:"含挥发油，猫代谢能力弱，仅可极少量调味"}},
   {id:4,name:"山楂",latin:"Crataegus pinnatifida Bge.",family:"蔷薇科",part:"成熟果实",efficacy:["消食","活血"],batch:1,imgGrad:["#c4443a","#8b1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健胃消食，已用于宠物口腔/消化产品",catNote:"健胃消食，大威宠口腔宝等产品已使用"}},
   {id:5,name:"乌梅",latin:"Prunus mume (Sieb.) Sieb. et Zucc.",family:"蔷薇科",part:"近成熟果实",efficacy:["收涩"],batch:1,imgGrad:["#3a3a3a","#1a1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"肠胃调理，麦富迪霸弗猫粮已使用",catNote:"麦富迪霸弗猫粮核心成分，调理肠胃"}},
   {id:6,name:"木瓜",latin:"Chaenomeles speciosa (Sweet) Nakai",family:"蔷薇科",part:"近成熟果实",efficacy:["祛风湿"],batch:1,imgGrad:["#d4943a","#b06a1a"],pet:{dog:"available",cat:"available",dogNote:"可作功能性添加，助消化",catNote:"适量使用安全"}},
-  {id:7,name:"火麻仁",latin:"Cannabis sativa L.",family:"桑科",part:"成熟种子",efficacy:["润下"],batch:1,imgGrad:["#8b9a5a","#5a6a3a"],pet:{dog:"caution",cat:"caution",dogNote:"含少量大麻素，需严格控制剂量",catNote:"含少量大麻素，猫对此更敏感，需极谨慎"}},
   {id:8,name:"龙眼肉",latin:"Dimocarpus longan Lour.",family:"无患子科",part:"假种皮",efficacy:["补血","安神"],batch:1,imgGrad:["#c4945a","#8b6a3a"],pet:{dog:"available",cat:"available",dogNote:"适量食用安全，滋补安神",catNote:"适量食用安全，糖分较高注意控制量"}},
   {id:9,name:"决明子",latin:"Cassia obtusifolia L. / C. tora L.",family:"豆科",part:"成熟种子",efficacy:["清热"],batch:1,imgGrad:["#5a6b3a","#3a4a1a"],pet:{dog:"caution",cat:"caution",dogNote:"含蒽醌类成分，大量可致腹泻，华生维克护眼产品使用（小剂量）",catNote:"含蒽醌类，猫肠道敏感，需严格控制剂量"}},
   {id:10,name:"肉豆蔻",latin:"Myristica fragrans Houtt.",family:"肉豆蔻科",part:"种仁",efficacy:["温里"],batch:1,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味少量使用安全",catNote:"含肉豆蔻醚等挥发油，猫代谢差，慎用"}},
@@ -420,7 +418,6 @@ const HERBS = [
   {id:31,name:"莱菔子",latin:"Raphanus sativus L.",family:"十字花科",part:"成熟种子",efficacy:["消食"],batch:1,imgGrad:["#8b8b5a","#5a5a3a"],pet:{dog:"available",cat:"available",dogNote:"消食除胀，适量安全",catNote:"适量安全，助消化"}},
   {id:32,name:"莲子",latin:"Nelumbo nucifera Gaertn.",family:"睡莲科",part:"成熟种子",efficacy:["收涩"],batch:1,imgGrad:["#c4b08b","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"健脾安神，适量安全",catNote:"适量安全"}},
   {id:33,name:"黄芥子",latin:"Brassica juncea (L.) Czern. et Coss.",family:"十字花科",part:"成熟种子",efficacy:["化痰止咳"],batch:1,imgGrad:["#c4b04a","#8b7a2a"],pet:{dog:"caution",cat:"caution",dogNote:"辛辣刺激，仅极少量调味",catNote:"辛辣刺激性强，猫胃肠道敏感，慎用"}},
-  {id:34,name:"紫苏籽",latin:"Perilla frutescens (L.) Britt.",family:"唇形科",part:"成熟果实",efficacy:["化痰止咳"],batch:1,imgGrad:["#5a4a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"富含Omega-3，可用于宠物食品",catNote:"不挥发油部分安全，籽比叶更安全"}},
   {id:35,name:"黑芝麻",latin:"Sesamum indicum L.",family:"脂麻科",part:"成熟种子",efficacy:["补阴"],batch:1,imgGrad:["#2a2a2a","#0a0a0a"],pet:{dog:"available",cat:"available",dogNote:"滋补肝肾，美毛",catNote:"美毛功效，适量安全"}},
   {id:36,name:"黑胡椒",latin:"Piper nigrum L.",family:"胡椒科",part:"近成熟果实",efficacy:["温里"],batch:1,imgGrad:["#3a3a3a","#1a1a1a"],pet:{dog:"caution",cat:"avoid",dogNote:"辛辣刺激，仅极少量调味",catNote:"含胡椒碱等刺激性成分，猫应避免"}},
   {id:37,name:"槐米",latin:"Sophora japonica L.",family:"豆科",part:"花蕾",efficacy:["止血"],batch:1,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"含芦丁，适量安全",catNote:"适量安全"}},
@@ -483,11 +480,7 @@ const HERBS = [
 
   // === 第二批 ===
   {id:88,name:"当归",latin:"Angelica sinensis (Oliv.) Diels",family:"伞形科",part:"根",efficacy:["补血","活血"],batch:2,imgGrad:["#8b5a3a","#5a3a1a"],pet:{dog:"recommended",cat:"available",dogNote:"补血活血，朗诺五珍系列已使用，香辛料用途常规",catNote:"适量安全，可作为香辛料少量使用"}},
-  {id:89,name:"山柰",latin:"Kaempferia galanga L.",family:"姜科",part:"根茎",efficacy:["温里"],batch:2,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味可，需控制"}},
-  {id:90,name:"西红花",latin:"Crocus sativus L.",family:"鸢尾科",part:"柱头",efficacy:["活血"],batch:2,imgGrad:["#c42a2a","#8b0a0a"],pet:{dog:"caution",cat:"caution",dogNote:"名贵药材，活血作用强，宠物食品极少用，仅微量调味可能",catNote:"活血作用强，猫不建议常规使用"}},
-  {id:91,name:"草果",latin:"Amomum tsao-ko Crevost et Lemaire",family:"姜科",part:"果实",efficacy:["温里"],batch:2,imgGrad:["#6b4a3a","#3a2a1a"],pet:{dog:"available",cat:"caution",dogNote:"调味使用安全",catNote:"姜科挥发油，少量调味"}},
   {id:92,name:"姜黄",latin:"Curcuma longa L.",family:"姜科",part:"根茎",efficacy:["活血"],batch:2,imgGrad:["#d4802a","#a0501a"],pet:{dog:"recommended",cat:"available",dogNote:"抗炎、关节养护，大威宠蛋壳膜软骨素已使用",catNote:"抗炎成分，猫关节配方可少量使用"}},
-  {id:93,name:"荜茇",latin:"Piper longum L.",family:"胡椒科",part:"果穗",efficacy:["温里"],batch:2,imgGrad:["#4a3a2a","#2a1a0a"],pet:{dog:"available",cat:"avoid",dogNote:"调味少量安全",catNote:"胡椒科刺激性成分，猫应避免"}},
 
   // === 第三批 ===
   {id:94,name:"党参",latin:"Codonopsis pilosula (Franch.) Nannf.",family:"桔梗科",part:"根",efficacy:["补气"],batch:3,imgGrad:["#c4a07a","#8b6a5a"],pet:{dog:"recommended",cat:"recommended",dogNote:"补中益气、改善虚弱，多品牌营养膏/处方粮使用",catNote:"补气健脾，WUI与你鲜食罐已使用"}},
@@ -504,7 +497,6 @@ const HERBS = [
   {id:103,name:"地黄",latin:"Rehmannia glutinosa Libosch.",family:"玄参科",part:"块根（鲜地黄/生地黄/熟地黄）",efficacy:["清热","补血"],batch:4,imgGrad:["#3a2a2a","#1a0a0a"],pet:{dog:"available",cat:"available",dogNote:"鲜/生地清热凉血，熟地补血，肝肾管理概念",catNote:"猫肝肾管理概念可用"}},
   {id:104,name:"麦冬",latin:"Ophiopogon japonicus (L.f) Ker-Gawl.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润肺，心脏配方概念",catNote:"养阴生津，心脏管理概念可用"}},
   {id:105,name:"天冬",latin:"Asparagus cochinchinensis (Lour.) Merr.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润燥，与麦冬类似",catNote:"滋阴，适量安全"}},
-  {id:106,name:"化橘红",latin:"Citrus grandis 'Tomentosa'",family:"芸香科",part:"未成熟/近成熟外层果皮",efficacy:["理气","化痰止咳"],batch:4,imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气化痰，呼吸道健康概念",catNote:"柑橘属果皮含挥发油，猫慎用"}}
 ];
 
 // ==================== 非药食同源植物（饲料目录7.6独有，28种）====================
