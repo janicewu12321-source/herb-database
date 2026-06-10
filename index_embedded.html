@@ -144,6 +144,24 @@ body {
 .img-toggle.plant-mode { background: rgba(90,140,90,0.75); }
 .img-toggle.med-mode { background: rgba(180,120,60,0.75); }
 .modal-img .img-toggle { bottom: 12px; right: 12px; font-size: 0.75em; padding: 5px 14px; }
+/* Print button */
+.print-btn {
+  position: absolute; top: 12px; right: 52px; background: none; border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; cursor: pointer; font-size: 0.8em;
+  color: var(--text-secondary); z-index: 10; transition: all 0.2s;
+}
+.print-btn:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+/* Print styles */
+@media print {
+  body > *:not(.modal-overlay) { display: none !important; }
+  .modal-overlay { position: static !important; background: #fff !important; display: block !important; padding: 0 !important; }
+  .modal { max-width: 100% !important; box-shadow: none !important; border: none !important; max-height: none !important; overflow: visible !important; }
+  .modal-close, .print-btn, .img-toggle, .modal-img button { display: none !important; }
+  .modal-img { height: 180px !important; }
+  .modal-body { padding: 16px 0 !important; }
+  .pet-section, .detail-grid { break-inside: avoid; }
+  @page { margin: 15mm; }
+}
 .herb-card .card-badge {
   position: absolute; top: 8px; right: 8px; padding: 3px 10px;
   border-radius: 12px; font-size: 0.7em; font-weight: 700; color: #fff;
@@ -230,13 +248,27 @@ body {
 .empty-state .icon { font-size: 3em; margin-bottom: 12px; }
 /* Responsive */
 @media (max-width: 768px) {
-  .header h1 { font-size: 1.4em; }
-  .herb-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .header h1 { font-size: 1.3em; }
+  .header { padding: 20px 16px; }
+  .herb-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .herb-card .card-img { height: 130px; }
+  .herb-card .card-name { font-size: 1em; }
+  .herb-card .card-latin { font-size: 0.65em; }
   .detail-grid { grid-template-columns: 1fr; }
   .pet-section { grid-template-columns: 1fr; }
-  .stats-bar { gap: 8px; }
-  .stat-card { min-width: 70px; padding: 10px 14px; }
-  .stat-card .num { font-size: 1.2em; }
+  .stats-bar { gap: 6px; flex-wrap: nowrap; overflow-x: auto; }
+  .stat-card { min-width: 60px; padding: 8px 10px; }
+  .stat-card .num { font-size: 1.1em; }
+  .stat-card .label { font-size: 0.65em; }
+  .search-input { font-size: 0.9em; padding: 10px 14px; }
+  .filter-bar { gap: 4px; }
+  .dropdown-btn { font-size: 0.72em; padding: 6px 10px; }
+  .dropdown-panel { max-width: 280px; }
+  .modal { max-width: 95vw; margin: 10px; }
+  .modal-body { padding: 16px 18px; }
+  .safety-row { font-size: 0.6em; }
+  .s-icon { width: 14px; height: 14px; font-size: 0.6em; line-height: 14px; }
+  .tag { font-size: 0.6em; padding: 1px 6px; }
 }
 </style>
 </head>
@@ -1044,6 +1076,7 @@ function openDetail(id) {
 
   document.getElementById('modalBox').innerHTML = `
     <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="print-btn" onclick="printSafetyReport()" title="打印安全审查报告">🖨️ 打印报告</button>
     <div class="modal-img">${renderModalImage(h,false)}<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿</button></div>
     <div class="modal-body">
       <h2>${h.name}${is76 ? ' <span style="font-size:0.6em;background:#7a5a9b;color:#fff;padding:2px 8px;border-radius:8px;vertical-align:middle;">非药食同源</span>' : ''}</h2>
@@ -1133,6 +1166,9 @@ function openDetail(id) {
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
+}
+function printSafetyReport() {
+  window.print();
 }
 
 // 图片切换：植株 ↔ 药材
