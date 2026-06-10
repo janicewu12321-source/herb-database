@@ -16,7 +16,7 @@ if sys.platform == 'win32':
 
 BASE_DIR = Path(__file__).parent
 IMAGES_DIR = BASE_DIR / 'images'
-HTML_FILE = BASE_DIR / 'index.html'
+HTML_FILE = BASE_DIR / 'index_standard.html'  # 干净源码（无嵌入数据）
 OUTPUT_FILE = BASE_DIR / 'index_embedded.html'
 
 # 读取植株图片并转为 base64（药材图片暂不内嵌：Wikimedia来源质量不可靠）

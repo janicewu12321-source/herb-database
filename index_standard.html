@@ -88,6 +88,23 @@ body {
   display: flex; align-items: center; padding: 7px 0;
 }
 .filter-section { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Dropdown filter bar */
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; position: relative; z-index: 100; }
+.filter-dropdown { position: relative; }
+.dropdown-btn {
+  padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 20px;
+  background: var(--card-bg); cursor: pointer; font-size: 0.82em; font-weight: 600;
+  white-space: nowrap; transition: all 0.2s; color: var(--text);
+}
+.dropdown-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+.dropdown-btn.open { background: var(--accent); color: #fff; border-color: var(--accent); }
+.dropdown-panel {
+  display: none; position: absolute; top: 110%; left: 0; min-width: 200px; max-width: 360px;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12); padding: 10px 12px; z-index: 200;
+  display: none; flex-wrap: wrap; gap: 6px;
+}
+.dropdown-panel.show { display: flex; }
 /* Results */
 .result-info {
   font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
@@ -134,6 +151,13 @@ body {
 .badge-used { background: #3a7d44; }
 .badge-caution { background: #d4943a; }
 .badge-avoid { background: #c0392b; }
+/* Safety review badges */
+.safety-row { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; font-size: 0.7em; }
+.s-icon { display: inline-block; width: 18px; height: 18px; border-radius: 4px; font-size: 0.7em; font-weight: 700; text-align: center; line-height: 18px; color: #fff; }
+.s-rec { background: #3a7d44; }
+.s-ok { background: #5b8c5a; }
+.s-warn { background: #d4943a; }
+.s-no { background: #c0392b; }
 .herb-card .card-body { padding: 14px 16px; }
 .herb-card .card-name { font-size: 1.15em; font-weight: 700; margin-bottom: 2px; }
 .herb-card .card-latin { font-size: 0.75em; font-style: italic; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -227,90 +251,94 @@ body {
 <div class="container">
   <!-- Search -->
   <div class="search-bar">
-    <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索名称、拉丁名、科属、功效...">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍 兽医快速审查：输入药材名、病症或功效...（如：猫+腹泻、犬+皮肤、清热）">
   </div>
 
-  <!-- Source category filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">📂 收录目录</span>
-    <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
-    <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
-    <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
-  </div>
-
-  <!-- Pet type filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">🐾 宠物类型</span>
-    <span class="filter-chip" data-filter="pet" data-val="all">全部</span>
-    <span class="filter-chip pet-dog" data-filter="pet" data-val="dog">🐕 犬</span>
-    <span class="filter-chip pet-cat" data-filter="pet" data-val="cat">🐈 猫</span>
-  </div>
-
-  <!-- Pet safety filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">⚠️ 安全性</span>
-    <span class="filter-chip" data-filter="safety" data-val="all">全部</span>
-    <span class="filter-chip safe-chip" data-filter="safety" data-val="recommended">✅ 已用于宠物食品</span>
-    <span class="filter-chip safe-chip" data-filter="safety" data-val="available">👍 可使用</span>
-    <span class="filter-chip caution-chip" data-filter="safety" data-val="caution">⚠️ 慎用</span>
-    <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
-  </div>
-
-  <!-- Pet food function filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">🛒 宠物食品功能</span>
-    <span class="filter-chip active" data-filter="foodFunc" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="肠胃调理">肠胃调理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="免疫提升">免疫提升</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="心脏管理">心脏管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="关节养护">关节养护</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="泌尿管理">泌尿管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="肝脏管理">肝脏管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="体重管理">体重管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="皮毛管理">皮毛管理</span>
-    <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
-  </div>
-
-  <!-- Efficacy filter -->
-  <div class="filter-section" style="margin-bottom:8px;">
-    <span class="filter-label">📋 功效分类</span>
-    <span class="filter-chip active" data-filter="efficacy" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补气">补气</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补血">补血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补阴">补阴</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="补阳">补阳</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="理气">理气</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="消食">消食</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="利水渗湿">利水渗湿</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="清热">清热</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="解表">解表</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="化痰止咳">化痰止咳</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="安神">安神</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="收涩">收涩</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="活血">活血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="止血">止血</span>
-    <span class="filter-chip" data-filter="efficacy" data-val="温里">温里</span>
-  </div>
-
-  <!-- Family filter -->
-  <div class="filter-section" style="margin-bottom:20px;">
-    <span class="filter-label">🔬 科属</span>
-    <span class="filter-chip active" data-filter="family" data-val="all">全部</span>
-    <span class="filter-chip" data-filter="family" data-val="豆科">豆科</span>
-    <span class="filter-chip" data-filter="family" data-val="蔷薇科">蔷薇科</span>
-    <span class="filter-chip" data-filter="family" data-val="唇形科">唇形科</span>
-    <span class="filter-chip" data-filter="family" data-val="姜科">姜科</span>
-    <span class="filter-chip" data-filter="family" data-val="菊科">菊科</span>
-    <span class="filter-chip" data-filter="family" data-val="芸香科">芸香科</span>
-    <span class="filter-chip" data-filter="family" data-val="百合科">百合科</span>
-    <span class="filter-chip" data-filter="family" data-val="禾本科">禾本科</span>
-    <span class="filter-chip" data-filter="family" data-val="伞形科">伞形科</span>
-    <span class="filter-chip" data-filter="family" data-val="睡莲科">睡莲科</span>
-    <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
-    <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
+  <!-- Dropdown filter bar -->
+  <div class="filter-bar">
+    <div class="filter-dropdown" id="dropdown-category">
+      <button class="dropdown-btn" onclick="toggleDropdown('category')">📂 收录目录 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="category" data-val="all">全部（134种）</span>
+        <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（106种）</span>
+        <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（28种）</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-pet">
+      <button class="dropdown-btn" onclick="toggleDropdown('pet')">🐾 宠物类型 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip" data-filter="pet" data-val="all">全部</span>
+        <span class="filter-chip pet-dog" data-filter="pet" data-val="dog">🐕 犬</span>
+        <span class="filter-chip pet-cat" data-filter="pet" data-val="cat">🐈 猫</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-safety">
+      <button class="dropdown-btn" onclick="toggleDropdown('safety')">⚠️ 安全性 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip" data-filter="safety" data-val="all">全部</span>
+        <span class="filter-chip safe-chip" data-filter="safety" data-val="recommended">✅ 已用于宠物食品</span>
+        <span class="filter-chip safe-chip" data-filter="safety" data-val="available">👍 可使用</span>
+        <span class="filter-chip caution-chip" data-filter="safety" data-val="caution">⚠️ 慎用</span>
+        <span class="filter-chip avoid-chip" data-filter="safety" data-val="avoid">🚫 避免使用</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-foodFunc">
+      <button class="dropdown-btn" onclick="toggleDropdown('foodFunc')">🛒 宠物食品功能 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="foodFunc" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="肠胃调理">肠胃调理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="免疫提升">免疫提升</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="心脏管理">心脏管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="关节养护">关节养护</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="口腔护理">口腔护理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="护眼明目">护眼明目</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="清热降火">清热降火</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="泌尿管理">泌尿管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="肝脏管理">肝脏管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="体重管理">体重管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="皮毛管理">皮毛管理</span>
+        <span class="filter-chip" data-filter="foodFunc" data-val="综合调理">综合调理</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-efficacy">
+      <button class="dropdown-btn" onclick="toggleDropdown('efficacy')">📋 功效分类 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="efficacy" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补气">补气</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补血">补血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补阴">补阴</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="补阳">补阳</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="理气">理气</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="消食">消食</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="利水渗湿">利水渗湿</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="清热">清热</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="解表">解表</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="化痰止咳">化痰止咳</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="安神">安神</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="收涩">收涩</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="活血">活血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="止血">止血</span>
+        <span class="filter-chip" data-filter="efficacy" data-val="温里">温里</span>
+      </div>
+    </div>
+    <div class="filter-dropdown" id="dropdown-family">
+      <button class="dropdown-btn" onclick="toggleDropdown('family')">🔬 科属 ▾</button>
+      <div class="dropdown-panel">
+        <span class="filter-chip active" data-filter="family" data-val="all">全部</span>
+        <span class="filter-chip" data-filter="family" data-val="豆科">豆科</span>
+        <span class="filter-chip" data-filter="family" data-val="蔷薇科">蔷薇科</span>
+        <span class="filter-chip" data-filter="family" data-val="唇形科">唇形科</span>
+        <span class="filter-chip" data-filter="family" data-val="姜科">姜科</span>
+        <span class="filter-chip" data-filter="family" data-val="菊科">菊科</span>
+        <span class="filter-chip" data-filter="family" data-val="芸香科">芸香科</span>
+        <span class="filter-chip" data-filter="family" data-val="百合科">百合科</span>
+        <span class="filter-chip" data-filter="family" data-val="禾本科">禾本科</span>
+        <span class="filter-chip" data-filter="family" data-val="伞形科">伞形科</span>
+        <span class="filter-chip" data-filter="family" data-val="睡莲科">睡莲科</span>
+        <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
+        <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
+      </div>
+    </div>
   </div>
 
   <!-- Results -->
@@ -530,8 +558,85 @@ const PET_FOODS = [
   {id:38,brand:"麦富迪",product:"霸弗闪亮滋养美毛猫粮（减少掉毛）",herbs:["黄芪","当归","黄精"],type:"主粮",func:"皮毛管理",pet:"猫",articleURL:"http://www.xtrb.cn/syunf/2026-05/27/content_1133997.htm",articleLabel:"掉毛季终结者：麦富迪霸弗美毛猫粮（新邢台/中国生活）"},
   {id:39,brand:"麦富迪",product:"霸弗美毛猫粮（三维皮肤生态养护）",herbs:["黄芪","当归","黄精"],type:"主粮",func:"皮毛管理",pet:"猫",articleURL:"https://m.life.china.com/2026-05/27/content_582655.html",articleLabel:"告别追猫喂鱼油：麦富迪霸弗美毛猫粮（中国生活）"},
 ];
-// 功能分类列表（用于筛选芯片生成）
+// 功能分类列表
 const FOOD_FUNCS = ["肠胃调理","免疫提升","心脏管理","关节养护","口腔护理","护眼明目","清热降火","泌尿管理","肝脏管理","体重管理","皮毛管理","综合调理"];
+
+// ==================== 药膳方剂数据（来源：药膳分类整理方.PDF） ====================
+const RECIPES = [
+  // --- 肠胃调理类 ---
+  {id:101,name:"四神粥",herbs:["山药","茯苓","芡实","薏苡仁"],func:"肠胃调理",pet:"犬猫通用",src:"《寿亲养老新书》",note:"健脾祛湿、固肾止泻，4味全在数据库recommended。已有麦富迪类似配方验证"},
+  {id:102,name:"山药莲子芡实粥",herbs:["山药","莲子","芡实"],func:"肠胃调理",pet:"犬猫通用",src:"药膳分类整理方",note:"健脾固肾、易消化，猫肠胃调理鲜食参考配方"},
+  {id:103,name:"山药茯苓瘦肉汤",herbs:["山药","茯苓"],func:"肠胃调理",pet:"犬猫通用",src:"药膳分类整理方",note:"健脾养胃、祛湿和胃，比瑞吉/麦富迪均有应用"},
+  {id:104,name:"芡实山药粥",herbs:["芡实","山药"],func:"肠胃调理",pet:"犬猫通用",src:"药膳分类整理方",note:"健脾止泻，宠物止泻配方参考"},
+  {id:105,name:"陈皮砂仁汤",herbs:["橘皮","砂仁"],func:"肠胃调理",pet:"犬",src:"药膳分类整理方",note:"理气健脾、改善胃胀。猫慎用（陈皮含挥发油）"},
+  {id:106,name:"陈皮麦芽瘦肉汤",herbs:["橘皮","麦芽"],func:"肠胃调理",pet:"犬",src:"药膳分类整理方",note:"健脾消食、理气和胃。猫慎用陈皮"},
+  {id:107,name:"健脾消食粥",herbs:["山药","白扁豆","莲子","鸡内金"],func:"肠胃调理",pet:"犬猫通用",src:"《幼幼集成》化裁",note:"健脾养胃、消食化积。儿童→幼犬猫肠胃配方参考"},
+  {id:108,name:"山楂麦芽茶",herbs:["山楂","麦芽"],func:"肠胃调理",pet:"犬猫通用",src:"药膳分类整理方",note:"消食开胃。大威宠口腔宝已使用山楂"},
+  {id:109,name:"山药山楂粥",herbs:["山药","山楂"],func:"肠胃调理",pet:"犬猫通用",src:"药膳分类整理方",note:"健脾消食，宠物消化配方参考"},
+  // --- 免疫提升类 ---
+  {id:110,name:"参芪山药粥",herbs:["黄芪","山药"],func:"免疫提升",pet:"犬猫通用",src:"《太平惠民和剂局方》化裁",note:"补气健脾，黄芪已有幼猫RCT验证（0.6%添加量）"},
+  {id:111,name:"黄芪薏米粥",herbs:["黄芪","薏苡仁"],func:"免疫提升",pet:"犬猫通用",src:"《寿亲养老新书》化裁",note:"补气祛湿、健脾抗疲劳"},
+  {id:112,name:"灵芝瘦肉汤",herbs:["灵芝"],func:"免疫提升",pet:"犬猫通用",src:"药膳分类整理方",note:"养心安神、调节免疫。卫仕/朗诺已有产品"},
+  {id:113,name:"红枣枸杞茶",herbs:["大枣","枸杞子"],func:"免疫提升",pet:"犬猫通用",src:"药膳分类整理方",note:"补气养血、增强抵抗力，去糖版可用于宠物"},
+  // --- 安神类 ---
+  {id:114,name:"安神益智羹",herbs:["酸枣仁","莲子","百合","龙眼肉"],func:"安神",pet:"犬",src:"《济生方》化裁",note:"⚠️ 犬可用。猫需去掉百合（百合科肾毒性风险）"},
+  {id:115,name:"酸枣仁茯苓汤",herbs:["酸枣仁","茯苓"],func:"安神",pet:"犬猫通用",src:"药膳分类整理方",note:"养心安神、助眠。老年犬猫安神配方参考"},
+  {id:116,name:"桂圆红枣小米粥",herbs:["龙眼肉","大枣"],func:"安神",pet:"犬猫通用",src:"药膳分类整理方",note:"养血安神，去糖版可用于宠物"},
+  // --- 关节养护类 ---
+  {id:117,name:"杜仲山药猪骨汤",herbs:["杜仲叶","山药"],func:"关节养护",pet:"犬猫通用",src:"药膳分类整理方",note:"补肝肾、强筋骨。WUI/源味九分已有产品"},
+  {id:118,name:"核桃芝麻粥",herbs:["黑芝麻"],func:"关节养护",pet:"犬猫通用",src:"药膳分类整理方",note:"补肝肾、润关节。黑芝麻美毛+关节双效"},
+  // --- 皮毛管理类 ---
+  {id:119,name:"黑芝麻核桃补髓糊",herbs:["黑芝麻","枸杞子","当归"],func:"皮毛管理",pet:"犬猫通用",src:"药膳分类整理方",note:"补肝肾、益精血。美毛固毛配方参考"},
+  // --- 清热降火类 ---
+  {id:120,name:"山楂荷叶茶",herbs:["山楂","荷叶"],func:"清热降火",pet:"犬猫通用",src:"药膳分类整理方",note:"降脂化浊，去糖版宠物可用"},
+  {id:121,name:"决明子菊花茶",herbs:["决明子","菊花"],func:"清热降火",pet:"犬",src:"药膳分类整理方",note:"⚠️ 犬可用。猫慎用（决明子含蒽醌类）"},
+  {id:122,name:"蒲公英薏米汤",herbs:["蒲公英","薏苡仁"],func:"清热降火",pet:"犬猫通用",src:"《本草纲目》",note:"清热利湿，宠物皮肤/代谢配方参考"},
+  // --- 泌尿管理类 ---
+  {id:123,name:"玉米须茯苓汤",herbs:["茯苓"],func:"泌尿管理",pet:"犬猫通用",src:"药膳分类整理方",note:"利水降糖、祛湿消肿，猫泌尿配方参考"},
+  {id:124,name:"茯苓赤小豆汤",herbs:["茯苓","赤小豆"],func:"泌尿管理",pet:"犬猫通用",src:"药膳分类整理方",note:"利水祛湿、改善水肿"},
+  // --- 补气补血类 ---
+  {id:125,name:"参枣归牛肉汤",herbs:["党参","当归","大枣"],func:"免疫提升",pet:"犬",src:"药膳分类整理方",note:"⚠️ 犬可用。猫慎用当归（活血）"},
+  {id:126,name:"山药黄精粥",herbs:["山药","黄精"],func:"免疫提升",pet:"犬猫通用",src:"《饮膳正要》",note:"补中益气、健脾养阴，老年犬滋补"},
+  {id:127,name:"牛肉黄精汤",herbs:["黄精","橘皮"],func:"免疫提升",pet:"犬",src:"药膳分类整理方",note:"健脾益肾、滋阴润燥。猫慎用陈皮"},
+  // --- 代谢调理类 ---
+  {id:128,name:"葛根玉竹饮",herbs:["葛根","玉竹"],func:"体重管理",pet:"犬猫通用",src:"《太平惠民和剂局方》",note:"滋阴生津，辅助调节血糖"},
+  {id:129,name:"桑叶葛根茶",herbs:["桑叶","葛根"],func:"体重管理",pet:"犬猫通用",src:"《本草纲目》",note:"清热润燥，辅助调节血糖血压"},
+  {id:130,name:"麦冬玉竹汤",herbs:["麦冬","玉竹","百合"],func:"补阴",pet:"犬",src:"《温病条辨》化裁",note:"⚠️ 犬可用。猫需去掉百合"},
+  
+  // --- 益气健脾类（全书682方，抽样统计中140/1287）---
+  {id:131,name:"补虚正气粥",herbs:["黄芪","甘草"],func:"肠胃调理",pet:"犬猫通用",src:"《圣济总录》",note:"黄芪+人参补气健脾，适合体虚犬猫。原方含人参→宠物可用党参替代"},
+  {id:132,name:"猪肚山药粥",herbs:["山药"],func:"肠胃调理",pet:"犬猫通用",src:"《中医药膳学》",note:"山药健脾止泻，粳米易消化，犬猫腹泻恢复期参考配方"},
+  {id:133,name:"鸽肉参芪汤",herbs:["党参","黄芪","山药"],func:"肠胃调理",pet:"犬猫通用",src:"《补品补药与补益良方》",note:"党参+黄芪+山药三味共补，犬猫体虚调理经典参考"},
+  {id:134,name:"灵芝炖鸡",herbs:["灵芝"],func:"免疫提升",pet:"犬猫通用",src:"《家庭药膳》",note:"灵芝温补脾胃，犬猫免疫低下时可参考。已有卫仕/朗诺产品验证"},
+  {id:135,name:"陈皮鸡",herbs:["橘皮"],func:"肠胃调理",pet:"犬",src:"《家庭药膳手册》",note:"陈皮理气健脾。⚠️ 仅犬用，猫慎（陈皮含柠檬烯挥发油）"},
+  {id:136,name:"补脾粥",herbs:["山药","赤小豆","芡实","薏苡仁","莲子","大枣"],func:"肠胃调理",pet:"犬猫通用",src:"《膳食保健》",note:"6味药食同源食材共煮，犬猫肠胃综合调理参考"},
+  {id:137,name:"甜酒酿山药羹",herbs:["山药"],func:"肠胃调理",pet:"犬猫通用",src:"《滋补保健药膳食谱》",note:"山药健脾补肺，去酒酿/白糖版可用于宠物"},
+  // --- 开胃消食类（全书约376方，抽样65/1287）---
+  {id:138,name:"猪肚砂枳汤",herbs:["砂仁"],func:"肠胃调理",pet:"犬",src:"《补品补药与补益良方》",note:"砂仁健胃消食。猫慎用（姜科挥发油）"},
+  {id:139,name:"萝卜炖羊肉",herbs:["生姜","花椒"],func:"肠胃调理",pet:"犬",src:"《中国药膳大辞典》",note:"消食化积。羊肉需去脂减量，猫慎花椒"},
+  // --- 安神益智类（全书约332方，抽样58/1287）---
+  {id:140,name:"灵芝粉蒸肉饼",herbs:["灵芝"],func:"安神",pet:"犬猫通用",src:"《家庭药膳手册》",note:"灵芝益气安神，老年犬猫认知功能参考"},
+  {id:141,name:"灵芝炖乳鸽",herbs:["灵芝"],func:"安神",pet:"犬猫通用",src:"《中医药膳大全》",note:"灵芝补中益气安神，宠物免疫+安神双效"},
+  // --- 利水退肿类（全书约273方，抽样48/1287）---
+  {id:142,name:"赤小豆汤",herbs:["赤小豆"],func:"泌尿管理",pet:"犬猫通用",src:"《中国药膳大辞典》",note:"利水消肿，犬猫轻度水肿参考"},
+  // --- 祛痰止咳类（全书374方，抽样70/1287）---
+  {id:143,name:"银耳白肺",herbs:["百合"],func:"化痰止咳",pet:"犬",src:"《食用菌饮食疗法》",note:"⚠️ 仅犬用！百合对猫有肾毒性风险，猫禁用"},
+  // --- 补血养营类（全书约295方，抽样51/1287）---
+  {id:144,name:"参归墨鱼汤",herbs:["党参","当归"],func:"免疫提升",pet:"犬",src:"《中国药膳大辞典》",note:"补气养血，产后/术后犬体虚参考。猫慎当归"},
+  // --- 气血双补类（全书约545方，抽样95/1287）---
+  {id:145,name:"补中益气糕",herbs:["党参","黄芪","大枣","当归","甘草","橘皮"],func:"免疫提升",pet:"犬",src:"《养生食疗菜谱》",note:"八珍汤化裁，6味入数据库。猫慎陈皮/当归"},
+  // --- 滋阴生津类（全书约626方，抽样109/1287）---
+  {id:146,name:"灵芝薄荷饮",herbs:["灵芝","薄荷"],func:"安神",pet:"犬",src:"《中医药膳大全》",note:"⚠️ 仅犬用！薄荷含萜类挥发油，猫缺乏代谢酶"},
+  // --- 润肠通便类（全书约125方，抽样22/1287）---
+  {id:147,name:"火麻仁蜜饮",herbs:["火麻仁"],func:"润下",pet:"犬",src:"《本草纲目》",note:"润肠通便。⚠️ 犬需严格控制剂量，猫更敏感慎用"},
+  // --- 清热解毒类（全书1283方，体量最大类别）---
+  {id:148,name:"银花莲子茶",herbs:["金银花","莲子"],func:"清热降火",pet:"犬猫通用",src:"《中国药膳大辞典》验方",note:"金银花清热解毒+莲子健脾，犬猫轻度上火可参考"},
+  // --- 祛风除湿类（全书652方，宠物关节炎方向）---
+  {id:149,name:"杜仲炖猪腰",herbs:["杜仲叶"],func:"关节养护",pet:"犬",src:"《中国药膳大辞典》",note:"杜仲补肝肾强筋骨，老年犬关节养护参考"},
+  // --- 不可用于宠物的方剂（标注风险） ---
+  {id:199,name:"五仁蜜糊",herbs:["火麻仁","杏仁","桃仁"],func:"润下",pet:"避免使用",src:"《世医得效方》化裁",note:"🚫 含桃仁/杏仁（氰苷前体），猫解毒能力极弱；火麻仁犬猫均需严格控制"},
+  {id:198,name:"川贝雪梨水",herbs:[],func:"化痰止咳",pet:"避免使用",src:"药膳分类整理方",note:"🚫 川贝非药食同源目录/饲料目录品种"},
+];
 
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
@@ -549,11 +654,18 @@ function getCardGradient(h) {
 }
 
 // 图片路径：优先本地 images/ 文件夹，由 download_images.py 脚本下载
+// Plant images embedded as base64 (iNaturalist, CC-licensed)
+
+
 function getImagePath(h) {
   if (h.id >= 107) {
-    return `images/76_${String(h.id-106).padStart(3,'0')}_${h.name}.jpg`;
+    const key = `76_${String(h.id-106).padStart(3,"0")}_${h.name}`;
+    if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
+    return `images/76_${String(h.id-106).padStart(3,"0")}_${h.name}.jpg`;
   }
-  return `images/${String(h.id).padStart(3,'0')}_${h.name}.jpg`;
+  const key = `${String(h.id).padStart(3,"0")}_${h.name}`;
+  if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
+  return `images/${String(h.id).padStart(3,"0")}_${h.name}.jpg`;
 }
 
 // 外部参考链接
@@ -619,12 +731,62 @@ const STATUS_LABELS = {
 const STATUS_ORDER = { recommended: 0, available: 1, caution: 2, avoid: 3 };
 
 // ==================== FILTERING ====================
+// 症状→功效语义映射（避免搜索"腹泻"时匹配到"可致腹泻"的药材）
+const SYMPTOM_MAP = {
+  '腹泻': ['收涩','肠胃调理','利水渗湿'],
+  '拉稀': ['收涩','肠胃调理'],
+  '软便': ['收涩','肠胃调理'],
+  '便秘': ['润下'],
+  '呕吐': ['理气','肠胃调理'],
+  '咳嗽': ['化痰止咳'],
+  '掉毛': ['皮毛管理','补阴'],
+  '尿血': ['泌尿管理','止血'],
+  '尿闭': ['泌尿管理','利水渗湿'],
+  '结石': ['泌尿管理','利水渗湿'],
+  '口臭': ['口腔护理','清热'],
+  '牙结石': ['口腔护理'],
+  '瘙痒': ['清热','祛风湿'],
+  '皮肤病': ['清热'],
+  '关节': ['关节养护','祛风湿'],
+  '跛行': ['关节养护'],
+  '免疫力': ['免疫提升','补气'],
+  '体弱': ['免疫提升','补气'],
+  '食欲不振': ['消食','肠胃调理'],
+  '肥胖': ['体重管理'],
+  '肝': ['肝脏管理'],
+  '心脏': ['心脏管理'],
+  '失眠': ['安神'],
+  '焦虑': ['安神'],
+  '上火': ['清热'],
+  '感冒': ['解表'],
+  '贫血': ['补血'],
+  '衰老': ['免疫提升','补气','补阴'],
+};
 function matchesFilter(h) {
-  // Search text
+  // Search text with symptom→efficacy semantic mapping
   if (state.search) {
     const q = state.search.toLowerCase();
-    const haystack = [h.name, h.latin, h.family, h.part, ...h.efficacy].join(' ').toLowerCase();
-    if (!haystack.includes(q)) return false;
+    const terms = q.split(/\s+/).filter(t => t.length > 0);
+    // 检查是否输入了症状关键词→匹配功效
+    let hasSymptomMatch = false;
+    for (const [symptom, efficacies] of Object.entries(SYMPTOM_MAP)) {
+      if (q.includes(symptom)) {
+        hasSymptomMatch = true;
+        if (efficacies.some(e => h.efficacy.includes(e))) {
+          // 该药材功效匹配症状→保留
+        } else {
+          // 功效不匹配，但仍允许文本一致时通过（如"车前子"含"止泻"）
+          const haystack = [h.name, h.latin, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
+          if (!terms.some(t => haystack.includes(t))) return false;
+        }
+        break;
+      }
+    }
+    // 无映射的症状关键词→普通文本匹配
+    if (!hasSymptomMatch) {
+      const haystack = [h.name, h.latin, h.family, h.part, ...h.efficacy, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
+      if (terms.some(t => !haystack.includes(t))) return false;
+    }
   }
   // Efficacy
   if (state.efficacy !== 'all' && !h.efficacy.includes(state.efficacy)) return false;
@@ -699,6 +861,11 @@ function renderCards() {
   const activePet = state.pet;
   grid.innerHTML = herbs.map(h => {
     const efficacyTags = h.efficacy.map(e => `<span class="tag tag-efficacy">${e}</span>`).join('');
+    // 安全审查徽章：始终显示犬猫双标
+    const dogStatus = h.pet.dog; const catStatus = h.pet.cat;
+    const statusIcon = {recommended:'<span class="s-icon s-rec" title="犬已应用">D</span>',available:'<span class="s-icon s-ok" title="犬可用">D</span>',caution:'<span class="s-icon s-warn" title="犬慎用">D</span>',avoid:'<span class="s-icon s-no" title="犬避免">D</span>'};
+    const statusIconC = {recommended:'<span class="s-icon s-rec" title="猫已应用">C</span>',available:'<span class="s-icon s-ok" title="猫可用">C</span>',caution:'<span class="s-icon s-warn" title="猫慎用">C</span>',avoid:'<span class="s-icon s-no" title="猫避免">C</span>'};
+    const safetyBadges = `<span class="safety-row">🐕${statusIcon[dogStatus]||''} 🐈${statusIconC[catStatus]||''}</span>`;
     let badgeHtml = '';
     if (h.id >= 107) {
       badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">非药食同源</span>';
@@ -714,7 +881,7 @@ function renderCards() {
         <div class="card-img">${renderCardImage(h,false)}<button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button></div>
         ${badgeHtml}
         <div class="card-body">
-          <div class="card-name">${h.name}</div>
+          <div class="card-name">${h.name}${safetyBadges}</div>
           <div class="card-latin">${h.latin}</div>
           <div class="card-tags">
             ${efficacyTags}
@@ -749,16 +916,19 @@ function openDetail(id) {
         <div class="detail-item"><div class="d-label">功效分类</div><div class="d-value">${efficacyTags}</div></div>
         <div class="detail-item"><div class="d-label">收录目录</div><div class="d-value">${is76 ? '饲料原料目录 7.6 类' : '药食同源 第'+h.batch+'批 ('+[2002,2002,2019,2023,2024][h.batch]+'年)'}</div></div>
       </div>
-      <div class="pet-section">
-        <div class="pet-col dog">
-          <h4><span class="pet-icon">🐕</span> 犬</h4>
-          <span class="pet-status ${dogStatus}">${STATUS_LABELS[dogStatus]}</span>
-          <p class="pet-note">${h.pet.dogNote}</p>
-        </div>
-        <div class="pet-col cat">
-          <h4><span class="pet-icon">🐈</span> 猫</h4>
-          <span class="pet-status ${catStatus}">${STATUS_LABELS[catStatus]}</span>
-          <p class="pet-note">${h.pet.catNote}</p>
+      <div style="margin-top:12px;padding:12px 14px;border-radius:10px;background:${dogStatus==='avoid'||catStatus==='avoid'?'#fdf0f0':dogStatus==='caution'||catStatus==='caution'?'#fef8f0':'#f0f7ed'};border:1px solid ${dogStatus==='avoid'||catStatus==='avoid'?'#e8c8c8':dogStatus==='caution'||catStatus==='caution'?'#e8d8c0':'#c8e0c8'};">
+        <h4 style="margin:0 0 8px;font-size:0.85em;">🔍 安全审查摘要</h4>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:120px;">
+            <span style="font-weight:700;">🐕 犬</span>
+            <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${dogStatus==='recommended'?'#3a7d44':dogStatus==='available'?'#5b8c5a':dogStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[dogStatus]}</span>
+            <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.dogNote}</p>
+          </div>
+          <div style="flex:1;min-width:120px;">
+            <span style="font-weight:700;">🐈 猫</span>
+            <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${catStatus==='recommended'?'#3a7d44':catStatus==='available'?'#5b8c5a':catStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[catStatus]}</span>
+            <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.catNote}</p>
+          </div>
         </div>
       </div>
       ${(()=>{
@@ -782,6 +952,25 @@ function openDetail(id) {
               <span style="font-size:0.65em;background:#e8f2e4;color:#5b8c5a;padding:2px 6px;border-radius:8px;">${f.func}</span>
               <span style="font-size:0.65em;color:var(--text-secondary);">${f.type}</span>
               ${buyTag}
+            </div>`;
+          }).join('')}
+        </div>`;
+      })()}
+      ${(()=>{
+        const recipes = RECIPES.filter(r => r.herbs.includes(h.name));
+        if (recipes.length === 0) return '';
+        return `
+        <div style="margin-top:12px;padding:14px;background:#fdf6ef;border-radius:10px;border:1px solid #e8d0b0;">
+          <h4 style="margin:0 0 10px;font-size:0.9em;">📜 含${h.name}的药膳方剂（${recipes.length}方）</h4>
+          ${recipes.map(r => {
+            const petColor = r.pet==='犬猫通用'?'#3a7d44':r.pet==='犬'?'#5b8c5a':r.pet==='避免使用'?'#c0392b':'#d4943a';
+            return `
+            <div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid #f0e0c8;flex-wrap:wrap;">
+              <span style="font-weight:700;font-size:0.78em;min-width:90px;">${r.name}</span>
+              <span style="font-size:0.65em;color:var(--text-secondary);min-width:60px;">${r.src}</span>
+              <span style="font-size:0.6em;background:${petColor};color:#fff;padding:2px 5px;border-radius:8px;">${r.pet}</span>
+              <span style="font-size:0.6em;background:#e8f2e4;color:#5b8c5a;padding:2px 5px;border-radius:8px;">${r.func}</span>
+              <span style="font-size:0.62em;color:var(--text-secondary);flex-basis:100%;margin-top:2px;">💡 ${r.note}</span>
             </div>`;
           }).join('')}
         </div>`;
@@ -863,6 +1052,24 @@ function toggleModalImg(btn) {
     modalImg.innerHTML = renderModalImage(h, false) + '<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿 植株</button>';
   }
 }
+
+// ==================== DROPDOWN FILTER ====================
+function toggleDropdown(name) {
+  const panel = document.querySelector(`#dropdown-${name} .dropdown-panel`);
+  const btn = document.querySelector(`#dropdown-${name} .dropdown-btn`);
+  const isOpen = panel.classList.contains('show');
+  // Close all dropdowns
+  document.querySelectorAll('.dropdown-panel.show').forEach(p => p.classList.remove('show'));
+  document.querySelectorAll('.dropdown-btn.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { panel.classList.add('show'); btn.classList.add('open'); }
+}
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.filter-dropdown')) {
+    document.querySelectorAll('.dropdown-panel.show').forEach(p => p.classList.remove('show'));
+    document.querySelectorAll('.dropdown-btn.open').forEach(b => b.classList.remove('open'));
+  }
+});
 
 // ==================== EVENT HANDLERS ====================
 document.getElementById('searchInput').addEventListener('input', function(e) {
