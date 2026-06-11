@@ -178,7 +178,7 @@ body {
 .s-no { background: #c0392b; }
 .herb-card .card-body { padding: 14px 16px; }
 .herb-card .card-name { font-size: 1.15em; font-weight: 700; margin-bottom: 2px; }
-.herb-card .card-latin { font-size: 0.75em; font-style: italic; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.herb-card .card-latin { font-size: 0.75em; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .herb-card .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .tag {
   padding: 2px 10px; border-radius: 10px; font-size: 0.7em;
@@ -217,7 +217,7 @@ body {
 }
 .modal-body { padding: 24px 28px 28px; }
 .modal-body h2 { font-size: 1.6em; margin-bottom: 4px; }
-.modal-body .latin-name { font-style: italic; color: var(--text-secondary); font-size: 0.95em; margin-bottom: 16px; }
+.modal-body .latin-name { color: var(--text-secondary); font-size: 0.95em; margin-bottom: 16px; }
 .detail-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;
 }
@@ -401,7 +401,6 @@ const HERBS = [
   {id:14,name:"沙棘",latin:"Hippophae rhamnoides L.",family:"胡颓子科",part:"成熟果实",efficacy:["补阴"],batch:1,imgGrad:["#d4903a","#a0601a"],pet:{dog:"available",cat:"available",dogNote:"富含维生素和抗氧化物质",catNote:"富含维生素，适量安全"}},
   {id:15,name:"芡实",latin:"Euryale ferox Salisb.",family:"睡莲科",part:"成熟种仁",efficacy:["收涩"],batch:1,imgGrad:["#8b8b7a","#5a5a4a"],pet:{dog:"available",cat:"available",dogNote:"健脾祛湿，可作功能性辅料",catNote:"健脾祛湿，适量安全"}},
   {id:16,name:"花椒",latin:"Zanthoxylum bungeanum Maxim.",family:"芸香科",part:"成熟果皮",efficacy:["温里"],batch:1,imgGrad:["#8b3a2a","#5a1a0a"],pet:{dog:"caution",cat:"avoid",dogNote:"刺激性较强，仅极少量调味，大量刺激肠胃",catNote:"含精油成分对猫刺激性大，应避免使用"}},
-  {id:17,name:"赤小豆",latin:"Vigna umbellata (Thunb.) Ohwi et Ohashi",family:"豆科",part:"成熟种子",efficacy:["利水渗湿"],batch:1,imgGrad:["#b44a3a","#7a2a1a"],pet:{dog:"available",cat:"available",dogNote:"利水消肿，适量安全",catNote:"适量安全"}},
   {id:18,name:"麦芽",latin:"Hordeum vulgare L.",family:"禾本科",part:"发芽颖果",efficacy:["消食"],batch:1,imgGrad:["#c4b04a","#8b7a2a"],pet:{dog:"available",cat:"available",dogNote:"助消化，可用于宠物食品",catNote:"助消化，幼猫适用"}},
   {id:19,name:"枣",latin:"Ziziphus jujuba Mill.",family:"鼠李科",part:"成熟果实",efficacy:["补气"],batch:1,imgGrad:["#b44a2a","#7a2a1a"],pet:{dog:"available",cat:"available",dogNote:"补气血，宠物营养品常用",catNote:"补气血，适量安全"}},
   {id:20,name:"罗汉果",latin:"Siraitia grosvenorii (Swingle) C.Jeffrey",family:"葫芦科",part:"果实",efficacy:["化痰止咳"],batch:1,imgGrad:["#6b8b5a","#3a5a3a"],pet:{dog:"available",cat:"available",dogNote:"天然甜味剂，清肺润肠",catNote:"天然甜味来源，猫喜甜味可作为适口性改良"}},
@@ -711,6 +710,13 @@ const EFFICACY_COLORS = {
 function getCardGradient(h) {
   return `linear-gradient(135deg, ${h.imgGrad[0]}, ${h.imgGrad[1]})`;
 }
+function formatLatin(latin) {
+  var m = latin.match(/^([A-Z][a-z]+(?:'[A-Z][a-z]+)?\s+[a-z]+(?:-[a-z]+)?)(.*)/);
+  if (m && m[2] && m[2].trim()) {
+    return '<i>' + m[1] + '</i> ' + m[2].trim();
+  }
+  return '<i>' + latin + '</i>';
+}
 
 // 图片路径：优先本地 images/ 文件夹，由 download_images.py 脚本下载
 // Plant images embedded as base64 (iNaturalist, CC-licensed)
@@ -941,7 +947,7 @@ function renderCards() {
         ${badgeHtml}
         <div class="card-body">
           <div class="card-name">${h.name}${safetyBadges}</div>
-          <div class="card-latin">${h.latin}</div>
+          <div class="card-latin">${formatLatin(h.latin)}</div>
           <div class="card-tags">
             ${efficacyTags}
             <span class="tag tag-family">${h.family}</span>
@@ -969,7 +975,7 @@ function openDetail(id) {
     <div class="modal-img">${renderModalImage(h,false)}<button class="img-toggle plant-mode" onclick="toggleModalImg(this)" title="切换植株/药材">🌿</button></div>
     <div class="modal-body">
       <h2>${h.name}${is76 ? ' <span style="font-size:0.6em;background:#7a5a9b;color:#fff;padding:2px 8px;border-radius:8px;vertical-align:middle;">非药食同源</span>' : ''}</h2>
-      <p class="latin-name">${h.latin}</p>
+      <p class="latin-name">${formatLatin(h.latin)}</p>
       <div class="detail-grid">
         <div class="detail-item"><div class="d-label">科名</div><div class="d-value">${h.family}</div></div>
         <div class="detail-item"><div class="d-label">使用部位</div><div class="d-value">${h.part}</div></div>
