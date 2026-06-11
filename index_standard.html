@@ -834,11 +834,16 @@ function matchesFilter(h) {
     const terms = q.split(/\s+/).filter(t => t.length > 0);
     // 检查是否输入了症状关键词→匹配功效
     let hasSymptomMatch = false;
+    const speciesTerms = terms.filter(t => !Object.keys(SYMPTOM_MAP).includes(t));
     for (const [symptom, efficacies] of Object.entries(SYMPTOM_MAP)) {
       if (q.includes(symptom)) {
         hasSymptomMatch = true;
         if (efficacies.some(e => h.efficacy.includes(e))) {
           // 该药材功效匹配症状→保留
+          if (speciesTerms.length > 0) {
+            const haystack = [h.name, h.latin, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
+            if (speciesTerms.some(t => !haystack.includes(t))) return false;
+          }
         } else {
           // 功效不匹配，但仍允许文本一致时通过（如"车前子"含"止泻"）
           const haystack = [h.name, h.latin, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
