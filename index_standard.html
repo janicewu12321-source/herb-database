@@ -842,7 +842,7 @@ function matchesFilter(h) {
         } else {
           // 功效不匹配，但仍允许文本一致时通过（如"车前子"含"止泻"）
           const haystack = [h.name, h.latin, h.pet.dogNote, h.pet.catNote].join(' ').toLowerCase();
-          if (!terms.some(t => haystack.includes(t))) return false;
+          if (terms.some(t => !haystack.includes(t))) return false;
         }
         break;
       }
