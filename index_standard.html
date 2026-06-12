@@ -834,10 +834,11 @@ function matchesFilter(h) {
     const terms = q.split(/\s+/).filter(t => t.length > 0);
     // 检查是否输入了症状关键词→匹配功效
     let hasSymptomMatch = false;
-    const speciesTerms = terms.filter(t => !Object.keys(SYMPTOM_MAP).includes(t));
-    for (const [symptom, efficacies] of Object.entries(SYMPTOM_MAP)) {
+    const SYMPTOM_KEYS = ["腹泻","拉稀","软便","便秘","呕吐","咳嗽","掉毛","尿血","尿闭","结石","口臭","牙结石","瘙痒","皮肤病","关节","跛行","免疫力","体弱","食欲不振","肥胖","肝","心脏","失眠","焦虑","上火","感冒","贫血","衰老"];const speciesTerms = terms.filter(t => !SYMPTOM_KEYS.includes(t));
+    const SYMPTOM_EFF = {"腹泻":["收涩","肠胃调理","利水渗湿"],"拉稀":["收涩","肠胃调理"],"软便":["收涩","肠胃调理"],"便秘":["润下"],"呕吐":["理气","肠胃调理"],"咳嗽":["化痰止咳"],"掉毛":["皮毛管理","补阴"],"尿血":["泌尿管理","止血"],"尿闭":["泌尿管理","利水渗湿"],"结石":["泌尿管理","利水渗湿"],"口臭":["口腔护理","清热"],"牙结石":["口腔护理"],"瘙痒":["清热","祛风湿"],"皮肤病":["清热"],"关节":["关节养护","祛风湿"],"跛行":["关节养护"],"免疫力":["免疫提升","补气"],"体弱":["免疫提升","补气"],"食欲不振":["消食","肠胃调理"],"肥胖":["体重管理"],"肝":["肝脏管理"],"心脏":["心脏管理"],"失眠":["安神"],"焦虑":["安神"],"上火":["清热"],"感冒":["解表"],"贫血":["补血"],"衰老":["免疫提升","补气","补阴"]};
+    for (const symptom in SYMPTOM_EFF) {
       if (q.includes(symptom)) {
-        hasSymptomMatch = true;
+        hasSymptomMatch = true;const efficacies = SYMPTOM_EFF[symptom];
         if (efficacies.some(e => h.efficacy.includes(e))) {
           // 该药材功效匹配症状→保留
           if (speciesTerms.length > 0) {
