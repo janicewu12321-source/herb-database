@@ -883,8 +883,9 @@ function matchesFilter(h) {
 function applySpeciesFilter(herbs) {
   if (!state.search) return herbs;
   const q = state.search.toLowerCase();
-  const wantDog = /\b(犬|狗)\b/.test(q);
-  const wantCat = /\b猫\b/.test(q);
+  const terms = q.split(/\s+/);
+  const wantDog = terms.some(t => t === '犬' || t === '狗');
+  const wantCat = terms.some(t => t === '猫');
   if (!wantDog && !wantCat) return herbs;
   return herbs.filter(h => {
     if (wantDog && (h.pet.dog === 'avoid' || h.pet.dog === 'caution')) return false;
@@ -901,7 +902,9 @@ function getFilteredHerbs() {
     allHerbs = HERBS.concat(HERBS_76);
   }
   // 纯物种搜索：用安全性分类代替文本匹配
-  if (state.search && /^(犬|狗|猫)$/.test(state.search.trim())) {
+  const terms = (state.search || '').split(/\s+/).filter(t => t.length > 0);
+  const isSpeciesOnly = terms.length === 1 && (terms[0] === '犬' || terms[0] === '狗' || terms[0] === '猫');
+  if (state.search && isSpeciesOnly) {
     return applySpeciesFilter(allHerbs);
   }
   let result = allHerbs.filter(matchesFilter);
