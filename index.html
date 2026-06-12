@@ -878,6 +878,20 @@ function matchesFilter(h) {
   }
   return true;
 }
+// ==================== SPECIES-AWARE SEARCH ====================
+// 搜索"犬/猫"时自动过滤不安全品种，与宠物类型筛选保持一致
+function applySpeciesFilter(herbs) {
+  if (!state.search) return herbs;
+  const q = state.search.toLowerCase();
+  const wantDog = /\b(犬|狗)\b/.test(q);
+  const wantCat = /\b猫\b/.test(q);
+  if (!wantDog && !wantCat) return herbs;
+  return herbs.filter(h => {
+    if (wantDog && h.pet.dog === 'avoid') return false;
+    if (wantCat && h.pet.cat === 'avoid') return false;
+    return true;
+  });
+}
 
 function getFilteredHerbs() {
   let allHerbs = HERBS;
@@ -886,7 +900,8 @@ function getFilteredHerbs() {
   } else if (state.category === 'all') {
     allHerbs = HERBS.concat(HERBS_76);
   }
-  return allHerbs.filter(matchesFilter);
+  let result = allHerbs.filter(matchesFilter);
+  return applySpeciesFilter(result);
 }
 
 // ==================== RENDER ====================
