@@ -920,7 +920,7 @@ function renderCards() {
   const info = document.getElementById('resultInfo');
   const is76 = state.category === '76only';
   const label = is76 ? '可食用植物（饲料目录7.6类收录）' : '可食用植物';
-  info.textContent = `共找到 ${herbs.length} 种${label}`;console.log("搜索:",state.search,"结果:",herbs.length,"SMAP:",typeof SYMPTOM_MAP,"物种词:",terms.filter(t=>!Object.keys(SYMPTOM_MAP).includes(t)));
+  info.textContent = `共找到 ${herbs.length} 种${label}`
 
   if (herbs.length === 0) {
     grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>没有找到匹配的结果，请调整筛选条件</p></div>`;
