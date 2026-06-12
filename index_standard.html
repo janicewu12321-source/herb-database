@@ -907,7 +907,20 @@ function getFilteredHerbs() {
   if (state.search && isSpeciesOnly) {
     return applySpeciesFilter(allHerbs);
   }
+  // 搜索"宠物食品功能"名称时，补充该功能产品中的药材
+  const isFoodFuncSearch = terms.length === 1 && FOOD_FUNCS.includes(terms[0]);
   let result = allHerbs.filter(matchesFilter);
+  if (isFoodFuncSearch) {
+    const funcName = terms[0];
+    const foods = PET_FOODS.filter(f => f.func === funcName);
+    const extraHerbs = [...new Set(foods.flatMap(f => f.herbs))];
+    const extraIds = new Set();
+    for (const h of allHerbs) {
+      if (extraHerbs.includes(h.name) && !result.includes(h)) {
+        result.push(h);
+      }
+    }
+  }
   return applySpeciesFilter(result);
 }
 
