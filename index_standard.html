@@ -719,17 +719,11 @@ function formatLatin(latin) {
 }
 
 // 图片路径：优先本地 images/ 文件夹，由 download_images.py 脚本下载
-// Plant images embedded as base64 (iNaturalist, CC-licensed)
-
-
+// Standard version: load images from files
 function getImagePath(h) {
   if (h.id >= 107) {
-    const key = `76_${String(h.id-106).padStart(3,"0")}_${h.name}`;
-    if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
     return `images/76_${String(h.id-106).padStart(3,"0")}_${h.name}.jpg`;
   }
-  const key = `${String(h.id).padStart(3,"0")}_${h.name}`;
-  if (EMBEDDED_IMAGES[key]) return EMBEDDED_IMAGES[key];
   return `images/${String(h.id).padStart(3,"0")}_${h.name}.jpg`;
 }
 
