@@ -716,6 +716,41 @@ const CONTRAS = [
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
 
+// ==================== URL STATE SYNC ====================
+const URL_KEYS = { search:'q', pet:'p', safety:'s', efficacy:'e', family:'f', category:'c', foodFunc:'ff' };
+const URL_DEFAULTS = { pet:'all', safety:'all', efficacy:'all', family:'all', category:'all', foodFunc:'all' };
+
+function stateToURL() {
+  const params = new URLSearchParams();
+  for (const [k, short] of Object.entries(URL_KEYS)) {
+    const v = state[k];
+    if (k === 'search') { if (v) params.set(short, v); }
+    else if (URL_DEFAULTS[k] !== v) params.set(short, v);
+  }
+  const qs = params.toString();
+  return qs ? '?' + qs : window.location.pathname;
+}
+
+function urlToState() {
+  const params = new URLSearchParams(window.location.search);
+  for (const [k, short] of Object.entries(URL_KEYS)) {
+    const v = params.get(short);
+    if (v !== null) state[k] = v;
+  }
+  // Restore UI active states
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    const f = chip.dataset.filter, val = chip.dataset.val;
+    chip.classList.toggle('active', state[f] === val);
+  });
+  if (state.search) document.getElementById('searchInput').value = state.search;
+}
+
+function updateURL(mode) {
+  const url = stateToURL();
+  if (mode === 'push') history.pushState(null, '', url);
+  else history.replaceState(null, '', url);
+}
+
 // ==================== HELPERS ====================
 const EFFICACY_COLORS = {
   "补气":"#5b8c5a","补血":"#c44a3a","补阴":"#4a7c8b","补阳":"#d4943a","理气":"#6b9a4a",
@@ -1214,6 +1249,7 @@ document.addEventListener('click', function(e) {
 // ==================== EVENT HANDLERS ====================
 document.getElementById('searchInput').addEventListener('input', function(e) {
   state.search = e.target.value.trim();
+  updateURL('replace');
   renderCards();
 });
 
@@ -1225,8 +1261,15 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
     // Update active states for this filter group
     document.querySelectorAll(`.filter-chip[data-filter="${filterType}"]`).forEach(c => c.classList.remove('active'));
     this.classList.add('active');
+    updateURL('push');
     renderCards();
   });
+});
+
+// Browser back/forward
+window.addEventListener('popstate', function() {
+  urlToState();
+  renderCards();
 });
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
@@ -1238,6 +1281,11 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ==================== INIT ====================
+urlToState();
+// Override initial history entry with current URL state (so back button returns here)
+if (window.location.search) {
+  history.replaceState(null, '', stateToURL());
+}
 renderCards();
 </script>
 </body>
