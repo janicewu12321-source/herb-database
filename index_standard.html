@@ -112,6 +112,72 @@ body {
   display: none; flex-wrap: wrap; gap: 6px;
 }
 .dropdown-panel.show { display: flex; }
+/* Contraindication checker */
+.contra-checker {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
+}
+.contra-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; cursor: pointer; user-select: none;
+  font-weight: 700; font-size: 0.95em; transition: background 0.2s;
+}
+.contra-header:hover { background: #fdf6ef; }
+.contra-toggle { font-size: 0.8em; transition: transform 0.2s; }
+.contra-toggle.open { transform: rotate(90deg); }
+.contra-body { padding: 0 20px 18px; display: none; }
+.contra-body.show { display: block; }
+.contra-input-row { position: relative; margin-bottom: 12px; }
+.contra-input-row input {
+  width: 100%; padding: 10px 14px; border: 2px solid var(--border);
+  border-radius: 8px; font-size: 0.9em; background: var(--bg);
+}
+.contra-input-row input:focus { outline: none; border-color: var(--accent); }
+.contra-suggestions {
+  display: none; position: absolute; top: 100%; left: 0; right: 0;
+  max-height: 200px; overflow-y: auto; background: var(--card-bg);
+  border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 300;
+}
+.contra-suggestions.show { display: block; }
+.contra-suggestion-item {
+  padding: 8px 14px; cursor: pointer; font-size: 0.85em;
+  border-bottom: 1px solid #f0ede5; transition: background 0.15s;
+}
+.contra-suggestion-item:hover { background: var(--accent-light); }
+.contra-suggestion-item:last-child { border-bottom: none; }
+.contra-suggestion-item .sugg-latin { font-size: 0.75em; color: var(--text-secondary); margin-left: 6px; }
+.contra-basket {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; min-height: 36px;
+  align-items: center;
+}
+.contra-basket-empty { font-size: 0.82em; color: var(--text-secondary); }
+.contra-chip-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px; font-size: 0.82em;
+  font-weight: 600; background: #fef5f0; border: 1.5px solid #e8c8a0;
+}
+.contra-chip-item .chip-remove {
+  cursor: pointer; font-size: 1.1em; line-height: 1; color: #c4783b;
+  transition: color 0.15s;
+}
+.contra-chip-item .chip-remove:hover { color: #c0392b; }
+.contra-results { font-size: 0.85em; }
+.contra-safe {
+  padding: 12px 16px; border-radius: 8px; background: #e8f2e4;
+  color: #3a7d44; font-weight: 600;
+}
+.contra-conflict {
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 8px;
+  background: #fef5f5; border: 1px solid #e8c8c8;
+}
+.contra-conflict .conflict-pair { font-weight: 700; font-size: 1.05em; margin-bottom: 4px; }
+.contra-conflict .conflict-level {
+  display: inline-block; padding: 2px 8px; border-radius: 8px;
+  font-size: 0.8em; font-weight: 700; color: #fff; margin-right: 8px;
+}
+.contra-conflict .conflict-reason { color: var(--text-secondary); margin-top: 4px; }
+.contra-conflict .conflict-source { font-size: 0.8em; color: var(--text-secondary); margin-top: 2px; }
 /* Results */
 .result-info {
   font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
@@ -378,6 +444,24 @@ body {
         <span class="filter-chip" data-filter="family" data-val="多孔菌科">多孔菌科</span>
         <span class="filter-chip" data-filter="family" data-val="其他科属">其他科属</span>
       </div>
+    </div>
+  </div>
+
+  <!-- Contraindication checker -->
+  <div class="contra-checker" id="contraChecker">
+    <div class="contra-header" onclick="toggleContraChecker()">
+      <span>⚠️ 配伍禁忌检查器 <span style="font-weight:400;font-size:0.8em;color:var(--text-secondary);">— 将多味药材加入配方篮，自动检查冲突</span></span>
+      <span class="contra-toggle" id="contraToggle">▸</span>
+    </div>
+    <div class="contra-body" id="contraBody">
+      <div class="contra-input-row">
+        <input type="text" id="contraInput" placeholder="输入药材名添加至配方篮..." autocomplete="off" oninput="handleContraInput()" onfocus="handleContraInput()">
+        <div class="contra-suggestions" id="contraSuggestions"></div>
+      </div>
+      <div class="contra-basket" id="contraBasket">
+        <span class="contra-basket-empty">尚未添加药材，请在上方输入</span>
+      </div>
+      <div class="contra-results" id="contraResults"></div>
     </div>
   </div>
 
@@ -720,6 +804,120 @@ const CONTRAS = [
   {herbs:["苦杏仁","猫"],reason:"苦杏仁含氰苷，猫解毒能力极弱，可致氰化物中毒",source:"毒理学",level:"猫绝对避免"},
   {herbs:["桃仁","猫"],reason:"桃仁含苦杏仁苷（氰苷前体），猫解毒能力弱",source:"毒理学",level:"猫绝对避免"},
 ];
+
+// ==================== CONTRAINDICATION CHECKER ====================
+let contraBasket = [];
+
+function getAllHerbs() {
+  return HERBS.concat(HERBS_76);
+}
+
+function toggleContraChecker() {
+  const body = document.getElementById('contraBody');
+  const toggle = document.getElementById('contraToggle');
+  const isOpen = body.classList.contains('show');
+  if (isOpen) { body.classList.remove('show'); toggle.classList.remove('open'); }
+  else { body.classList.add('show'); toggle.classList.add('open'); }
+}
+
+function handleContraInput() {
+  const input = document.getElementById('contraInput');
+  const q = input.value.trim().toLowerCase();
+  const suggestions = document.getElementById('contraSuggestions');
+  if (!q) { suggestions.classList.remove('show'); return; }
+  const allHerbs = getAllHerbs();
+  const matches = allHerbs.filter(h => {
+    if (contraBasket.includes(h.name)) return false;
+    const haystack = [h.name, h.latin, h.family, h.part].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+  if (matches.length === 0) { suggestions.classList.remove('show'); return; }
+  suggestions.innerHTML = matches.slice(0, 8).map(h =>
+    '<div class="contra-suggestion-item" onmousedown="event.preventDefault();addToBasket(\'' + h.name.replace(/'/g,"\\'") + '\')">' +
+    h.name + '<span class="sugg-latin">' + h.latin.split(' ').slice(0,2).join(' ') + '</span></div>'
+  ).join('');
+  suggestions.classList.add('show');
+}
+
+function addToBasket(name) {
+  if (contraBasket.includes(name)) return;
+  contraBasket.push(name);
+  document.getElementById('contraInput').value = '';
+  document.getElementById('contraSuggestions').classList.remove('show');
+  renderContraUI();
+}
+
+function removeFromBasket(name) {
+  contraBasket = contraBasket.filter(n => n !== name);
+  renderContraUI();
+}
+
+function renderContraUI() {
+  const basketDiv = document.getElementById('contraBasket');
+  const resultsDiv = document.getElementById('contraResults');
+
+  // Render basket
+  if (contraBasket.length === 0) {
+    basketDiv.innerHTML = '<span class="contra-basket-empty">尚未添加药材，请在上方输入</span>';
+  } else {
+    basketDiv.innerHTML = contraBasket.map(name =>
+      '<span class="contra-chip-item">' + name +
+      '<span class="chip-remove" onclick="removeFromBasket(\'' + name.replace(/'/g,"\\'") + '\')" title="移除">×</span></span>'
+    ).join('');
+  }
+
+  // Check contraindications
+  if (contraBasket.length < 2) {
+    resultsDiv.innerHTML = contraBasket.length === 0 ? '' :
+      '<div class="contra-safe">✅ 仅1味药材，需至少2味才能检查配伍禁忌</div>';
+    return;
+  }
+
+  const conflicts = [];
+  for (let i = 0; i < contraBasket.length; i++) {
+    for (let j = i + 1; j < contraBasket.length; j++) {
+      const a = contraBasket[i], b = contraBasket[j];
+      for (const c of CONTRAS) {
+        if (c.herbs.includes(a) && c.herbs.includes(b)) {
+          conflicts.push({ a, b, rule: c });
+        }
+      }
+    }
+  }
+
+  if (conflicts.length === 0) {
+    resultsDiv.innerHTML = '<div class="contra-safe">✅ 未发现配伍禁忌 — ' + contraBasket.length + '味药材组合安全</div>';
+  } else {
+    const lvlColor = {'避免':'#c0392b','犬猫均避免':'#c0392b','猫绝对避免':'#c0392b','慎用':'#d4943a','注意':'#7a6b4a'};
+    resultsDiv.innerHTML = '<div style="font-weight:700;margin-bottom:8px;color:#c0392b;">⚠️ 发现 ' + conflicts.length + ' 条配伍禁忌：</div>' +
+      conflicts.map(cf =>
+        '<div class="contra-conflict">' +
+        '<div class="conflict-pair">' + cf.a + ' + ' + cf.b + '</div>' +
+        '<span class="conflict-level" style="background:' + (lvlColor[cf.rule.level]||'#d4943a') + ';">' + cf.rule.level + '</span>' +
+        '<span>' + cf.rule.reason + '</span>' +
+        '<div class="conflict-source">📖 ' + cf.rule.source + '</div>' +
+        '</div>'
+      ).join('');
+  }
+}
+
+// Close suggestions on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.contra-input-row')) {
+    document.getElementById('contraSuggestions').classList.remove('show');
+  }
+});
+
+// Enter key to add first suggestion
+document.getElementById('contraInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const first = document.querySelector('.contra-suggestion-item');
+    if (first) {
+      const name = first.textContent.replace(/\s+\(.*/,'').trim();
+      addToBasket(name);
+    }
+  }
+});
 
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
