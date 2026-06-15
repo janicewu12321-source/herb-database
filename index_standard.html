@@ -212,6 +212,81 @@ body {
   display: inline-block; padding: 2px 8px; border-radius: 8px;
   font-size: 0.7em; font-weight: 700; color: #fff;
 }
+/* Herb compare */
+.cmp-btn {
+  position: absolute; top: 8px; left: 8px; z-index: 6;
+  width: 26px; height: 26px; border-radius: 6px;
+  border: 1.5px solid rgba(255,255,255,0.6); background: rgba(0,0,0,0.35);
+  color: #fff; font-size: 0.7em; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all 0.2s;
+}
+.cmp-btn:hover { background: rgba(90,140,90,0.8); border-color: #fff; }
+.herb-card.cmp-selected { box-shadow: 0 0 0 3px #5b8c5a, 0 6px 24px rgba(0,0,0,0.15); }
+.herb-card.cmp-selected .cmp-btn { background: #5b8c5a; border-color: #fff; }
+/* Floating compare bar */
+.cmp-bar {
+  display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #2c2416; color: #fff; border-radius: 28px; padding: 10px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25); z-index: 900; align-items: center; gap: 14px;
+}
+.cmp-bar.show { display: flex; }
+.cmp-bar .cmp-bar-herb {
+  font-size: 0.85em; font-weight: 600; max-width: 100px; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.cmp-bar .cmp-bar-vs { color: #d4943a; font-weight: 700; font-size: 0.8em; }
+.cmp-bar .cmp-bar-go {
+  padding: 6px 16px; border-radius: 18px; border: none; background: #5b8c5a;
+  color: #fff; font-weight: 700; font-size: 0.82em; cursor: pointer; transition: background 0.2s;
+}
+.cmp-bar .cmp-bar-go:hover { background: #3a7d44; }
+.cmp-bar .cmp-bar-go:disabled { background: #6b5e4f; cursor: default; }
+.cmp-bar .cmp-bar-clear {
+  background: none; border: none; color: #a09080; cursor: pointer; font-size: 0.75em;
+}
+.cmp-bar .cmp-bar-clear:hover { color: #fff; }
+/* Compare modal */
+.cmp-modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 1001; justify-content: center; align-items: center; padding: 20px;
+}
+.cmp-modal-overlay.show { display: flex; }
+.cmp-modal {
+  background: var(--card-bg); border-radius: 16px; max-width: 880px; width: 100%;
+  max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  position: relative;
+}
+.cmp-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.cmp-col { padding: 24px 20px; }
+.cmp-col:first-child { border-right: 1px solid var(--border); }
+.cmp-col .cmp-img {
+  height: 180px; display: flex; align-items: center; justify-content: center;
+  background: #e8e0d5; border-radius: 10px; overflow: hidden; margin-bottom: 14px;
+}
+.cmp-col .cmp-img img { width: 100%; height: 100%; object-fit: cover; }
+.cmp-col .cmp-img .img-fallback {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  font-size: 4em; color: #fff; font-weight: 700;
+}
+.cmp-col h3 { font-size: 1.2em; margin-bottom: 2px; }
+.cmp-col .cmp-latin { font-size: 0.8em; color: var(--text-secondary); margin-bottom: 10px; }
+.cmp-col .cmp-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #f0ede5; font-size: 0.82em; }
+.cmp-col .cmp-row .cmp-label { color: var(--text-secondary); font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.5px; }
+.cmp-col .cmp-row .cmp-value { font-weight: 600; }
+.cmp-diff { background: #fef5e8; border-radius: 4px; padding: 0 4px; }
+.cmp-same { color: var(--text-secondary); }
+.cmp-contra-warn {
+  margin: 16px 20px; padding: 12px 16px; border-radius: 8px;
+  background: #fef5f5; border: 1px solid #e8c8c8; font-size: 0.82em;
+}
+.cmp-safe-msg {
+  margin: 16px 20px; padding: 10px 16px; border-radius: 8px;
+  background: #e8f2e4; color: #3a7d44; font-size: 0.82em; font-weight: 600;
+}
+@media (max-width: 768px) {
+  .cmp-two-col { grid-template-columns: 1fr; }
+  .cmp-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+}
 /* Results */
 .result-info {
   font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
@@ -522,6 +597,21 @@ body {
 <!-- Detail Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modalBox"></div>
+</div>
+
+<!-- Compare Modal -->
+<div class="cmp-modal-overlay" id="cmpModalOverlay">
+  <div class="cmp-modal" id="cmpModalBox"></div>
+</div>
+
+<!-- Floating compare bar -->
+<div class="cmp-bar" id="cmpBar">
+  <span style="font-size:0.8em;opacity:0.7;">对比</span>
+  <span class="cmp-bar-herb" id="cmpBarH1">—</span>
+  <span class="cmp-bar-vs">VS</span>
+  <span class="cmp-bar-herb" id="cmpBarH2">—</span>
+  <button class="cmp-bar-go" id="cmpBarGo" disabled onclick="openCompare()">开始对比</button>
+  <button class="cmp-bar-clear" onclick="clearCompare()">✕</button>
 </div>
 
 <script>
@@ -1008,6 +1098,110 @@ function openDetailByName(name) {
   if (h) openDetail(h.id);
 }
 
+// ==================== HERB COMPARE ====================
+let cmpSlots = [];
+
+function toggleCompare(id) {
+  if (cmpSlots.includes(id)) {
+    cmpSlots = cmpSlots.filter(function(x) { return x !== id; });
+  } else if (cmpSlots.length < 2) {
+    cmpSlots.push(id);
+  }
+  updateCmpUI();
+}
+
+function clearCompare() {
+  cmpSlots = [];
+  updateCmpUI();
+}
+
+function updateCmpUI() {
+  // Update card selected states
+  document.querySelectorAll('.herb-card').forEach(function(card) {
+    card.classList.remove('cmp-selected');
+  });
+  cmpSlots.forEach(function(id) {
+    var card = document.getElementById('card-' + id);
+    if (card) card.classList.add('cmp-selected');
+  });
+
+  // Update floating bar
+  var bar = document.getElementById('cmpBar');
+  if (cmpSlots.length > 0) {
+    bar.classList.add('show');
+    var allHerbs = getAllHerbs();
+    var h1 = allHerbs.find(function(h) { return h.id === cmpSlots[0]; });
+    document.getElementById('cmpBarH1').textContent = h1 ? h1.name : '—';
+    if (cmpSlots.length >= 2) {
+      var h2 = allHerbs.find(function(h) { return h.id === cmpSlots[1]; });
+      document.getElementById('cmpBarH2').textContent = h2 ? h2.name : '—';
+      document.getElementById('cmpBarGo').disabled = false;
+    } else {
+      document.getElementById('cmpBarH2').textContent = '?';
+      document.getElementById('cmpBarGo').disabled = true;
+    }
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function openCompare() {
+  if (cmpSlots.length < 2) return;
+  var allHerbs = getAllHerbs();
+  var h1 = allHerbs.find(function(h) { return h.id === cmpSlots[0]; });
+  var h2 = allHerbs.find(function(h) { return h.id === cmpSlots[1]; });
+  if (!h1 || !h2) return;
+
+  // Check contraindication
+  var contra = null;
+  for (var i = 0; i < CONTRAS.length; i++) {
+    var c = CONTRAS[i];
+    if (c.herbs.includes(h1.name) && c.herbs.includes(h2.name)) {
+      contra = c; break;
+    }
+  }
+
+  var modalBox = document.getElementById('cmpModalBox');
+  var lvlColor = {'避免':'#c0392b','犬猫均避免':'#c0392b','猫绝对避免':'#c0392b','慎用':'#d4943a','注意':'#7a6b4a'};
+  var statusLabel = {recommended:'已应用',available:'可用',caution:'慎用',avoid:'避免'};
+  var statusColor = {recommended:'#3a7d44',available:'#5b8c5a',caution:'#d4943a',avoid:'#c0392b'};
+
+  function renderCol(h, otherH) {
+    var dogSame = h.pet.dog === otherH.pet.dog;
+    var catSame = h.pet.cat === otherH.pet.cat;
+    var famSame = h.family === otherH.family;
+    return '<div class="cmp-col">' +
+      '<div class="cmp-img">' + renderModalImage(h, false) + '</div>' +
+      '<h3>' + h.name + (h.id >= 107 ? ' <span style="font-size:0.55em;background:#7a5a9b;color:#fff;padding:1px 6px;border-radius:6px;vertical-align:middle;">非药食同源</span>' : '') + '</h3>' +
+      '<p class="cmp-latin">' + formatLatin(h.latin) + '</p>' +
+      '<div class="cmp-row"><span class="cmp-label">科名</span><span class="cmp-value' + (famSame ? ' cmp-same' : ' cmp-diff') + '">' + h.family + '</span></div>' +
+      '<div class="cmp-row"><span class="cmp-label">使用部位</span><span class="cmp-value">' + h.part + '</span></div>' +
+      '<div class="cmp-row"><span class="cmp-label">功效</span><span class="cmp-value">' + h.efficacy.join('、') + '</span></div>' +
+      '<div class="cmp-row"><span class="cmp-label">🐕 犬</span><span class="cmp-value' + (dogSame ? ' cmp-same' : ' cmp-diff') + '" style="color:' + statusColor[h.pet.dog] + ';">' + statusLabel[h.pet.dog] + '</span></div>' +
+      '<div class="cmp-row"><span class="cmp-label">🐈 猫</span><span class="cmp-value' + (catSame ? ' cmp-same' : ' cmp-diff') + '" style="color:' + statusColor[h.pet.cat] + ';">' + statusLabel[h.pet.cat] + '</span></div>' +
+      '<div style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;line-height:1.5;">' +
+      '<div><strong>犬：</strong>' + h.pet.dogNote + '</div>' +
+      '<div style="margin-top:3px;"><strong>猫：</strong>' + h.pet.catNote + '</div>' +
+      '</div></div>';
+  }
+
+  modalBox.innerHTML =
+    '<button class="modal-close" onclick="closeCmpModal()">✕</button>' +
+    '<div style="padding:16px 20px 4px;"><h2 style="margin:0;font-size:1.2em;">📊 药材对比：' + h1.name + ' vs ' + h2.name + '</h2></div>' +
+    (contra ?
+      '<div class="cmp-contra-warn">⚠️ <strong>配伍禁忌：</strong>' + contra.reason + ' <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:8px;font-size:0.85em;background:' + (lvlColor[contra.level]||'#d4943a') + ';color:#fff;">' + contra.level + '</span><div style="font-size:0.8em;margin-top:2px;">📖 ' + contra.source + '</div></div>'
+    :
+      '<div class="cmp-safe-msg">✅ 两味药材之间未发现配伍禁忌</div>'
+    ) +
+    '<div class="cmp-two-col">' + renderCol(h1, h2) + renderCol(h2, h1) + '</div>';
+
+  document.getElementById('cmpModalOverlay').classList.add('show');
+}
+
+function closeCmpModal() {
+  document.getElementById('cmpModalOverlay').classList.remove('show');
+}
+
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
 
@@ -1324,8 +1518,10 @@ function renderCards() {
       else if (status === 'avoid') badgeHtml += '<span class="card-badge badge-avoid">避免</span>';
     }
     return `
-      <div class="herb-card" onclick="openDetail(${h.id})">
-        <div class="card-img">${renderCardImage(h,false)}<button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button></div>
+      <div class="herb-card" id="card-${h.id}" onclick="openDetail(${h.id})">
+        <div class="card-img">${renderCardImage(h,false)}
+          <button class="cmp-btn" onclick="event.stopPropagation();toggleCompare(${h.id})" title="加入对比">⊞</button>
+          <button class="img-toggle plant-mode" onclick="event.stopPropagation();toggleCardImg(this)" title="切换植株/药材">🌿</button></div>
         ${badgeHtml}
         <div class="card-body">
           <div class="card-name">${h.name}${safetyBadges}</div>
@@ -1593,8 +1789,18 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
+document.getElementById('cmpModalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCmpModal();
+});
+
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    if (document.getElementById('cmpModalOverlay').classList.contains('show')) {
+      closeCmpModal();
+    } else {
+      closeModal();
+    }
+  }
 });
 
 // ==================== INIT ====================
