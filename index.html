@@ -67,6 +67,13 @@ body {
   font-size: 1em; background: var(--card-bg); transition: 0.2s;
 }
 .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.share-btn {
+  padding: 12px 18px; border: 2px solid var(--border); border-radius: var(--radius);
+  background: var(--card-bg); cursor: pointer; font-size: 0.9em;
+  color: var(--text-secondary); transition: all 0.2s; white-space: nowrap;
+}
+.share-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.share-btn.copied { border-color: #3a7d44; color: #3a7d44; background: #e8f2e4; }
 .filter-group {
   display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
 }
@@ -284,6 +291,7 @@ body {
   <!-- Search -->
   <div class="search-bar">
     <input type="text" class="search-input" id="searchInput" placeholder="🔍 兽医快速审查：输入药材名、病症或功效...（如：猫+腹泻、犬+皮肤、清热）">
+    <button class="share-btn" id="shareBtn" onclick="copyShareLink()" title="复制当前搜索/筛选结果链接">🔗 复制链接</button>
   </div>
 
   <!-- Dropdown filter bar -->
@@ -1271,6 +1279,28 @@ window.addEventListener('popstate', function() {
   urlToState();
   renderCards();
 });
+
+// Copy share link
+function copyShareLink() {
+  const url = window.location.href;
+  const btn = document.getElementById('shareBtn');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function() {
+      btn.textContent = '✅ 已复制';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = '🔗 复制链接'; btn.classList.remove('copied'); }, 2000);
+    });
+  } else {
+    // Fallback for older browsers / non-HTTPS
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = '✅ 已复制';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = '🔗 复制链接'; btn.classList.remove('copied'); }, 2000);
+  }
+}
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
