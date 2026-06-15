@@ -178,6 +178,40 @@ body {
 }
 .contra-conflict .conflict-reason { color: var(--text-secondary); margin-top: 4px; }
 .contra-conflict .conflict-source { font-size: 0.8em; color: var(--text-secondary); margin-top: 2px; }
+/* Dosage reference panel */
+.dosage-panel {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
+}
+.dosage-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; cursor: pointer; user-select: none;
+  font-weight: 700; font-size: 0.95em; transition: background 0.2s;
+}
+.dosage-header:hover { background: #f0f7f2; }
+.dosage-toggle { font-size: 0.8em; transition: transform 0.2s; }
+.dosage-toggle.open { transform: rotate(90deg); }
+.dosage-body { padding: 0 16px 16px; display: none; }
+.dosage-body.show { display: block; }
+.dosage-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.dosage-table th {
+  text-align: left; padding: 8px 10px; background: #f9f7f2;
+  font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-secondary); border-bottom: 2px solid var(--border);
+}
+.dosage-table td {
+  padding: 9px 10px; border-bottom: 1px solid #f0ede5; vertical-align: top;
+}
+.dosage-table tr:hover td { background: #fafaf7; }
+.dosage-table .dosage-herb { font-weight: 700; white-space: nowrap; cursor: pointer; color: var(--accent); }
+.dosage-table .dosage-herb:hover { text-decoration: underline; }
+.dosage-table .dosage-species { font-size: 0.85em; }
+.dosage-table .dosage-dose { font-size: 0.88em; line-height: 1.5; }
+.dosage-table .dosage-source { font-size: 0.75em; color: var(--text-secondary); }
+.dosage-table .dosage-status {
+  display: inline-block; padding: 2px 8px; border-radius: 8px;
+  font-size: 0.7em; font-weight: 700; color: #fff;
+}
 /* Results */
 .result-info {
   font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
@@ -462,6 +496,21 @@ body {
         <span class="contra-basket-empty">尚未添加药材，请在上方输入</span>
       </div>
       <div class="contra-results" id="contraResults"></div>
+    </div>
+  </div>
+
+  <!-- Dosage reference panel -->
+  <div class="dosage-panel" id="dosagePanel">
+    <div class="dosage-header" onclick="toggleDosagePanel()">
+      <span>📊 RCT 剂量参考 <span style="font-weight:400;font-size:0.8em;color:var(--text-secondary);">— 7味药材有犬猫临床验证数据</span></span>
+      <span class="dosage-toggle" id="dosageToggle">▸</span>
+    </div>
+    <div class="dosage-body" id="dosageBody">
+      <table class="dosage-table">
+        <thead><tr><th>药材</th><th>物种</th><th>剂量 / 用法</th><th>适应症</th><th>研究来源</th><th>安全性</th></tr></thead>
+        <tbody id="dosageTbody"></tbody>
+      </table>
+      <p style="font-size:0.72em;color:var(--text-secondary);margin-top:10px;">RCT = 随机对照试验。数据摘自各药材犬猫安全性备注，点击药材名可查看详情。</p>
     </div>
   </div>
 
@@ -918,6 +967,46 @@ document.getElementById('contraInput').addEventListener('keydown', function(e) {
     }
   }
 });
+
+// ==================== DOSAGE REFERENCE PANEL ====================
+const DOSAGES = [
+  {herb:"黄芪",species:"猫（幼猫）",dose:"0.6%日粮添加",condition:"免疫调节",source:"中国饲料 2024, RCT n=48",status:"recommended"},
+  {herb:"姜黄",species:"猫",dose:"EPA/DHA+姜黄饮食 13周",condition:"骨关节炎",source:"Animals 2024, RCT n=30",status:"available"},
+  {herb:"桑叶",species:"犬",dose:"6%日粮添加",condition:"脂代谢/免疫改善",source:"Metabolites 2023, RCT n=15",status:"available"},
+  {herb:"甘草",species:"犬",dose:"地黄桂芩胶囊（含甘草）复方",condition:"皮肤病",source:"Res Vet Sci 2024, RCT n=60",status:"recommended"},
+  {herb:"地黄",species:"犬",dose:"40-60 mg/kg 日二次 ×14天",condition:"皮肤病（复方）",source:"RCT n=60, 2024",status:"available"},
+  {herb:"茯苓",species:"猫",dose:"四君子汤（含茯苓）复方",condition:"肠道菌群/软便",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
+  {herb:"山药",species:"猫",dose:"四君子汤（含山药）复方",condition:"软便/IgA/IgG升高",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
+];
+
+function toggleDosagePanel() {
+  const body = document.getElementById('dosageBody');
+  const toggle = document.getElementById('dosageToggle');
+  const isOpen = body.classList.contains('show');
+  if (isOpen) { body.classList.remove('show'); toggle.classList.remove('open'); }
+  else { body.classList.add('show'); toggle.classList.add('open'); }
+}
+
+function renderDosageTable() {
+  const statusLabel = {recommended:'已应用',available:'可用',caution:'慎用'};
+  const statusColor = {recommended:'#3a7d44',available:'#5b8c5a',caution:'#d4943a'};
+  document.getElementById('dosageTbody').innerHTML = DOSAGES.map(function(d) {
+    return '<tr>' +
+      '<td><span class="dosage-herb" onclick="openDetailByName(\'' + d.herb + '\')">' + d.herb + '</span></td>' +
+      '<td><span class="dosage-species">' + d.species + '</span></td>' +
+      '<td><span class="dosage-dose">' + d.dose + '</span></td>' +
+      '<td>' + d.condition + '</td>' +
+      '<td><span class="dosage-source">' + d.source + '</span></td>' +
+      '<td><span class="dosage-status" style="background:' + (statusColor[d.status]||'#5b8c5a') + ';">' + (statusLabel[d.status]||'') + '</span></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function openDetailByName(name) {
+  const allHerbs = getAllHerbs();
+  const h = allHerbs.find(function(x) { return x.name === name; });
+  if (h) openDetail(h.id);
+}
 
 // ==================== APP STATE ====================
 const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
@@ -1515,6 +1604,7 @@ if (window.location.search) {
   history.replaceState(null, '', stateToURL());
 }
 renderCards();
+renderDosageTable();
 </script>
 </body>
 </html>
