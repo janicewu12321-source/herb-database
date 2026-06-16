@@ -41,9 +41,8 @@ body {
 .header p { opacity: 0.9; font-size: 0.95em; }
 /* Compact stats line */
 .stats-bar {
-  display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center;
-  padding: 10px 24px; max-width: 1400px; margin: 0 auto;
-  font-size: 0.78em; color: var(--text-secondary);
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  padding: 0 0 10px 0; font-size: 0.78em; color: var(--text-secondary);
 }
 .stats-bar .stat-num { font-weight: 700; color: var(--accent); }
 .stats-bar .stat-warn { color: var(--caution); }
@@ -61,15 +60,14 @@ body {
   font-size: 1em; background: var(--card-bg); transition: 0.2s;
 }
 .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
-/* Filter toggle */
-.filter-toggle-row { display: flex; justify-content: center; margin-bottom: 12px; }
+/* Filter toggle (inline in search bar) */
 .filter-toggle-btn {
-  padding: 6px 18px; border: 1.5px dashed var(--border); border-radius: 20px;
-  background: transparent; cursor: pointer; font-size: 0.78em; color: var(--text-secondary);
-  transition: all 0.2s; user-select: none;
+  padding: 12px 18px; border: 2px solid var(--border); border-radius: var(--radius);
+  background: var(--card-bg); cursor: pointer; font-size: 0.85em; color: var(--text-secondary);
+  transition: all 0.2s; user-select: none; white-space: nowrap;
 }
 .filter-toggle-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-.filter-toggle-btn.active { border-style: solid; border-color: var(--accent); color: var(--accent); }
+.filter-toggle-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 /* Toolbox tabs */
 .toolbox {
   background: var(--card-bg); border-radius: var(--radius);
@@ -477,18 +475,15 @@ body {
   <h1>🌿 宠物可饲用天然植物审查系统 <span style="font-size:0.4em;opacity:0.6;">v2.1</span></h1>
   </div>
 
-<div class="stats-bar" id="statsBar"></div>
-
 <div class="container">
+
+  <div class="stats-bar" id="statsBar"></div>
+
   <!-- Search -->
   <div class="search-bar">
     <input type="text" class="search-input" id="searchInput" placeholder="🔍 兽医快速审查：输入药材名、病症或功效...（如：猫+腹泻、犬+皮肤、清热）">
-    <button class="share-btn" id="shareBtn" onclick="copyShareLink()" title="复制当前搜索/筛选结果链接">🔗 复制链接</button>
-  </div>
-
-  <!-- Filter toggle (collapsed by default) -->
-  <div class="filter-toggle-row">
-    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterBar()">🔽 高级筛选</button>
+    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterBar()">🔽 筛选</button>
+    <button class="share-btn" id="shareBtn" onclick="copyShareLink()" title="复制当前搜索/筛选结果链接">🔗 分享</button>
   </div>
 
   <!-- Dropdown filter bar -->
@@ -977,11 +972,11 @@ function toggleFilterBar() {
   if (bar.style.display === 'none') {
     bar.style.display = 'flex';
     btn.classList.add('active');
-    btn.textContent = '🔼 收起筛选';
+    btn.textContent = '🔼 收起';
   } else {
     bar.style.display = 'none';
     btn.classList.remove('active');
-    btn.textContent = '🔽 高级筛选';
+    btn.textContent = '🔽 筛选';
   }
 }
 
