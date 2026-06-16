@@ -306,9 +306,17 @@ body {
   .cmp-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
 }
 /* Results */
-.result-info {
-  font-size: 0.85em; color: var(--text-secondary); margin-bottom: 14px;
+.result-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
 }
+.result-info { font-size: 0.85em; color: var(--text-secondary); }
+.sort-select {
+  padding: 5px 10px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--card-bg); font-size: 0.8em; color: var(--text);
+  cursor: pointer; outline: none;
+}
+.sort-select:focus { border-color: var(--accent); }
 .herb-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -599,7 +607,16 @@ body {
   </div>
 
   <!-- Results -->
-  <div class="result-info" id="resultInfo"></div>
+  <div class="result-bar">
+    <div class="result-info" id="resultInfo"></div>
+    <select class="sort-select" id="sortSelect" onchange="onSortChange()">
+      <option value="default">默认排序</option>
+      <option value="name-asc">名称 A → Z</option>
+      <option value="name-desc">名称 Z → A</option>
+      <option value="category-106">药食同源优先</option>
+      <option value="category-76">非药食同源优先</option>
+    </select>
+  </div>
   <div class="herb-grid" id="herbGrid"></div>
 </div>
 
@@ -1216,11 +1233,11 @@ function closeCmpModal() {
 }
 
 // ==================== APP STATE ====================
-const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all' };
+const state = { pet: 'all', safety: 'all', efficacy: 'all', family: 'all', search: '', category: 'all', foodFunc: 'all', sort: 'default' };
 
 // ==================== URL STATE SYNC ====================
-const URL_KEYS = { search:'q', pet:'p', safety:'s', efficacy:'e', family:'f', category:'c', foodFunc:'ff' };
-const URL_DEFAULTS = { pet:'all', safety:'all', efficacy:'all', family:'all', category:'all', foodFunc:'all' };
+const URL_KEYS = { search:'q', pet:'p', safety:'s', efficacy:'e', family:'f', category:'c', foodFunc:'ff', sort:'o' };
+const URL_DEFAULTS = { pet:'all', safety:'all', efficacy:'all', family:'all', category:'all', foodFunc:'all', sort:'default' };
 
 function stateToURL() {
   const params = new URLSearchParams();
@@ -1245,6 +1262,7 @@ function urlToState() {
     chip.classList.toggle('active', state[f] === val);
   });
   if (state.search) document.getElementById('searchInput').value = state.search;
+  if (state.sort) document.getElementById('sortSelect').value = state.sort;
 }
 
 function updateURL(mode) {
@@ -1496,8 +1514,23 @@ function updateStats() {
     '<span class="stat-sep">|</span><span>⚠️ 避免 <span class="stat-danger">' + avoid + '</span></span>';
 }
 
+function sortHerbs(herbs) {
+  const s = state.sort;
+  if (s === 'name-asc') return herbs.slice().sort(function(a,b) { return a.name.localeCompare(b.name,'zh'); });
+  if (s === 'name-desc') return herbs.slice().sort(function(a,b) { return b.name.localeCompare(a.name,'zh'); });
+  if (s === 'category-106') return herbs.slice().sort(function(a,b) { return (a.id>=107?1:0) - (b.id>=107?1:0) || a.name.localeCompare(b.name,'zh'); });
+  if (s === 'category-76') return herbs.slice().sort(function(a,b) { return (b.id>=107?1:0) - (a.id>=107?1:0) || a.name.localeCompare(b.name,'zh'); });
+  return herbs; // default: original order
+}
+function onSortChange() {
+  state.sort = document.getElementById('sortSelect').value;
+  updateURL('push');
+  renderCards();
+}
+
 function renderCards() {
-  const herbs = getFilteredHerbs();
+  var herbs = getFilteredHerbs();
+  herbs = sortHerbs(herbs);
   const grid = document.getElementById('herbGrid');
   const info = document.getElementById('resultInfo');
   const is76 = state.category === '76only';
