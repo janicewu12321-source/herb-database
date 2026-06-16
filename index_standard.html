@@ -39,27 +39,21 @@ body {
 }
 .header h1 { font-size: 2em; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
 .header p { opacity: 0.9; font-size: 0.95em; }
-/* Stats bar */
+/* Compact stats line */
 .stats-bar {
-  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
-  padding: 20px 24px; max-width: 1400px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center;
+  padding: 10px 24px; max-width: 1400px; margin: 0 auto;
+  font-size: 0.78em; color: var(--text-secondary);
 }
-.stat-card {
-  background: var(--card-bg); border-radius: var(--radius); padding: 14px 22px;
-  box-shadow: var(--shadow); text-align: center; min-width: 100px; flex: 1;
-  border-left: 4px solid var(--accent);
-}
-.stat-card.warn { border-left-color: var(--caution); }
-.stat-card.danger { border-left-color: var(--avoid); }
-.stat-card .num { font-size: 1.6em; font-weight: 700; color: var(--accent); }
-.stat-card.warn .num { color: var(--caution); }
-.stat-card.danger .num { color: var(--avoid); }
-.stat-card .label { font-size: 0.8em; color: var(--text-secondary); margin-top: 2px; }
+.stats-bar .stat-num { font-weight: 700; color: var(--accent); }
+.stats-bar .stat-warn { color: var(--caution); }
+.stats-bar .stat-danger { color: var(--avoid); }
+.stats-bar .stat-sep { opacity: 0.3; }
 /* Main layout */
 .container { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px; }
 /* Search & filter */
 .search-bar {
-  display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+  display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
 }
 .search-input {
   flex: 1; min-width: 240px; padding: 12px 18px;
@@ -67,6 +61,32 @@ body {
   font-size: 1em; background: var(--card-bg); transition: 0.2s;
 }
 .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+/* Filter toggle */
+.filter-toggle-row { display: flex; justify-content: center; margin-bottom: 12px; }
+.filter-toggle-btn {
+  padding: 6px 18px; border: 1.5px dashed var(--border); border-radius: 20px;
+  background: transparent; cursor: pointer; font-size: 0.78em; color: var(--text-secondary);
+  transition: all 0.2s; user-select: none;
+}
+.filter-toggle-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.filter-toggle-btn.active { border-style: solid; border-color: var(--accent); color: var(--accent); }
+/* Toolbox tabs */
+.toolbox {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
+}
+.toolbox-tabs {
+  display: flex; border-bottom: 1px solid var(--border); background: #faf9f5;
+}
+.toolbox-tab-btn {
+  flex: 1; padding: 10px 16px; border: none; background: none; cursor: pointer;
+  font-size: 0.82em; font-weight: 600; color: var(--text-secondary);
+  transition: all 0.15s; border-bottom: 2px solid transparent;
+}
+.toolbox-tab-btn:hover { color: var(--text); background: rgba(0,0,0,0.02); }
+.toolbox-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.toolbox-tab-body { display: none; padding: 16px 20px; }
+.toolbox-tab-body.show { display: block; }
 .share-btn {
   padding: 12px 18px; border: 2px solid var(--border); border-radius: var(--radius);
   background: var(--card-bg); cursor: pointer; font-size: 0.9em;
@@ -438,10 +458,7 @@ body {
   .herb-card .card-latin { font-size: 0.65em; }
   .detail-grid { grid-template-columns: 1fr; }
   .pet-section { grid-template-columns: 1fr; }
-  .stats-bar { gap: 6px; flex-wrap: nowrap; overflow-x: auto; }
-  .stat-card { min-width: 60px; padding: 8px 10px; }
-  .stat-card .num { font-size: 1.1em; }
-  .stat-card .label { font-size: 0.65em; }
+  .stats-bar { gap: 4px 10px; font-size: 0.7em; }
   .search-input { font-size: 0.9em; padding: 10px 14px; }
   .filter-bar { gap: 4px; }
   .dropdown-btn { font-size: 0.72em; padding: 6px 10px; }
@@ -469,8 +486,13 @@ body {
     <button class="share-btn" id="shareBtn" onclick="copyShareLink()" title="复制当前搜索/筛选结果链接">🔗 复制链接</button>
   </div>
 
+  <!-- Filter toggle (collapsed by default) -->
+  <div class="filter-toggle-row">
+    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterBar()">🔽 高级筛选</button>
+  </div>
+
   <!-- Dropdown filter bar -->
-  <div class="filter-bar">
+  <div class="filter-bar" id="filterBar" style="display:none;">
     <div class="filter-dropdown" id="dropdown-category">
       <button class="dropdown-btn" onclick="toggleDropdown('category')">📂 收录目录 ▾</button>
       <div class="dropdown-panel">
@@ -556,13 +578,13 @@ body {
     </div>
   </div>
 
-  <!-- Contraindication checker -->
-  <div class="contra-checker" id="contraChecker">
-    <div class="contra-header" onclick="toggleContraChecker()">
-      <span>⚠️ 配伍禁忌检查器 <span style="font-weight:400;font-size:0.8em;color:var(--text-secondary);">— 将多味药材加入配方篮，自动检查冲突</span></span>
-      <span class="contra-toggle" id="contraToggle">▸</span>
+  <!-- Toolbox: contraindication checker + dosage reference -->
+  <div class="toolbox" id="toolbox">
+    <div class="toolbox-tabs">
+      <button class="toolbox-tab-btn active" onclick="switchToolboxTab('contra')">⚠️ 配伍检查</button>
+      <button class="toolbox-tab-btn" onclick="switchToolboxTab('dosage')">📊 剂量参考</button>
     </div>
-    <div class="contra-body" id="contraBody">
+    <div class="toolbox-tab-body show" id="tab-contra">
       <div class="contra-input-row">
         <input type="text" id="contraInput" placeholder="输入药材名添加至配方篮..." autocomplete="off" oninput="handleContraInput()" onfocus="handleContraInput()">
         <div class="contra-suggestions" id="contraSuggestions"></div>
@@ -572,15 +594,7 @@ body {
       </div>
       <div class="contra-results" id="contraResults"></div>
     </div>
-  </div>
-
-  <!-- Dosage reference panel -->
-  <div class="dosage-panel" id="dosagePanel">
-    <div class="dosage-header" onclick="toggleDosagePanel()">
-      <span>📊 RCT 剂量参考 <span style="font-weight:400;font-size:0.8em;color:var(--text-secondary);">— 7味药材有犬猫临床验证数据</span></span>
-      <span class="dosage-toggle" id="dosageToggle">▸</span>
-    </div>
-    <div class="dosage-body" id="dosageBody">
+    <div class="toolbox-tab-body" id="tab-dosage">
       <table class="dosage-table">
         <thead><tr><th>药材</th><th>物种</th><th>剂量 / 用法</th><th>适应症</th><th>研究来源</th><th>安全性</th></tr></thead>
         <tbody id="dosageTbody"></tbody>
@@ -951,12 +965,24 @@ function getAllHerbs() {
   return HERBS.concat(HERBS_76);
 }
 
-function toggleContraChecker() {
-  const body = document.getElementById('contraBody');
-  const toggle = document.getElementById('contraToggle');
-  const isOpen = body.classList.contains('show');
-  if (isOpen) { body.classList.remove('show'); toggle.classList.remove('open'); }
-  else { body.classList.add('show'); toggle.classList.add('open'); }
+function switchToolboxTab(tab) {
+  document.querySelectorAll('.toolbox-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.toolbox-tab-body').forEach(function(b) { b.classList.remove('show'); });
+  document.getElementById('tab-' + tab).classList.add('show');
+  event.target.classList.add('active');
+}
+function toggleFilterBar() {
+  var bar = document.getElementById('filterBar');
+  var btn = document.getElementById('filterToggleBtn');
+  if (bar.style.display === 'none') {
+    bar.style.display = 'flex';
+    btn.classList.add('active');
+    btn.textContent = '🔼 收起筛选';
+  } else {
+    bar.style.display = 'none';
+    btn.classList.remove('active');
+    btn.textContent = '🔽 高级筛选';
+  }
 }
 
 function handleContraInput() {
@@ -1068,14 +1094,6 @@ const DOSAGES = [
   {herb:"茯苓",species:"猫",dose:"四君子汤（含茯苓）复方",condition:"肠道菌群/软便",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
   {herb:"山药",species:"猫",dose:"四君子汤（含山药）复方",condition:"软便/IgA/IgG升高",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
 ];
-
-function toggleDosagePanel() {
-  const body = document.getElementById('dosageBody');
-  const toggle = document.getElementById('dosageToggle');
-  const isOpen = body.classList.contains('show');
-  if (isOpen) { body.classList.remove('show'); toggle.classList.remove('open'); }
-  else { body.classList.add('show'); toggle.classList.add('open'); }
-}
 
 function renderDosageTable() {
   const statusLabel = {recommended:'已应用',available:'可用',caution:'慎用'};
@@ -1468,21 +1486,19 @@ function getFilteredHerbs() {
 // ==================== RENDER ====================
 function updateStats() {
   const filtered = getFilteredHerbs();
-  const total = HERBS.length;
   const allHerbs = HERBS.concat(HERBS_76);
-  const dogRec = allHerbs.filter(h => h.pet.dog === 'recommended').length;
-  const catRec = allHerbs.filter(h => h.pet.cat === 'recommended').length;
-  const dogAvoid = allHerbs.filter(h => h.pet.dog === 'avoid').length;
-  const catAvoid = allHerbs.filter(h => h.pet.cat === 'avoid').length;
+  const dogRec = allHerbs.filter(function(h) { return h.pet.dog === 'recommended'; }).length;
+  const catRec = allHerbs.filter(function(h) { return h.pet.cat === 'recommended'; }).length;
+  const avoid = allHerbs.filter(function(h) { return h.pet.dog === 'avoid' || h.pet.cat === 'avoid'; }).length;
 
-  document.getElementById('statsBar').innerHTML = `
-    <div class="stat-card"><div class="num">${HERBS.length}</div><div class="label">药食同源</div></div>
-    <div class="stat-card"><div class="num">${HERBS_76.length}</div><div class="label">非药食同源</div></div>
-    <div class="stat-card"><div class="num">${filtered.length}</div><div class="label">当前筛选结果</div></div>
-    <div class="stat-card"><div class="num">${dogRec}</div><div class="label">🐕 犬已用</div></div>
-    <div class="stat-card"><div class="num">${catRec}</div><div class="label">🐈 猫已用</div></div>
-    <div class="stat-card warn"><div class="num">${dogAvoid + catAvoid}</div><div class="label">⚠️ 避免</div></div>
-  `;
+  document.getElementById('statsBar').innerHTML =
+    '<span>共收录 <span class="stat-num">160</span> 种</span>' +
+    '<span class="stat-sep">|</span><span>药食同源 <span class="stat-num">' + HERBS.length + '</span></span>' +
+    '<span class="stat-sep">|</span><span>饲料目录独有 <span class="stat-num">' + HERBS_76.length + '</span></span>' +
+    '<span class="stat-sep">|</span><span>当前筛选 <span class="stat-num">' + filtered.length + '</span> 种</span>' +
+    '<span class="stat-sep">|</span><span>🐕 犬已用 <span class="stat-num">' + dogRec + '</span></span>' +
+    '<span class="stat-sep">|</span><span>🐈 猫已用 <span class="stat-num">' + catRec + '</span></span>' +
+    '<span class="stat-sep">|</span><span>⚠️ 避免 <span class="stat-danger">' + avoid + '</span></span>';
 }
 
 function renderCards() {
