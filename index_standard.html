@@ -85,6 +85,53 @@ body {
 .toolbox-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 .toolbox-tab-body { display: none; padding: 16px 20px; }
 .toolbox-tab-body.show { display: block; }
+/* Recommendation panel */
+.rec-input-row {
+  display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;
+}
+.rec-input-row input {
+  flex: 1; min-width: 200px; padding: 10px 14px; border: 2px solid var(--border);
+  border-radius: 8px; font-size: 0.9em; background: var(--bg);
+}
+.rec-input-row input:focus { outline: none; border-color: var(--accent); }
+.rec-species-btn {
+  padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 20px;
+  background: var(--card-bg); cursor: pointer; font-size: 0.82em; font-weight: 600;
+  transition: all 0.2s; user-select: none;
+}
+.rec-species-btn:hover { border-color: var(--accent); }
+.rec-species-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.rec-species-btn.active.dog-sel { background: #5b8c5a; border-color: #5b8c5a; }
+.rec-species-btn.active.cat-sel { background: #4a7c8b; border-color: #4a7c8b; }
+.rec-go-btn {
+  padding: 10px 22px; border: none; border-radius: var(--radius);
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 0.9em;
+  cursor: pointer; transition: background 0.2s;
+}
+.rec-go-btn:hover { background: #3a7d44; }
+.rec-result-card {
+  background: #f9f7f2; border-radius: 10px; padding: 16px; margin-bottom: 12px;
+  border-left: 4px solid #5b8c5a; transition: box-shadow 0.2s;
+}
+.rec-result-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.rec-result-card.rec-rct { border-left-color: #3a7d44; }
+.rec-result-card.rec-applied { border-left-color: #5b8c5a; }
+.rec-result-card.rec-concept { border-left-color: #c0c0a0; }
+.rec-card-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.rec-card-header .rec-brand { font-weight: 700; font-size: 0.95em; }
+.rec-card-header .rec-product { font-size: 0.88em; color: var(--text-secondary); }
+.rec-card-header .rec-badge {
+  padding: 2px 10px; border-radius: 10px; font-size: 0.7em; font-weight: 700; color: #fff; white-space: nowrap;
+}
+.rec-herbs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.rec-herb-tag {
+  padding: 2px 8px; border-radius: 6px; font-size: 0.72em; font-weight: 600;
+}
+.rec-herb-tag.rec-match { background: #c8e0c8; color: #3a7d44; }
+.rec-herb-tag.rec-other { background: #f0ede5; color: var(--text-secondary); }
+.rec-herb-tag.rec-rct-tag { background: #dfc8a0; color: #7a5a2a; }
+.rec-meta { font-size: 0.72em; color: var(--text-secondary); display: flex; gap: 16px; flex-wrap: wrap; }
+.rec-empty { text-align: center; padding: 30px 20px; color: var(--text-secondary); font-size: 0.85em; }
 .share-btn {
   padding: 12px 18px; border: 2px solid var(--border); border-radius: var(--radius);
   background: var(--card-bg); cursor: pointer; font-size: 0.9em;
@@ -586,6 +633,7 @@ body {
     <div class="toolbox-tabs">
       <button class="toolbox-tab-btn active" onclick="switchToolboxTab('contra')">⚠️ 配伍检查</button>
       <button class="toolbox-tab-btn" onclick="switchToolboxTab('dosage')">📊 剂量参考</button>
+      <button class="toolbox-tab-btn" onclick="switchToolboxTab('recommend')">🤖 智能推荐</button>
     </div>
     <div class="toolbox-tab-body show" id="tab-contra">
       <div class="contra-input-row">
@@ -603,6 +651,15 @@ body {
         <tbody id="dosageTbody"></tbody>
       </table>
       <p style="font-size:0.72em;color:var(--text-secondary);margin-top:10px;">RCT = 随机对照试验。数据摘自各药材犬猫安全性备注，点击药材名可查看详情。</p>
+    </div>
+    <div class="toolbox-tab-body" id="tab-recommend">
+      <div class="rec-input-row">
+        <input type="text" id="recInput" placeholder="输入症状或需求，如：老年猫关节炎、幼犬腹泻、猫咪掉毛..." onkeydown="if(event.key==='Enter')runRecommend()">
+        <button class="rec-species-btn dog-sel" id="recDogBtn" onclick="toggleRecSpecies('dog')">🐕 犬</button>
+        <button class="rec-species-btn cat-sel" id="recCatBtn" onclick="toggleRecSpecies('cat')">🐈 猫</button>
+        <button class="rec-go-btn" onclick="runRecommend()">推荐</button>
+      </div>
+      <div id="recResults"><div class="rec-empty">👆 输入症状关键词，如"关节炎""腹泻""掉毛"，选择犬/猫后点击推荐</div></div>
     </div>
   </div>
 
@@ -983,6 +1040,135 @@ function switchToolboxTab(tab) {
   document.getElementById('tab-' + tab).classList.add('show');
   event.target.classList.add('active');
 }
+// ==================== RECOMMENDATION ENGINE ====================
+let recSpecies = { dog: true, cat: true };
+
+function toggleRecSpecies(s) {
+  if (s === 'dog') recSpecies.dog = !recSpecies.dog;
+  else recSpecies.cat = !recSpecies.cat;
+  document.getElementById('recDogBtn').classList.toggle('active', recSpecies.dog);
+  document.getElementById('recCatBtn').classList.toggle('active', recSpecies.cat);
+}
+// Init species toggles as active
+document.getElementById('recDogBtn').classList.add('active');
+document.getElementById('recCatBtn').classList.add('active');
+
+function runRecommend() {
+  const q = document.getElementById('recInput').value.trim();
+  if (!q) return;
+
+  // 1. Match input → food functions via symptom mapping
+  const SYMPTOM_EFF = {"腹泻":["收涩","肠胃调理","利水渗湿"],"拉稀":["收涩","肠胃调理"],"软便":["收涩","肠胃调理"],"便秘":["润下"],"呕吐":["理气","肠胃调理"],"咳嗽":["化痰止咳"],"掉毛":["皮毛管理","补阴"],"尿血":["泌尿管理","止血"],"尿闭":["泌尿管理","利水渗湿"],"结石":["泌尿管理","利水渗湿"],"口臭":["口腔护理","清热"],"牙结石":["口腔护理"],"瘙痒":["清热","祛风湿"],"皮肤病":["清热"],"关节":["关节养护","祛风湿"],"跛行":["关节养护"],"免疫力":["免疫提升","补气"],"体弱":["免疫提升","补气"],"食欲不振":["消食","肠胃调理"],"肥胖":["体重管理"],"肝":["肝脏管理"],"心脏":["心脏管理"],"失眠":["安神"],"焦虑":["安神"],"上火":["清热"],"感冒":["解表"],"贫血":["补血"],"衰老":["免疫提升","补气","补阴"]};
+  const matchedFuncs = new Set();
+  const qLower = q.toLowerCase();
+  for (const sym in SYMPTOM_EFF) {
+    if (qLower.includes(sym)) SYMPTOM_EFF[sym].forEach(function(f) { matchedFuncs.add(f); });
+  }
+  // Also direct function name match
+  FOOD_FUNCS.forEach(function(f) { if (qLower.includes(f)) matchedFuncs.add(f); });
+  if (matchedFuncs.size === 0) {
+    document.getElementById('recResults').innerHTML = '<div class="rec-empty">未识别到症状关键词，请尝试输入：关节炎、腹泻、掉毛、口臭、免疫力...</div>';
+    return;
+  }
+
+  // 2. Get target species
+  const species = [];
+  if (recSpecies.dog) species.push('dog');
+  if (recSpecies.cat) species.push('cat');
+
+  // 3. Find herbs matching the functions, check safety
+  const allHerbs = HERBS.concat(HERBS_76);
+  const rctHerbs = new Set(DOSAGES.map(function(d) { return d.herb; }));
+
+  // 4. Score each product
+  const scored = PET_FOODS.map(function(p) {
+    let score = 0; const reasons = [];
+    // Filter herbs in product that match the functions
+    const matchHerbs = [];
+    const otherHerbs = [];
+    p.herbs.forEach(function(hName) {
+      const herb = allHerbs.find(function(x) { return x.name === hName; });
+      if (!herb) return;
+      const effMatch = herb.efficacy.some(function(e) { return matchedFuncs.has(e); });
+      if (effMatch) matchHerbs.push(hName);
+      else otherHerbs.push(hName);
+    });
+    if (matchHerbs.length === 0) return null; // no matching herbs → skip
+
+    score += matchHerbs.length * 10;
+    reasons.push(matchHerbs.length + '味药材匹配症状');
+
+    // RCT bonus
+    const rctCount = matchHerbs.filter(function(h) { return rctHerbs.has(h); }).length;
+    if (rctCount > 0) { score += rctCount * 5; reasons.push(rctCount + '味有RCT验证'); }
+
+    // Species match
+    const petOk = species.map(function(sp) {
+      const ok = p.pet.includes(sp) || p.pet.includes('犬猫通用');
+      // Check herb safety for this species
+      let safetyScore = 0; let disqualified = false;
+      p.herbs.forEach(function(hName) {
+        const herb = allHerbs.find(function(x) { return x.name === hName; });
+        if (!herb) return;
+        const status = herb.pet[sp];
+        if (status === 'avoid') disqualified = true;
+        else if (status === 'caution') safetyScore -= 2;
+        else if (status === 'recommended') safetyScore += 2;
+      });
+      return { sp: sp, ok: ok, safetyScore: safetyScore, disqualified: disqualified };
+    });
+    if (petOk.some(function(x) { return x.disqualified; })) return null;
+    score += petOk.reduce(function(s,x) { return s + x.safetyScore; }, 0);
+
+    // Evidence tier
+    let tier = 'concept';
+    if (rctCount > 0) tier = 'rct';
+    else if (matchHerbs.some(function(h) {
+      const herb = allHerbs.find(function(x) { return x.name === h; });
+      return herb && (species.some(function(sp) { return herb.pet[sp] === 'recommended'; }));
+    })) tier = 'applied';
+
+    return {
+      product: p, matchHerbs: matchHerbs, otherHerbs: otherHerbs, rctHerbs: rctCount,
+      score: score, tier: tier, reasons: reasons,
+      speciesOk: petOk.filter(function(x) { return x.ok; }).map(function(x) { return x.sp; })
+    };
+  }).filter(function(x) { return x !== null; });
+
+  scored.sort(function(a,b) { return b.score - a.score; });
+
+  // 5. Render results
+  var html = '';
+  if (scored.length === 0) {
+    html = '<div class="rec-empty">未找到安全匹配的产品。部分药材对该物种存在禁忌，已自动排除。</div>';
+  } else {
+    const tierLabel = {rct:'⭐ RCT验证', applied:'✅ 已应用', concept:'💡 概念可用'};
+    const tierBadgeColor = {rct:'#3a7d44', applied:'#5b8c5a', concept:'#9b9b7a'};
+    const tierClass = {rct:'rec-rct', applied:'rec-applied', concept:'rec-concept'};
+    html += '<div style="font-size:0.8em;color:var(--text-secondary);margin-bottom:10px;">匹配功能：' + Array.from(matchedFuncs).join('、') + ' | 找到 ' + scored.length + ' 款产品</div>';
+    scored.forEach(function(s) {
+      var spLabel = s.speciesOk.join('/');
+      html += '<div class="rec-result-card ' + tierClass[s.tier] + '">' +
+        '<div class="rec-card-header">' +
+        '<div><span class="rec-brand">' + s.product.brand + '</span> <span class="rec-product">' + s.product.product + '</span></div>' +
+        '<span class="rec-badge" style="background:' + tierBadgeColor[s.tier] + ';">' + tierLabel[s.tier] + '</span>' +
+        '</div>' +
+        '<div class="rec-herbs">' +
+        s.matchHerbs.map(function(h) {
+          var isRCT = rctHerbs.has(h);
+          return '<span class="rec-herb-tag ' + (isRCT ? 'rec-rct-tag' : 'rec-match') + '">' + h + (isRCT ? ' 📊' : '') + '</span>';
+        }).join('') +
+        s.otherHerbs.map(function(h) { return '<span class="rec-herb-tag rec-other">' + h + '</span>'; }).join('') +
+        '</div>' +
+        '<div class="rec-meta">' +
+        '<span>🐾 ' + s.product.pet + '</span><span>🏷 ' + s.product.type + '</span><span>📋 ' + s.product.func + '</span>' +
+        (s.product.articleURL ? '<a href="' + s.product.articleURL + '" target="_blank" rel="noopener" style="color:#5b8c5a;">📰 报道</a>' : '') +
+        '</div></div>';
+    });
+  }
+  document.getElementById('recResults').innerHTML = html;
+}
+
 function toggleFilterBar() {
   var bar = document.getElementById('filterBar');
   var btn = document.getElementById('filterToggleBtn');
