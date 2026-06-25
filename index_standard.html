@@ -546,8 +546,8 @@ body {
     <div class="filter-dropdown" id="dropdown-category">
       <button class="dropdown-btn" onclick="toggleDropdown('category')">📂 收录目录 ▾</button>
       <div class="dropdown-panel">
-        <span class="filter-chip active" data-filter="category" data-val="all">全部（160种）</span>
-        <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（93种）</span>
+        <span class="filter-chip active" data-filter="category" data-val="all">全部（159种）</span>
+        <span class="filter-chip" data-filter="category" data-val="106only">药食同源植物（92种）</span>
         <span class="filter-chip" data-filter="category" data-val="76only">非药食同源植物（67种）</span>
       </div>
     </div>
@@ -777,7 +777,7 @@ const HERBS = [
   {id:74,name:"鲜芦根",latin:"Phragmites communis Trin.",family:"禾本科",part:"新鲜根茎",efficacy:["清热"],batch:1,imgGrad:["#c4c4b0","#8b8b7a"],pet:{dog:"available",cat:"available",dogNote:"清热生津，适量安全",catNote:"适量安全"}},
 
   // === 第一批 菌藻类 ===
-  {id:75,name:"昆布",latin:"Laminaria japonica Aresch.",family:"海带科",part:"叶状体",efficacy:["利水渗湿"],batch:1,imgGrad:["#4a6b5a","#2a3a3a"],pet:{dog:"available",cat:"available",dogNote:"软坚散结，富含碘，适量安全",catNote:"含碘高，甲亢猫需控制量"}},
+
   {id:76,name:"茯苓",latin:"Poria cocos (Schw.) Wolf",family:"多孔菌科",part:"菌核",efficacy:["利水渗湿"],batch:1,imgGrad:["#c4b0a0","#8b7a6a"],pet:{dog:"recommended",cat:"recommended",dogNote:"健脾祛湿，多品牌使用。猫四君子汤（含茯苓）改善肠道健康（Front Vet Sci 2025,RCT,n=24）",catNote:"猫肠胃调理核心成分。RCT验证：四君子汤改善肠道菌群（Front Vet Sci 2025）"}},
   {id:77,name:"淡豆豉",latin:"Glycine max (L.) Merr.",family:"豆科",part:"大豆发酵加工品",efficacy:["解表"],batch:1,imgGrad:["#5a4a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"发酵豆制品，适量安全",catNote:"适量安全，注意豆类过敏"}},
 
@@ -1711,7 +1711,7 @@ function updateStats() {
   const avoid = allHerbs.filter(function(h) { return h.pet.dog === 'avoid' || h.pet.cat === 'avoid'; }).length;
 
   document.getElementById('statsBar').innerHTML =
-    '<span>共收录 <span class="stat-num">160</span> 种</span>' +
+    '<span>共收录 <span class="stat-num">159</span> 种</span>' +
     '<span class="stat-sep">|</span><span>药食同源 <span class="stat-num">' + HERBS.length + '</span></span>' +
     '<span class="stat-sep">|</span><span>饲料目录独有 <span class="stat-num">' + HERBS_76.length + '</span></span>' +
     '<span class="stat-sep">|</span><span>当前筛选 <span class="stat-num">' + filtered.length + '</span> 种</span>' +
