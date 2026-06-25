@@ -1285,13 +1285,33 @@ document.getElementById('contraInput').addEventListener('keydown', function(e) {
 // ==================== DOSAGE REFERENCE PANEL ====================
 const DOSAGES = [
   {herb:"黄芪",species:"猫（幼猫）",dose:"0.6%日粮添加",condition:"免疫调节",source:"中国饲料 2024, RCT n=48",status:"recommended"},
+  {herb:"黄芪",species:"犬（幼犬）",dose:"100-200 mg/kg 饲粮",condition:"生长性能/免疫/肠道菌群",source:"饲料研究 2026, RCT n=?",status:"recommended"},
   {herb:"姜黄",species:"猫",dose:"EPA/DHA+姜黄饮食 13周",condition:"骨关节炎",source:"Animals 2024, RCT n=30",status:"available"},
+  {herb:"姜黄",species:"犬",dose:"C3姜黄软骨素复方",condition:"膝关节炎",source:"犬实验 2024",status:"recommended"},
   {herb:"桑叶",species:"犬",dose:"6%日粮添加",condition:"脂代谢/免疫改善",source:"Metabolites 2023, RCT n=15",status:"available"},
+  {herb:"桑叶",species:"犬",dose:"桑叶多糖 4w",condition:"肥胖症-体重↓/血脂↓/葡萄糖耐量↑",source:"犬实验 RCT n=18",status:"available"},
   {herb:"甘草",species:"犬",dose:"地黄桂芩胶囊（含甘草）复方",condition:"皮肤病",source:"Res Vet Sci 2024, RCT n=60",status:"recommended"},
+  {herb:"甘草",species:"犬猫",dose:"复方甘草营养剂 0.5-2.5比例",condition:"皮肤病-丘疹100%/红斑75%有效",source:"河北工程大学 犬猫各6例",status:"recommended"},
   {herb:"地黄",species:"犬",dose:"40-60 mg/kg 日二次 ×14天",condition:"皮肤病（复方）",source:"RCT n=60, 2024",status:"available"},
   {herb:"茯苓",species:"猫",dose:"四君子汤（含茯苓）复方",condition:"肠道菌群/软便",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
   {herb:"山药",species:"猫",dose:"四君子汤（含山药）复方",condition:"软便/IgA/IgG升高",source:"Front Vet Sci 2025, RCT n=24",status:"recommended"},
+  {herb:"百合+玉竹",species:"犬猫",dose:"百合玉竹益肺方剂 42d",condition:"毛发保健-毛囊密度↑/抗氧化↑/毛发光亮度↑",source:"犬猫各16只 2024",status:"available"},
+  {herb:"菊苣",species:"猫",dose:"菊苣酸 130-210 mg/kg/d",condition:"脂肪肝-肝功能恢复/脂质代谢改善",source:"猫 RCT n=30",status:"available"},
+  {herb:"马齿苋",species:"犬",dose:"马齿苋20g+益生菌20%接种量",condition:"腹泻防治-联合应用优于单用",source:"犬实验 番泻叶腹泻模型",status:"recommended"},
+  {herb:"杨树花",species:"犬",dose:"杨树花口服液 中西结合",condition:"细小病毒病-治愈率90%(vs纯西药85%)",source:"犬临床试验 n=40",status:"available"},
+  {herb:"益母草+淫羊藿",species:"犬（母犬）",dose:"益母草0.1%+淫羊藿0.1%日粮",condition:"繁殖性能-发情率↑20%/受胎率↑12%",source:"柴犬 n=120",status:"available"},
+  {herb:"天麻",species:"猫",dose:"天麻素（GAS）灌胃",condition:"杀虫剂（吡虫啉）中毒肝损伤保护",source:"猫急性中毒实验",status:"available"},
+  {herb:"补骨脂",species:"犬",dose:"补骨脂水提物 UPLC-MS/MS",condition:"10个活性成分犬药代动力学",source:"比格犬药代研究",status:"caution"},
+  {herb:"槐米",species:"犬",dose:"1%槐米提取物共包埋",condition:"益生菌微胶囊-模拟胃肠液存活率↑/储存60天",source:"犬类咀嚼片研究",status:"available"},
+  {herb:"银杏叶",species:"犬",dose:"银杏叶提取物 高脂饮食",condition:"肥胖犬-脂肪沉积↓/脂质代谢改善",source:"犬实验 3篇",status:"available"},
+  {herb:"葛根",species:"犬",dose:"葛根素 膝关节腔注射",condition:"膝骨关节炎-软骨保护/抗炎",source:"犬实验",status:"available"},
+  {herb:"杜仲叶",species:"犬猫",dose:"杜仲叶提取物",condition:"犬抗氧化/免疫↑; 猫生长/血液指标改善",source:"犬猫各1篇实验",status:"recommended"},
+  {herb:"绞股蓝",species:"猫",dose:"绞股蓝醇提取物",condition:"脂肪肝-脂质代谢改善",source:"猫实验",status:"available"},
+  {herb:"金银花",species:"犬",dose:"金银花多糖 0.1%日粮",condition:"抗氧化/疫苗免疫效果增强",source:"犬实验",status:"recommended"},
+  {herb:"五味子",species:"犬",dose:"五味子提取物 600mg/kg",condition:"心肌缺血再灌注损伤保护",source:"犬实验",status:"available"},
+  {herb:"菟丝子",species:"犬猫",dose:"菟丝子提取物(CL-4); 3g/kg",condition:"猫尿液/血清抗氧化/免疫↑; 犬心肌缺血保护",source:"犬猫各1篇实验",status:"available"},
 ];
+
 
 function renderDosageTable() {
   const statusLabel = {recommended:'已应用',available:'可用',caution:'慎用'};
