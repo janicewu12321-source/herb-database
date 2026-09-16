@@ -431,6 +431,7 @@ body {
 .s-ok { background: #5b8c5a; }
 .s-warn { background: #d4943a; }
 .s-no { background: #c0392b; }
+.evi-dot { font-size: 0.65em; margin-left: 1px; cursor: help; opacity: 0.85; }
 .herb-card .card-body { padding: 14px 16px; }
 .herb-card .card-name { font-size: 1.15em; font-weight: 700; margin-bottom: 2px; }
 .herb-card .card-latin { font-size: 0.75em; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -799,7 +800,7 @@ const HERBS = [
   {id:94,name:"党参",latin:"Codonopsis pilosula (Franch.) Nannf.",family:"桔梗科",part:"根",efficacy:["补气"],batch:3,imgGrad:["#c4a07a","#8b6a5a"],pet:{dog:"recommended",cat:"recommended",dogNote:"补中益气、改善虚弱，多品牌营养膏/处方粮使用",catNote:"补气健脾，WUI与你鲜食罐已使用"}},
   {id:95,name:"肉苁蓉",latin:"Cistanche deserticola Y.C.Ma",family:"列当科",part:"肉质茎",efficacy:["补阳"],batch:3,imgGrad:["#8b6a4a","#5a3a2a"],pet:{dog:"available",cat:"available",dogNote:"补肾阳，老年犬滋补可用",catNote:"老年猫滋补概念可用"}},
   {id:96,name:"铁皮石斛",latin:"Dendrobium officinale Kimura et Migo",family:"兰科",part:"茎",efficacy:["补阴"],batch:3,imgGrad:["#5a8b4a","#2a5a2a"],pet:{dog:"available",cat:"available",dogNote:"滋阴、肠胃黏膜修复，概念阶段",catNote:"滋阴养胃，猫肠胃调理概念可用"}},
-  {id:97,name:"西洋参",latin:"Panax quinquefolium L.",family:"五加科",part:"根",efficacy:["补气","补阴"],batch:3,imgGrad:["#c4a05a","#8b6a3a"],pet:{dog:"available",cat:"available",dogNote:"补气养阴（偏凉补），适合热性体质犬，心脏配方概念",catNote:"凉补，猫较犬更适合（猫偏热性体质较多）"}},
+  {id:97,name:"西洋参",latin:"Panax quinquefolium L.",family:"五加科",part:"根",efficacy:["补气","补阴"],batch:3,imgGrad:["#c4a05a","#8b6a3a"],pet:{dog:"available",cat:"caution",dogNote:"补气养阴（偏凉补），适合热性体质犬，心脏配方概念",catNote:"暂无猫特异性安全性数据，基于中医药理论外推"}},
   {id:98,name:"黄芪",latin:"Astragalus membranaceus (Fisch.) Bge. var. mongholicus (Bge.) Hsiao",family:"豆科",part:"根",efficacy:["补气"],batch:3,imgGrad:["#c4a04a","#8b6a2a"],pet:{dog:"recommended",cat:"recommended",dogNote:"免疫调节，多品牌使用。幼猫0.6%日粮添加量最优（RCT,n=48,2024）",catNote:"免疫调节，多品牌使用。幼猫0.6%日粮添加最优（中国饲料2024,RCT,n=48）"}},
   {id:99,name:"灵芝",latin:"Ganoderma lucidum (Leyss. ex Fr.) Karst.",family:"多孔菌科",part:"子实体",efficacy:["安神"],batch:3,imgGrad:["#6b3a3a","#3a1a1a"],pet:{dog:"recommended",cat:"recommended",dogNote:"免疫调节，朗诺五珍系列已使用",catNote:"免疫调节、安神，猫免疫配方可用"}},
   {id:100,name:"山茱萸",latin:"Cornus officinalis Sieb. et Zucc.",family:"山茱萸科",part:"果肉",efficacy:["收涩"],batch:3,imgGrad:["#b42a2a","#7a1a1a"],pet:{dog:"available",cat:"available",dogNote:"补益肝肾，泌尿配方概念",catNote:"猫泌尿配方概念可用"}},
@@ -808,8 +809,8 @@ const HERBS = [
 
   // === 第四批 ===
   {id:103,name:"地黄",latin:"Rehmannia glutinosa Libosch.",family:"玄参科",part:"块根（鲜地黄/生地黄/熟地黄）",efficacy:["清热","补血"],batch:4,imgGrad:["#3a2a2a","#1a0a0a"],pet:{dog:"available",cat:"available",dogNote:"鲜生地清热凉血，熟地补血。犬皮肤病复方（地黄桂芩胶囊）40-60mg/kg日二次14天（RCT,n=60,2024）",catNote:"猫肝肾管理概念可用。暂无猫单独剂量数据"}},
-  {id:104,name:"麦冬",latin:"Ophiopogon japonicus (L.f) Ker-Gawl.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润肺，心脏配方概念",catNote:"养阴生津，心脏管理概念可用"}},
-  {id:105,name:"天冬",latin:"Asparagus cochinchinensis (Lour.) Merr.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"滋阴润燥，与麦冬类似",catNote:"滋阴，适量安全"}},
+  {id:104,name:"麦冬",latin:"Ophiopogon japonicus (L.f) Ker-Gawl.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"caution",dogNote:"滋阴润肺，心脏配方概念",catNote:"百合科植物，暂无猫特异性安全性数据"}},
+  {id:105,name:"天冬",latin:"Asparagus cochinchinensis (Lour.) Merr.",family:"百合科",part:"干燥块根",efficacy:["补阴"],batch:4,imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"caution",dogNote:"滋阴润燥，与麦冬类似",catNote:"百合科植物，暂无猫特异性安全性数据"}},
 ];
 
 // ==================== 非药食同源植物（饲料目录7.6独有，28种）====================
@@ -830,7 +831,7 @@ const HERBS_76 = [
   {id:120,name:"女贞子",latin:"Ligustrum lucidum Ait.",family:"木犀科",part:"干燥成熟果实",efficacy:["补阴"],imgGrad:["#3a3a5a","#1a1a3a"],pet:{dog:"available",cat:"available",dogNote:"滋补肝肾，老年宠物可用",catNote:"适量安全"}},
   {id:121,name:"五味子",latin:"Schisandra chinensis (Turcz.) Baill.",family:"木兰科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#c42a2a","#8b0a0a"],pet:{dog:"available",cat:"caution",dogNote:"收敛固涩，宠物止泻配方可用",catNote:"含木脂素类，猫需控制剂量"}},
   {id:122,name:"泽泻",latin:"Alisma plantago-aquatica L.",family:"泽泻科",part:"干燥块茎",efficacy:["利水渗湿"],imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"利水渗湿，中兽医经典用药",catNote:"利尿，猫泌尿配方可用"}},
-  {id:123,name:"知母",latin:"Anemarrhena asphodeloides Bge.",family:"百合科",part:"干燥根茎",efficacy:["清热"],imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"available",dogNote:"清热泻火，宠物清热配方可用",catNote:"适量安全"}},
+  {id:123,name:"知母",latin:"Anemarrhena asphodeloides Bge.",family:"百合科",part:"干燥根茎",efficacy:["清热"],imgGrad:["#c4b07a","#8b7a5a"],pet:{dog:"available",cat:"caution",dogNote:"清热泻火，宠物清热配方可用",catNote:"百合科植物，暂无猫特异性安全性数据"}},
   {id:124,name:"枳壳",latin:"Citrus aurantium L.",family:"芸香科",part:"干燥未成熟果实",efficacy:["理气"],imgGrad:["#d4802a","#a0501a"],pet:{dog:"available",cat:"caution",dogNote:"理气宽中，宠物消化配方可用",catNote:"柑橘属含挥发油，猫慎用"}},
   {id:125,name:"茜草",latin:"Rubia cordifolia L.",family:"茜草科",part:"干燥根和根茎",efficacy:["止血"],imgGrad:["#8b2a2a","#5a0a0a"],pet:{dog:"available",cat:"available",dogNote:"凉血止血，宠物外伤/出血概念",catNote:"适量安全"}},
   {id:126,name:"诃子",latin:"Terminalia chebula Retz.",family:"使君子科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#6b5a3a","#3a2a1a"],pet:{dog:"available",cat:"available",dogNote:"涩肠敛肺，宠物止泻配方可用",catNote:"宠物肠胃调理可用"}},
@@ -851,19 +852,19 @@ const HERBS_76 = [
   {id:143,name:"槐角",latin:"Sophora japonica L.",family:"豆科",part:"干燥成熟果实",efficacy:["止血"],imgGrad:["#2690a6","#78cf8d"],pet:{dog:"available",cat:"available",dogNote:"槐角，槐树果实，凉血止血。适量安全",catNote:"槐角，适量安全"}},
   {id:144,name:"金荞麦",latin:"Fagopyrum dibotrys (D. Don) Hara",family:"蓼科",part:"干燥根茎",efficacy:["清热"],imgGrad:["#705e49","#deb1bc"],pet:{dog:"available",cat:"available",dogNote:"金荞麦，清热解毒。适量安全",catNote:"金荞麦，适量安全"}},
   {id:145,name:"金樱子",latin:"Rosa laevigata Michx.",family:"蔷薇科",part:"干燥成熟果实",efficacy:["收涩"],imgGrad:["#307ae1","#22e3aa"],pet:{dog:"available",cat:"available",dogNote:"金樱子，固精缩尿。适量安全",catNote:"金樱子，适量安全"}},
-  {id:146,name:"韭菜子",latin:"Allium tuberosum Rottl. ex Spreng.",family:"百合科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#ecbeb0","#e156db"],pet:{dog:"available",cat:"avoid",dogNote:"葱属植物，犬大量可致溶血",catNote:"⚠️ 葱属对猫可致海因茨体贫血，应避免使用"}},
+  {id:146,name:"韭菜子",latin:"Allium tuberosum Rottl. ex Spreng.",family:"百合科",part:"干燥成熟种子",efficacy:["补阳"],imgGrad:["#ecbeb0","#e156db"],pet:{dog:"caution",cat:"avoid",dogNote:"葱属植物，含硫化物，犬需控制剂量（大量可致溶血）。与薤白同理",catNote:"⚠️ 葱属对猫可致海因茨体贫血，应避免使用"}},
   {id:147,name:"芦荟",latin:"Aloe barbadensis Miller",family:"百合科",part:"叶",efficacy:["润下"],imgGrad:["#ff9a8b","#5d1f44"],pet:{dog:"available",cat:"caution",dogNote:"外用为主，内服需控制剂量",catNote:"猫慎内服"}},
   {id:148,name:"玫瑰花",latin:"Rosa rugosa Thunb.",family:"蔷薇科",part:"干燥花蕾",efficacy:["理气"],imgGrad:["#ef4453","#0e006d"],pet:{dog:"available",cat:"available",dogNote:"玫瑰花，理气解郁。适量安全，宠物情绪舒缓可用",catNote:"玫瑰花，适量安全"}},
   {id:149,name:"迷迭香",latin:"Rosmarinus officinalis",family:"唇形科",part:"干燥茎叶或花",efficacy:["解表"],imgGrad:["#562b3b","#bcd3e8"],pet:{dog:"available",cat:"caution",dogNote:"适量安全，天然抗氧化剂",catNote:"含挥发油，猫代谢能力有限，少量慎用"}},
   {id:150,name:"牛蒡子",latin:"Arctium lappa L.",family:"菊科",part:"干燥成熟果实",efficacy:["解表"],imgGrad:["#533667","#f7fce7"],pet:{dog:"available",cat:"available",dogNote:"牛蒡子，疏散风热。适量安全",catNote:"牛蒡子，适量安全"}},
   {id:151,name:"青皮",latin:"Citrus reticulata Blanco",family:"芸香科",part:"干燥幼果或未成熟果皮",efficacy:["理气"],imgGrad:["#715741","#56216c"],pet:{dog:"available",cat:"caution",dogNote:"青皮，橘未熟果皮，破气力强于陈皮。适量安全",catNote:"青皮含挥发油，猫慎用（同陈皮）"}},
-  {id:152,name:"人参",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥根及根茎",efficacy:["补气"],imgGrad:["#fa0b10","#ac2b55"],pet:{dog:"available",cat:"available",dogNote:"补气要药，犬可适量使用，已有红参猫粮产品（比乐）",catNote:"补气，已有产品实际使用（比乐红参猫粮），适量安全"}},
-  {id:153,name:"人参叶",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥叶",efficacy:["补气"],imgGrad:["#ed858b","#40bb3b"],pet:{dog:"available",cat:"available",dogNote:"人参叶，补气生津。与人参同源，适量安全",catNote:"人参叶，适量安全（已有比乐红参产品验证）"}},
+  {id:152,name:"人参",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥根及根茎",efficacy:["补气"],imgGrad:["#fa0b10","#ac2b55"],pet:{dog:"available",cat:"caution",dogNote:"补气要药，犬可适量使用",catNote:"暂无猫特异性安全性数据。比乐红参猫粮实际使用党参，非人参"}},
+  {id:153,name:"人参叶",latin:"Panax ginseng C. A. Mey.",family:"五加科",part:"干燥叶",efficacy:["补气"],imgGrad:["#ed858b","#40bb3b"],pet:{dog:"available",cat:"caution",dogNote:"人参叶，补气生津。与人参同源，适量安全",catNote:"与人参同理，暂无猫特异性安全性数据"}},
   {id:154,name:"桑白皮",latin:"Morus alba L.",family:"桑科",part:"干燥根皮",efficacy:["化痰止咳"],imgGrad:["#9410cc","#df3382"],pet:{dog:"available",cat:"available",dogNote:"桑白皮，桑树根皮，泻肺平喘。适量安全",catNote:"桑白皮，适量安全"}},
   {id:155,name:"桑枝",latin:"Morus alba L.",family:"桑科",part:"干燥嫩枝",efficacy:["祛风湿"],imgGrad:["#b32e1c","#b0c88b"],pet:{dog:"available",cat:"available",dogNote:"桑枝，桑树嫩枝，祛风通络。适量安全",catNote:"桑枝，适量安全"}},
   {id:156,name:"升麻",latin:"Cimicifuga foetida L.",family:"毛茛科",part:"干燥根茎",efficacy:["解表"],imgGrad:["#fedd6b","#74e063"],pet:{dog:"available",cat:"caution",dogNote:"升麻，发表透疹。犬适量安全",catNote:"升麻有激素样作用，猫慎用"}},
   {id:157,name:"酸角",latin:"Tamarindus indica L.",family:"豆科",part:"果实",efficacy:["消食"],imgGrad:["#c28469","#4da74f"],pet:{dog:"available",cat:"available",dogNote:"酸角，可食用果实，消食化积。适量安全",catNote:"酸角，适量安全"}},
-  {id:158,name:"土茯苓",latin:"Smilax glabra Roxb.",family:"百合科",part:"干燥根茎",efficacy:["清热","利水渗湿"],imgGrad:["#267e25","#a945a3"],pet:{dog:"available",cat:"available",dogNote:"土茯苓，清热解毒、利湿。适量安全，宠物皮肤配方可用",catNote:"土茯苓，适量安全"}},
+  {id:158,name:"土茯苓",latin:"Smilax glabra Roxb.",family:"百合科",part:"干燥根茎",efficacy:["清热","利水渗湿"],imgGrad:["#267e25","#a945a3"],pet:{dog:"available",cat:"caution",dogNote:"土茯苓，清热解毒、利湿。适量安全，宠物皮肤配方可用",catNote:"百合科植物，暂无猫特异性安全性数据"}},
   {id:159,name:"五加皮",latin:"Acanthopanax gracilistylus W. W. Smith",family:"五加科",part:"干燥根皮",efficacy:["祛风湿"],imgGrad:["#311dca","#b95504"],pet:{dog:"available",cat:"available",dogNote:"五加皮，祛风湿强筋骨。与刺五加同科，适量安全",catNote:"五加皮，适量安全"}},
   {id:160,name:"五指毛桃",latin:"Ficus hirta Vahl",family:"桑科",part:"根",efficacy:["补气"],imgGrad:["#cf3b7c","#833991"],pet:{dog:"available",cat:"available",dogNote:"五指毛桃，补气健脾。岭南常用，适量安全",catNote:"五指毛桃，适量安全"}},
   {id:161,name:"洋槐花",latin:"Robinia pseudoacacia L.",family:"豆科",part:"花",efficacy:["止血"],imgGrad:["#2b36a4","#7067be"],pet:{dog:"available",cat:"available",dogNote:"洋槐花，槐属植物花，凉血止血。适量安全",catNote:"洋槐花，适量安全"}},
@@ -880,7 +881,7 @@ const HERBS_76 = [
   {id:172,name:"粗壮女贞苦丁茶",latin:"Ligustrum robustum (Roxb.) Blum.",family:"木犀科",part:"幼芽、嫩叶",efficacy:["清热"],imgGrad:["#306d36","#7a6fcc"],pet:{dog:"available",cat:"available",dogNote:"粗壮女贞苦丁茶，木犀科，与女贞子同科。适量安全",catNote:"粗壮女贞苦丁茶，适量安全"}},
   {id:173,name:"平卧菊三七",latin:"Gynura procumbens (Lour.) Merr.",family:"菊科",part:"嫩叶茎",efficacy:["清热"],imgGrad:["#e0edeb","#599e70"],pet:{dog:"available",cat:"available",dogNote:"平卧菊三七，菊科三七属。适量安全",catNote:"平卧菊三七，适量安全"}},
   {id:174,name:"杨树花",latin:"Populus L.",family:"杨柳科",part:"花",efficacy:["清热"],imgGrad:["#5f72fa","#ddb8fe"],pet:{dog:"available",cat:"available",dogNote:"杨树花，杨柳科，可食用。适量安全",catNote:"杨树花，适量安全"}},
-  {id:175,name:"绿茶",latin:"Camellia sinensis",family:"山茶科",part:"叶",efficacy:["清热"],imgGrad:["#7e668e","#496ff4"],pet:{dog:"available",cat:"available",dogNote:"含咖啡因，需控制量",catNote:"猫对咖啡因敏感，避免使用"}},
+  {id:175,name:"绿茶",latin:"Camellia sinensis",family:"山茶科",part:"叶",efficacy:["清热"],imgGrad:["#7e668e","#496ff4"],pet:{dog:"available",cat:"avoid",dogNote:"含咖啡因，需控制量",catNote:"猫对咖啡因敏感，应避免使用。与冬青科苦丁茶同理"}},
 ];
 
 // ==================== 宠物食品产品数据 ====================
@@ -1093,7 +1094,13 @@ function runRecommend() {
       if (effMatch) matchHerbs.push(hName);
       else otherHerbs.push(hName);
     });
-    if (matchHerbs.length === 0) return null; // no matching herbs → skip
+    // Match by product functional category as fallback
+    var funcMatch = matchedFuncs.has(p.func);
+    if (matchHerbs.length === 0 && !funcMatch) return null;
+    if (funcMatch && matchHerbs.length === 0) {
+      p.herbs.forEach(function(hName) { matchHerbs.push(hName); });
+      reasons.push('功能分类匹配: ' + p.func);
+    }
 
     score += matchHerbs.length * 10;
     reasons.push(matchHerbs.length + '味药材匹配症状');
@@ -1311,6 +1318,237 @@ const DOSAGES = [
   {herb:"五味子",species:"犬",dose:"五味子提取物 600mg/kg",condition:"心肌缺血再灌注损伤保护",source:"犬实验",status:"available"},
   {herb:"菟丝子",species:"犬猫",dose:"菟丝子提取物(CL-4); 3g/kg",condition:"猫尿液/血清抗氧化/免疫↑; 犬心肌缺血保护",source:"犬猫各1篇实验",status:"available"},
 ];
+
+// ==================== 证据等级数据（犬/猫独立标注）====================
+// tier: "rct"=RCT验证 / "experiment"=犬猫实验 / "market"=产品验证 / "expert"=理论外推
+const HERB_EVIDENCE = {
+  "黄芪":{dog:{tier:"rct",ref:"饲料研究2026 RCT"}, cat:{tier:"rct",ref:"中国饲料2024 RCT n=48"}},
+  "姜黄":{dog:{tier:"experiment",ref:"C3姜黄软骨素犬实验2024"}, cat:{tier:"rct",ref:"Animals 2024 RCT n=30"}},
+  "桑叶":{dog:{tier:"rct",ref:"Metabolites 2023 RCT n=15"}, cat:{tier:"experiment",ref:"猫适口性研究 10%最优"}},
+  "甘草":{dog:{tier:"rct",ref:"Res Vet Sci 2024 RCT n=60"}, cat:{tier:"experiment",ref:"河北工程大学犬猫各6例"}},
+  "地黄":{dog:{tier:"rct",ref:"RCT n=60 2024"}, cat:{}},
+  "茯苓":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24"}},
+  "山药":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24"}},
+  "菊苣":{dog:{}, cat:{tier:"rct",ref:"猫RCT n=30"}},
+  "百合":{dog:{tier:"experiment",ref:"犬猫各16只 2024"}, cat:{tier:"experiment",ref:"犬猫各16只 2024"}},
+  "玉竹":{dog:{tier:"experiment",ref:"犬猫各16只 2024"}, cat:{tier:"experiment",ref:"犬猫各16只 2024"}},
+  "马齿苋":{dog:{tier:"experiment",ref:"犬番泻叶腹泻模型"}, cat:{tier:"market",ref:"麦富迪霸弗猫粮核心成分"}},
+  "杨树花":{dog:{tier:"experiment",ref:"犬临床试验 n=40"}, cat:{}},
+  "益母草":{dog:{tier:"experiment",ref:"柴犬繁殖 n=120 + Beagle犬28d毒性试验"}, cat:{}},
+  "淫羊藿":{dog:{tier:"experiment",ref:"柴犬 n=120"}, cat:{}},
+  "天麻":{dog:{}, cat:{tier:"experiment",ref:"猫急性中毒实验"}},
+  "补骨脂":{dog:{tier:"experiment",ref:"比格犬药代研究 + 犬特应性皮炎低敏处方粮"}, cat:{}},
+  "槐米":{dog:{tier:"experiment",ref:"犬类咀嚼片研究"}, cat:{}},
+  "银杏叶":{dog:{tier:"rct",ref:"RCT n=50 肥胖犬脂质代谢 DOI:10.3969/j.issn.1006-267x.2022.05.052"}, cat:{}},
+  "葛根":{dog:{tier:"experiment",ref:"犬膝骨关节炎实验"}, cat:{}},
+  "杜仲叶":{dog:{tier:"experiment",ref:"犬猫各1篇实验"}, cat:{tier:"experiment",ref:"犬猫各1篇实验"}},
+  "绞股蓝":{dog:{}, cat:{tier:"rct",ref:"猫脂肪肝 RCT n=48 总有效率优于常规治疗"}},
+  "金银花":{dog:{tier:"experiment",ref:"金银花多糖犬实验"}, cat:{}},
+  "五味子":{dog:{tier:"experiment",ref:"犬心肌缺血实验"}, cat:{}},
+  "菟丝子":{dog:{tier:"experiment",ref:"犬猫各1篇实验"}, cat:{tier:"experiment",ref:"犬猫各1篇实验"}},
+  "灵芝":{dog:{tier:"experiment",ref:"J Animal Sci 2024 RCT n=40"}, cat:{tier:"market",ref:"卫仕LA20灵芝长寿猫粮"}},
+  "当归":{dog:{tier:"experiment",ref:"脾虚犬实验 7天"}, cat:{tier:"market",ref:"朗诺五珍系列"}},
+  "白术":{dog:{tier:"experiment",ref:"犬猫肾脏健康专利"}, cat:{tier:"market",ref:"麦富迪霸弗猫粮"}},
+  "党参":{dog:{tier:"experiment",ref:"脾虚犬实验 7天"}, cat:{tier:"market",ref:"WUI鲜食罐/元更元猫粮"}},
+  "枸杞子":{dog:{tier:"experiment",ref:"犬泪痕实验 2021"}, cat:{tier:"market",ref:"华生维克护眼产品"}},
+  "菊花":{dog:{tier:"experiment",ref:"犬泪痕实验/口腔专利"}, cat:{}},
+  "决明子":{dog:{tier:"experiment",ref:"犬泪痕实验 2021"}, cat:{}},
+  "山楂":{dog:{tier:"experiment",ref:"犬猫消化实验 p<0.05"}, cat:{tier:"market",ref:"大威宠口腔宝/比瑞吉"}},
+  "麦芽":{dog:{tier:"experiment",ref:"犬猫消食专利"}, cat:{tier:"market",ref:"宠物消食产品"}},
+  "莱菔子":{dog:{tier:"experiment",ref:"犬猫消食专利"}, cat:{tier:"market",ref:"宠物消食产品"}},
+  "车前子":{dog:{tier:"experiment",ref:"5件专利 临床有效率90%"}, cat:{tier:"experiment",ref:"5件专利 临床有效率90%"}},
+  "骨碎补":{dog:{tier:"market",ref:"大威宠软骨素配方"}, cat:{tier:"market",ref:"大威宠软骨素配方"}},
+  "蒲公英":{dog:{tier:"market",ref:"大威宠口腔宝"}, cat:{tier:"market",ref:"大威宠口腔宝"}},
+  "乌梅":{dog:{}, cat:{tier:"market",ref:"麦富迪霸弗猫粮核心成分"}},
+  "酸枣仁":{dog:{tier:"market",ref:"老年犬功能性冻干"}, cat:{}},
+  "薄荷":{dog:{tier:"experiment",ref:"犬口腔清洁专利"}, cat:{}},
+  "野菊花":{dog:{tier:"experiment",ref:"犬口腔清洁专利"}, cat:{}},
+  "白扁豆":{dog:{tier:"experiment",ref:"犬猫消食专利"}, cat:{tier:"experiment",ref:"犬猫消食专利"}},
+  "薏苡仁":{dog:{tier:"experiment",ref:"犬猫消食专利"}, cat:{tier:"experiment",ref:"犬猫消食专利"}},
+  "肉豆蔻":{dog:{tier:"experiment",ref:"Beagle犬长期毒性研究"}, cat:{}},
+  "泽泻":{dog:{tier:"experiment",ref:"犬猫泌尿道专利"}, cat:{tier:"experiment",ref:"犬猫泌尿道专利"}},
+  "橘皮":{dog:{tier:"experiment",ref:"犬猫胃胀专利"}, cat:{}},
+  "赤芍":{dog:{tier:"experiment",ref:"犬皮肤病复方"}, cat:{}},
+  "川芎":{dog:{tier:"experiment",ref:"犬猫多种专利配方"}, cat:{}},
+  "绿茶":{dog:{tier:"experiment",ref:"犬抗氧化/降脂/老年犬免疫功能 多篇实验 剂量0.25%-1%"}, cat:{}},
+  "黄精":{dog:{tier:"experiment",ref:"犬疫苗抗体/血常规 10g黄精多糖"}, cat:{tier:"market",ref:"麦富迪霸弗美毛猫粮"}},
+  "红景天":{dog:{tier:"experiment",ref:"犬肝转录组学/血液生化指标 PI3K-Akt/MAPK通路"}, cat:{}},
+  "牛蒡子":{dog:{tier:"experiment",ref:"Beagle犬28d皮下注射毒性 安全剂量≤6mg/kg"}, cat:{tier:"experiment",ref:"猫尿液/血清抗氧化+菟丝子复合提取物"}},
+  "白芍":{dog:{tier:"experiment",ref:"犬UC免疫/肠道功能 + 犬胰腺移植Oddi括约肌"}, cat:{}},
+  "麦冬":{dog:{tier:"experiment",ref:"犬心肌缺血药效学实验"}, cat:{tier:"experiment",ref:"猫肾细胞(F81)影响研究"}},
+  "升麻":{dog:{tier:"experiment",ref:"犬PK药代研究 + 犬猫慢性腹泻临床 DOI:10.13823/j.cnki.jtcvm.2009.04.039"}, cat:{}},
+  "香附":{dog:{tier:"experiment",ref:"比格犬药动学比较研究 香附四物汤"}, cat:{}},
+  "杜仲":{dog:{tier:"experiment",ref:"犬股骨头坏死修复 VEGF/bFGF调控"}, cat:{tier:"experiment",ref:"猫生长/免疫/抗氧化 500-1000mg/kg DOI:10.15906/j.cnki.cn11-2975/s.2024120024-04"}},
+  "山药":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24 + 幼猫0.2%生长/抗氧化/免疫"}},
+  "荷叶":{dog:{tier:"experiment",ref:"比格犬肥胖 荷叶碱改善脂代谢"}, cat:{tier:"experiment",ref:"猫肾脏细胞毒性研究"}},
+  "藿香":{dog:{tier:"case",ref:"犬急性胃肠炎 藿香正气水临床应用"}, cat:{}},
+  "淡豆豉":{dog:{tier:"case",ref:"犬瘟热初期临床应用"}, cat:{}},
+  "香薷":{dog:{tier:"case",ref:"德国肉犬中暑治疗 香薷散 DOI:10.13823/j.cnki.jtcvm.2003.04.022"}, cat:{}},
+  "百合":{dog:{tier:"experiment",ref:"犬猫各16只 2024"}, cat:{tier:"experiment",ref:"犬猫各16只 2024 + 猫致命毒性文献确认"}},
+  "菊花":{dog:{tier:"experiment",ref:"犬猫泪痕改善 含菊花/决明子日粮 TNF-α降低"}, cat:{tier:"experiment",ref:"犬猫泪痕改善 含菊花/决明子日粮"}},
+  "芦荟":{dog:{tier:"experiment",ref:"肉犬生产性能 + 一般药理学研究"}, cat:{tier:"market",ref:"猫皮肤抗菌修复凝胶专利(植物乳杆菌+芦荟多糖)"}},
+  "罗汉果":{dog:{}, cat:{tier:"experiment",ref:"罗汉果甜苷毒性作用研究"}},
+  "砂仁":{dog:{}, cat:{tier:"market",ref:"猫犬通用冻干宠物零食专利"}},
+  "蜂蜜":{dog:{}, cat:{tier:"case",ref:"宠物烧烫伤外用治疗"}},
+  "芥子":{dog:{tier:"case",ref:"小动物癣病/疥疮外用治疗"}, cat:{}},
+  "苍术":{dog:{}, cat:{tier:"market",ref:"超人强肠胃护理猫粮"}},
+  "黄精":{dog:{}, cat:{tier:"market",ref:"麦富迪霸弗美毛猫粮"}},
+  "荷叶":{dog:{}, cat:{tier:"market",ref:"比瑞吉体重管理猫粮"}},
+  "栀子":{dog:{}, cat:{tier:"market",ref:"青岛农大木宁舒冻干"}},
+  "小蓟":{dog:{}, cat:{tier:"market",ref:"青岛农大砾安晴冻干"}},
+};
+
+function getEvidence(herbName, species) {
+  const ev = HERB_EVIDENCE[herbName];
+  if (ev && ev[species] && ev[species].tier) return ev[species];
+  // Check PET_FOODS for market validation
+  const inProduct = PET_FOODS.some(function(p) {
+    return p.herbs.includes(herbName) && (p.pet.includes(species) || p.pet.includes('犬猫通用'));
+  });
+  if (inProduct) return {tier:"market", ref:"已用于宠物食品产品"};
+  return {tier:"expert", ref:"基于中医药理论与经验外推"};
+}
+
+const EVI_TIER_LABEL = {rct:"RCT验证", experiment:"实验研究", market:"产品验证", expert:"理论外推"};
+const EVI_TIER_COLOR = {rct:"#2e7d32", experiment:"#1565c0", market:"#e65100", expert:"#757575"};
+
+// ==================== 文献引用数据（万方378篇提取）====================
+const LIT_REF = {
+  "丁香": ["基于网络药理学方法研究阿司匹林丁香酚酯防治犬心血管疾病的作用机制", "几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用", "复合植物提取物对腺苷脱氨酶抑制作用及降低犬粪便氨臭效果评价", "猫用饮水添加剂的制备与效果观察", "知柏四物汤治疗犬子宫蓄血"],
+  "丹参": ["米槁心乐滴丸对麻醉猫血流动力学的影响"],
+  "乌梅": ["中西医结合治疗疗犬病效果好", "一种治疗宠物犬的寄生虫用中药", "一种用于治疗猫呕吐的药物组合物及其制备方法"],
+  "五加皮": ["一种宠物犬饼干及其制备方法"],
+  "五味子": ["五味子提取物对肝移植模型犬Th17细胞和调节性T细胞失衡的调控 [DOI:10.3969/j.issn.2095-4344.0297]", "一种中药组合物在制备治疗犬窝咳的中药制剂中的应用", "一种宠物犬猫用食品及其制备方法", "一种用于治疗犬寒湿泄泻的中药及其制备方法", "单味中药对宠物犬源大肠杆菌的体外抑菌试验"],
+  "人参": ["不同部位人参皂苷对犬急性心肌缺血保护作用的比较研究", "人参四逆颗粒对心力衰竭犬的保护作用", "人参果皂苷对犬实验性心肌梗死的保护作用", "人参茎叶皂苷联合硒对伪狂犬疫苗免疫增强作用的研究", "西洋参叶20s-原人参二醇组皂苷对犬急性心肌梗死的保护作用"],
+  "佛手": ["一种添加中草药的宠物猫粮"],
+  "党参": ["基于文献计量分析的我国黄芪、当归、党参在畜牧与动物医学领域的研究", "“桃红四物汤”在犬外科疾病中临床应用", "一种宠物专用的猫草颗粒、制备方法及其制备装置", "一种宠物犬猫用食品及其制备方法", "一种治疗犬类腰椎疾病的中药组合物"],
+  "八角茴香": ["八角茴香油在畜禽生产中的应用研究进展"],
+  "决明子": ["低脂粮补饲决明子、桑叶和山楂复合物对猫体重的调节作用 [DOI:10.13302/j.cnki.fi.2024.23.020]", "决明子水提物对猫肾细胞(F81)的影响研究", "决明子蛋白质、低聚糖及蒽醌苷降压作用的实验研究", "一种宠物专用的猫草颗粒、制备方法及其制备装置", "提高公犬精子质量复方中药及其制备方法和用途"],
+  "升麻": ["LC-MS_MS法测定升麻葛根汤颗粒在犬体内的药代动力学研究 [DOI:10.11656/j.issn.1673-9043.2019.01.18]", "自拟升麻汤治疗犬猫慢性腹泻"],
+  "厚朴": ["厚朴生姜汤在犬病治疗的临床应用", "“桃红四物汤”在犬外科疾病中临床应用", "一种宠物犬猫用食品及其制备方法", "一种宠物肠道健康与粪便除臭复合添加剂及其制备方法", "一种治疗犬类腰椎疾病的中药组合物"],
+  "地黄": ["地黄归芩胶囊治疗犬皮肤瘙痒症的作用机制探究 [DOI:10.13823/j.cnki.jtcvm.2024.038]", "提高公犬精子质量复方中药及其制备方法和用途"],
+  "大枣": ["一种防治猫口炎的中药组方及其制备方法与应用"],
+  "大黄": ["“桃红四物汤”在犬外科疾病中临床应用", "一种治疗猫传染性腹膜炎的中药组合物", "单味中药对宠物犬源大肠杆菌的体外抑菌试验", "单味中药对犬胆囊运动及血浆CCK含量影响的实验研究", "理中汤治疗犬多涎症3例"],
+  "天冬": ["天冬总皂苷对麻醉犬脑血流量及脑血管阻力的影响", "白芍对斜视性弱视模型猫视皮质N-甲基-D-天冬氨酸受体1表达的影响", "一种宠物犬猫用食品及其制备方法", "保健犬粮对德国牧羊犬种公犬产仔数的影响"],
+  "女贞子": ["一种治疗猫口炎的中兽药组合物及其制备方法"],
+  "姜": ["负载姜黄素的犬脂肪间充质干细胞来源外泌体对皮肤损伤愈合的效果及机制研究 [DOI:10.11843/j.issn.0366-6964.2025.08.041]", "厚朴生姜汤在犬病治疗的临床应用", "姜黄素和维生素E联用对比格犬营养物质表观消化率、血清生化指标和脂质代谢的影响", "姜黄素对犬肝动脉栓塞性肝损伤保护作用的实验研究", "姜黄素对犬骨髓间充质干细胞迁移能力的影响"],
+  "姜黄": ["一种宠物犬猫用食品及其制备方法", "一种猫粮及其制备方法"],
+  "小茴香": ["犬用中药组合物及应用"],
+  "小蓟": ["_小蓟饮子_加减治疗犬猫泌尿系感染", "小蓟对犬出血性肠炎止血效果试验"],
+  "山楂": ["低脂粮补饲决明子、桑叶和山楂复合物对猫体重的调节作用 [DOI:10.13302/j.cnki.fi.2024.23.020]", "黄芪、山药和山楂对幼猫生长性能、毛发、抗氧化、免疫指标及肠道菌群的影响 [DOI:10.13557/j.cnki.issn1002-2813.2023.19.026]", "山楂叶总黄酮对麻醉犬冠脉结扎所致心肌缺血的保护作用", "调变山楂叶有效组分比例对犬血流动力学的影响", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法(1)"],
+  "山茱萸": ["一种宠物犬猫用食品及其制备方法"],
+  "山药": ["黄芪、山药和山楂对幼猫生长性能、毛发、抗氧化、免疫指标及肠道菌群的影响 [DOI:10.13557/j.cnki.issn1002-2813.2023.19.026]", "螺旋藻粉和山药粉共同添加对幼犬增重、养分表观消化率和粪便质量的影响", "一种不含诱食剂的幼龄猫粮及其制备方法", "一种增强肠道功能的猫粮及其制备方法", "一种宠物犬猫用食品及其制备方法"],
+  "川芎": ["“桃红四物汤”在犬外科疾病中临床应用", "一种治疗犬类腰椎疾病的中药组合物", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂", "知柏四物汤治疗犬子宫蓄血"],
+  "干姜": ["景明散临床应用举隅", "理中汤治疗犬多涎症3例"],
+  "当归": ["基于文献计量分析的我国黄芪、当归、党参在畜牧与动物医学领域的研究", "“桃红四物汤”在犬外科疾病中临床应用", "一种宠物犬猫用食品及其制备方法", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂", "一种用于预防犬先兆性流产的犬粮及其制备方法"],
+  "木瓜": ["“桃红四物汤”在犬外科疾病中临床应用", "一种不含诱食剂的幼龄猫粮及其制备方法", "一种治疗犬类腰椎疾病的中药组合物", "一种能够治疗犬疫病的狗粮", "一种零添加剂猫粮配方"],
+  "木香": ["一种宠物肠道健康与粪便除臭复合添加剂及其制备方法", "一种能够治疗犬疫病的狗粮", "单味中药对犬胆囊运动及血浆CCK含量影响的实验研究", "理中汤治疗犬多涎症3例", "知柏四物汤治疗犬子宫蓄血"],
+  "杏仁": ["一种治疗猫传染性腹膜炎的中药组合物", "一种成年犬营养和中药添加剂饲料配方", "一种波斯猫饲养料", "犬、猫止咳药物及其制备方法"],
+  "杜仲": ["全杜仲胶囊在犬股骨头坏死修复过程中对VEGF_bFGF的调控作用和对Bcl-2_Bax及Caspas [DOI:10.13210/j.cnki.jhmu.20230524.001]", "杜仲叶提取物和南瓜籽对宠物猫生长性能、血液指标、免疫性能及抗氧化功能的影响 [DOI:10.15906/j.cnki.cn11-2975/s.2024120024-04]", "“桃红四物汤”在犬外科疾病中临床应用", "一种复合植物提取物动物保健品及其应用", "一种实验幼犬粮及其制备方法"],
+  "杜仲叶": ["杜仲叶提取物和南瓜籽对宠物猫生长性能、血液指标、免疫性能及抗氧化功能的影响 [DOI:10.15906/j.cnki.cn11-2975/s.2024120024-04]"],
+  "杨树花": ["犬细小病毒病流行病学调查及杨树花口服液对该病的疗效研究"],
+  "板蓝根": ["一种治疗猫传染性腹膜炎的中药组合物"],
+  "枳壳": ["“桃红四物汤”在犬外科疾病中临床应用", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂", "单味中药对犬胆囊运动及血浆CCK含量影响的实验研究", "知柏四物汤治疗犬子宫蓄血"],
+  "枸杞": ["一种军警工作犬专用犬粮及其制备方法", "一种宠物犬猫处方罐头及其制作方法", "一种宠物犬猫用食品及其制备方法", "一种能够治疗犬疫病的狗粮", "提高公犬精子质量复方中药及其制备方法和用途"],
+  "柴胡": ["“桃红四物汤”在犬外科疾病中临床应用", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂"],
+  "桂枝": ["“桃红四物汤”在犬外科疾病中临床应用", "越婢加术汤在犬病中兽医临床中的治疗作用"],
+  "桃仁": ["“桃红四物汤”在犬外科疾病中临床应用", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂", "一种狗粮及其制备方法"],
+  "桑叶": ["低脂粮补饲决明子、桑叶和山楂复合物对猫体重的调节作用 [DOI:10.13302/j.cnki.fi.2024.23.020]", "浅谈桑叶在宠物临床的应用 [DOI:10.3969/j.issn.1008-4754.2014.12.023]", "桑叶在宠物功能食品中的应用", "桑叶粉冻干猫粮的养分及饲用效果评价", "添加饲料桑叶粉的宠物饲料对宠物猫适口性的影响"],
+  "桑椹": ["一种宠物犬猫用食品及其制备方法"],
+  "桑白皮": ["桑白皮提取物在犬金黄色葡萄球菌性脓皮病治疗中的应用与机制研究综述 [DOI:10.3969/j.issn.1008-4754.2026.01.059]"],
+  "桔梗": ["一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂", "一种能够治疗犬疫病的狗粮", "一种治疗宠物猫视力减退的中药", "用于治疗狗鼻炎的药物组合物及其制备方法"],
+  "槐花": ["中西医结合治疗疗犬病效果好"],
+  "沙棘": ["沙棘油对犬科动物(狗)消炎能力的评估", "一种幼猫猫粮及其制备方法"],
+  "泽泻": ["“桃红四物汤”在犬外科疾病中临床应用"],
+  "淡竹叶": ["一种治疗猫口炎的中兽药组合物及其制备方法"],
+  "淡豆豉": ["浅谈淡豆豉治疗犬瘟热", "“桃红四物汤”在犬外科疾病中临床应用"],
+  "淫羊藿": ["提高公犬精子质量复方中药及其制备方法和用途"],
+  "灵芝": ["黄芪多糖、灵芝多糖益生菌组合对幼犬生长性能与免疫力的影响", "一种宠物犬猫处方罐头及其制作方法", "一种宠物犬猫用食品及其制备方法"],
+  "牛蒡子": ["菟丝子和牛蒡子复合提取物对成年猫尿液理化、血清抗氧化及免疫指标的影响 [DOI:10.16431/j.cnki.1671-7236.2025.06.007]", "牛蒡子苷元皮下注射对Beagle犬重复给药毒性研究", "一种中药组合物在制备治疗犬窝咳的中药制剂中的应用", "一种宠物专用的猫草颗粒、制备方法及其制备装置"],
+  "牡蛎": ["一种猫类专用营养素", "一种零添加剂猫粮配方"],
+  "甘草": ["复方甘草酸苷片对厌食引发猫脂肪肝的疗效分析 [DOI:10.3969/j.issn.1008-4754.2024.07.061]", "河北省犬猫皮肤病流行情况调查及复方甘草对皮肤病的疗效研究", "甘草乙醇提取物对猫肾脏细胞的毒性研究", "一种宠物犬猫用食品及其制备方法", "一种宠物犬饼干及其制备方法"],
+  "生姜": ["一种用于治疗犬寒湿泄泻的中药及其制备方法", "知柏四物汤治疗犬子宫蓄血", "越婢加术汤在犬病中兽医临床中的治疗作用"],
+  "白子菜": ["基于网络药理学、分子对接和动物实验探讨白子菜治疗高脂血症的作用机制 [DOI:10.13728/j.1673-6427.2025.03.005]"],
+  "白扁豆": ["一种用于成年绝育雄性宠物猫保健的宠物中草药猫粮及其制备方法"],
+  "白术": ["一种宠物犬猫用食品及其制备方法", "一种治疗犬类腰椎疾病的中药组合物", "一种猫类专用营养素", "一种用于成年绝育雄性宠物猫保健的宠物中草药猫粮及其制备方法", "一种用于治疗犬寒湿泄泻的中药及其制备方法"],
+  "白果": ["犬中毒救治", "一种苏格兰弯耳猫饲养料", "一种药膳鲜狗汤料及其制作方法", "犬、猫止咳药物及其制备方法", "用于治疗狗鼻炎的药物组合物及其制备方法"],
+  "白芍": ["白芍提取物对溃疡性结肠炎犬免疫和肠道功能影响的研究 [DOI:10.3969/j.issn.1008-0589.202502016]", "白芍对斜视性弱视模型猫视皮质N-甲基-D-天冬氨酸受体1表达的影响", "白芍对膀胱引流式犬胰腺移植Oddi括约肌功能的影响", "白芍止眩方对动物活血止痛调节的实验研究", "一种宠物犬猫用食品及其制备方法"],
+  "白芷": ["“桃红四物汤”在犬外科疾病中临床应用", "一种治疗犬类腰椎疾病的中药组合物", "一种用于犬猫外耳炎的中药组合物及其制备方法"],
+  "百合": ["百合花对猫有致命毒性_", "一种蝴蝶犬幼犬狗粮及其制备方法"],
+  "益母草": ["益母草、淫羊藿中草药饲料添加剂对柴犬母犬繁殖性能的影响", "益母草注射液小鼠急性毒性和Beagle犬重复给药毒性试验研究"],
+  "知母": ["知柏四物汤治疗犬子宫蓄血", "越婢加术汤在犬病中兽医临床中的治疗作用"],
+  "砂仁": ["一种添加砂仁提取物的猫犬通用型冻干宠物零食的制备方法"],
+  "秦艽": ["一种治疗犬类腰椎疾病的中药组合物"],
+  "积雪草": ["提高丝兰粉抑制脲酶活性的积雪草提取物制备方法及应用", "一种修复犬肠道黏膜屏障的活性物质及其制备方法与应用", "几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用", "复合植物提取物对腺苷脱氨酶抑制作用及降低犬粪便氨臭效果评价"],
+  "穿心莲": ["一种宠物成年犬用食品"],
+  "紫苏": ["“桃红四物汤”在犬外科疾病中临床应用", "一种中药组合物在制备治疗犬窝咳的中药制剂中的应用", "一种宠物犬营养补充剂及其制备方法", "一种宠物猫粮及其制备方法"],
+  "红景天": ["添加红景天苷的全价粮对犬血液生化指标和肝转录组学的影响", "一种宠物犬猫用食品及其制备方法", "一种宠物犬饼干及其制备方法", "一种治疗猫传染性腹膜炎的中药组合物", "几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用"],
+  "红花": ["“桃红四物汤”在犬外科疾病中临床应用", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂"],
+  "绿茶": ["延缓猫犬衰老的绿茶提取物、水解角蛋白和维生素C组合物", "绿茶粉和绿茶多酚对犬的抗氧化作用", "绿茶粉和绿茶多酚对犬的降脂作用", "绿茶粉对老年犬体重、血清生化指标、抗氧化能力及免疫功能的影响", "绿茶粉对老年犬免疫功能的影响"],
+  "罗汉果": ["罗汉果甜苷的毒性作用研究", "一种改善犬类和猫类的食欲的宠物饲料及其制备方法", "一种狗粮及其制备方法"],
+  "肉桂": ["一种治疗犬类腰椎疾病的中药组合物", "一种用于治疗犬寒湿泄泻的中药及其制备方法", "一种狗粮及其制备方法", "用于治疗狗鼻炎的药物组合物及其制备方法"],
+  "芡实": ["一种军警工作犬专用犬粮及其制备方法"],
+  "芥子": ["外用白芥子药水治疗小动物癣病和疥疮", "用黄芥子硫磺等治疗藏獒疥螨病", "一种狗粮及其制备方法", "用于治疗狗鼻炎的药物组合物及其制备方法"],
+  "芦荟": ["芦荟全叶冻干粉的一般药理学实验研究 [DOI:10.3969/j.issn.1005-5304.2014.01.017]", "一种基于猫源益生菌与芦荟多糖的宠物皮肤抗菌修复凝胶", "芦荟、蜂胶作为饲料添加剂对肉犬生产性能的影响", "一种修复犬肠道黏膜屏障的活性物质及其制备方法与应用"],
+  "花椒": ["花椒叶驱除猫绦虫效果观察", "一种用于治疗犬蛔虫的中药口服液及其制备方法", "一种治疗犬猫耳炎的中药制剂及其制备方法"],
+  "苍术": ["消食平胃颗粒的制备及其对幼犬生长性能的影响", "理中汤治疗犬多涎症3例"],
+  "茜草": ["一种治疗犬类腰椎疾病的中药组合物"],
+  "茯苓": ["一种含茯苓的组合物及其制备方法和应用", "一种宠物犬猫用食品及其制备方法", "一种治疗犬类腰椎疾病的中药组合物", "一种用于治疗犬寒湿泄泻的中药及其制备方法", "保健犬粮对德国牧羊犬种公犬产仔数的影响"],
+  "荷叶": ["一种用于防治宠物犬肥胖的荷叶碱组合物及其制备方法和应用", "荷叶提取物对猫肾脏细胞的毒性研究", "荷叶碱改善高脂饮食诱导比格犬肥胖的试验研究"],
+  "莱菔子": ["提高公犬精子质量复方中药及其制备方法和用途", "犬用中药组合物及应用", "用于防治犬胃炎的中药组合物、制剂、及其制备方法和应用"],
+  "莲子": ["一种宠物犬猫用食品及其制备方法", "一种治疗猫口炎的中兽药组合物及其制备方法", "一种用于成年绝育雄性宠物猫保健的宠物中草药猫粮及其制备方法", "3月龄以上幼年贵妇犬专用狗粮", "一种全素犬粮"],
+  "菊花": ["一种宠物犬猫用食品及其制备方法", "一种犬用饮用水及其制备方法", "几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用", "复合植物提取物对腺苷脱氨酶抑制作用及降低犬粪便氨臭效果评价", "一种可消除犬类体味的饲料添加剂"],
+  "菊苣": ["菊苣酸治疗猫脂肪肝效果研究", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法(1)", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法", "一种宠物犬猫用食品及其制备方法", "一种猫粮及其生产工艺"],
+  "菟丝子": ["菟丝子和牛蒡子复合提取物对成年猫尿液理化、血清抗氧化及免疫指标的影响 [DOI:10.16431/j.cnki.1671-7236.2025.06.007]", "菟丝子散的药代动力学实验", "一种宠物专用的猫草颗粒、制备方法及其制备装置"],
+  "葛根": ["LC-MS_MS法测定升麻葛根汤颗粒在犬体内的药代动力学研究 [DOI:10.11656/j.issn.1673-9043.2019.01.18]", "葛根芩连汤对宠物犬源大肠杆菌敏感性提高研究 [DOI:10.13302/j.cnki.fi.2026.09.017]", "葛根多糖对猫肠道菌群的影响", "葛根素对犬膝骨关节炎的软骨保护和抗炎作用", "一种宠物犬饼干及其制备方法"],
+  "蒲公英": ["一种宠物犬猫用食品及其制备方法", "几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用", "单味中药对宠物犬源大肠杆菌的体外抑菌试验", "复合植物提取物对腺苷脱氨酶抑制作用及降低犬粪便氨臭效果评价", "浅谈两例老年犬肺心病的中西医结合治疗"],
+  "蒲黄": ["蒲黄总黄酮对犬急性心肌缺血的保护作用"],
+  "薄荷": ["一种含活性植物成分的猫用微胶囊调味粉及其制备方法(1)", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法", "一种治疗猫传染性腹膜炎的中药组合物", "一种犬用饮用水及其制备方法", "一种简州猫饲养料"],
+  "薏苡仁": ["“桃红四物汤”在犬外科疾病中临床应用", "一种宠物犬猫用食品及其制备方法"],
+  "薤白": ["米槁心乐滴丸对麻醉猫血流动力学的影响"],
+  "藿香": ["中药藿香正气水质量评价与药动学研究", "藿香正气水在犬病上的应用", "藿香正气水治疗犬急性胃肠炎", "“桃红四物汤”在犬外科疾病中临床应用", "一种治疗猫传染性腹膜炎的中药组合物"],
+  "蜂蜜": ["蜂蜜治疗宠物烧烫伤", "一种犬用饮用水及其制备方法", "犬用中药组合物及应用", "猫用饮水添加剂的制备与效果观察"],
+  "补骨脂": ["添加补骨脂提取物的低敏处方粮对犬皮肤健康的影响", "景明散临床应用举隅"],
+  "西洋参": ["西洋参叶20s-原人参二醇组皂苷对犬急性心肌梗死的保护作用", "一种可预防幼犬佝偻病的保健狗粮"],
+  "覆盆子": ["一种猫粮及其生产工艺", "一种零添加剂猫粮配方"],
+  "诃子": ["一种用于治疗犬寒湿泄泻的中药及其制备方法", "单味中药对宠物犬源大肠杆菌的体外抑菌试验"],
+  "赤芍": ["“桃红四物汤”在犬外科疾病中临床应用", "一种用于治疗犬猫颈腰及四肢气滞血瘀证的中药喷雾剂"],
+  "车前子": ["一种单一肉源低敏无谷的犬猫用冻干混合零食及其制备方法和应用", "一种宠物犬猫用食品及其制备方法", "一种宠物犬营养补充剂及其制备方法", "一种零添加剂猫粮配方", "提高公犬精子质量复方中药及其制备方法和用途"],
+  "远志": ["一种治疗宠物犬视力减退的中药口服液及其制作方法"],
+  "连翘": ["“桃红四物汤”在犬外科疾病中临床应用", "一种治疗猫传染性腹膜炎的中药组合物", "单味中药对宠物犬源大肠杆菌的体外抑菌试验", "犬用中药组合物及应用", "知柏四物汤治疗犬子宫蓄血"],
+  "迷迭香": ["迷迭香提取物对笼养宠物犬应激相关指标的影响 [DOI:10.13557/j.cnki.issn1002-2813.2023.19.025]", "一种不含诱食剂的幼龄猫粮及其制备方法", "一种有利于提高中老年猫抗氧化能力的猫粮制备方法及其设备", "一种猫粮及其制备方法", "一种猫粮及其生产工艺"],
+  "郁金": ["中西医结合治疗疗犬病效果好", "单味中药对犬胆囊运动及血浆CCK含量影响的实验研究"],
+  "酸枣仁": ["一种宠物犬猫用食品及其制备方法"],
+  "野菊花": ["几种植物提取物对谷氨酸脱氢酶抑制作用及在降低猫粪便氨臭中的应用", "复合植物提取物对腺苷脱氨酶抑制作用及降低犬粪便氨臭效果评价"],
+  "金银花": ["一种治疗猫传染性腹膜炎的中药组合物", "一种治疗猫口炎的中兽药组合物及其制备方法", "一种犬用饮用水及其制备方法", "一种能够治疗犬疫病的狗粮", "一种防治猫口炎的中药组方及其制备方法与应用"],
+  "铁皮石斛": ["宠物犬粮及其制备方法"],
+  "银杏": ["一种修复犬肠道黏膜屏障的活性物质及其制备方法与应用"],
+  "银杏叶": ["国产与进口银杏叶片萜类内酯Beagle犬生物利用度的比较 [DOI:10.7501/j.issn.0253-2670.2018.12]", "一种修复犬肠道黏膜屏障的活性物质及其制备方法与应用"],
+  "附子": ["景明散临床应用举隅", "一种简州猫饲养料"],
+  "陈皮": ["“桃红四物汤”在犬外科疾病中临床应用", "一种宠物肠道健康与粪便除臭复合添加剂及其制备方法", "浅谈两例老年犬肺心病的中西医结合治疗", "消食平胃颗粒的制备及其对幼犬生长性能的影响", "犬用中药组合物及应用"],
+  "青皮": ["“桃红四物汤”在犬外科疾病中临床应用", "一种治疗宠物犬的寄生虫用中药"],
+  "韭菜子": ["提高公犬精子质量复方中药及其制备方法和用途"],
+  "香薷": ["香薷散加味治疗德国肉犬中暑"],
+  "香附": ["香附四物汤全方及其效应部位中2种生物碱类成分在比格犬体内的药动学比较研究", "“桃红四物汤”在犬外科疾病中临床应用", "理中汤治疗犬多涎症3例"],
+  "马齿苋": ["用于抗猫细小病毒的马齿苋发酵液粗提物及其应用", "马齿苋的药理作用研究和人体试用观察"],
+  "骨碎补": ["“桃红四物汤”在犬外科疾病中临床应用", "一种抗应激猫湿粮及其制备方法", "一种治疗犬类腰椎疾病的中药组合物"],
+  "鱼腥草": ["一种治疗猫传染性腹膜炎的中药组合物"],
+  "麦冬": ["一种具有美毛作用的麦冬宠物饲料添加剂", "麦冬提取物抗犬心肌缺血的药效学实验研究", "麦冬水提物对猫肾细胞的影响研究", "一种治疗猫口炎的中兽药组合物及其制备方法", "一种防治猫口炎的中药组方及其制备方法与应用"],
+  "麦芽": ["一种减少犬或猫臭气的饲料添加剂、功能性饲料及其应用", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法(1)", "一种含活性植物成分的猫用微胶囊调味粉及其制备方法", "一种改善肠道健康的犬鲜粮及其制备方法", "一种治疗犬类腰椎疾病的中药组合物"],
+  "麻黄": ["一种中药组合物在制备治疗犬窝咳的中药制剂中的应用", "一种治疗猫传染性腹膜炎的中药组合物", "越婢加术汤在犬病中兽医临床中的治疗作用"],
+  "黄柏": ["一种用于犬猫外耳炎的中药组合物及其制备方法", "单味中药对宠物犬源大肠杆菌的体外抑菌试验", "知柏四物汤治疗犬子宫蓄血", "用于治疗猫瘟病的药物组合物及其制备方法"],
+  "黄精": ["饲料中添加黄精多糖对犬狂犬病疫苗抗体及血常规指标的影响", "一种宠物犬猫用食品及其制备方法", "一种猫类专用营养素", "提高公犬精子质量复方中药及其制备方法和用途"],
+  "黄芥子": ["用黄芥子硫磺等治疗藏獒疥螨病"],
+  "黄芩": ["一种治疗犬类腰椎疾病的中药组合物", "一种用于预防犬先兆性流产的犬粮及其制备方法", "一种防治猫口炎的中药组方及其制备方法与应用", "知柏四物汤治疗犬子宫蓄血"],
+  "黄芪": ["浅谈黄芪在宠物临床上的运用 [DOI:10.3969/j.issn.1008-4754.2016.4.031]", "黄芪、山药和山楂对幼猫生长性能、毛发、抗氧化、免疫指标及肠道菌群的影响 [DOI:10.13557/j.cnki.issn1002-2813.2023.19.026]", "黄芪多糖对幼犬生长性能、免疫功能及肠道菌群的影响 [DOI:10.13557/j.cnki.issn1002-2813.2026.04.025]", "黄芪多糖对犬抗氧化、血液指标及犬疫苗免疫效果影响的研究 [DOI:10.15906/j.cnki.cn11-2975/s.20252419]", "黄芪对幼猫生长性能、抗氧化指标、免疫指标及肠道菌群的影响 [DOI:10.15906/j.cnki.cn11-2975/s.20240218]"],
+  "黄连": ["一种用于犬猫外耳炎的中药组合物及其制备方法", "一种防治猫口炎的中药组方及其制备方法与应用", "中西医结合治疗疗犬病效果好", "单味中药对宠物犬源大肠杆菌的体外抑菌试验", "一种治疗宠物猫的寄生虫用中药"],
+  "黑胡椒": ["一种含黑胡椒提取物且可促进肠道消化吸收的组合物及猫粮"],
+  "黑芝麻": ["一种军警工作犬专用犬粮及其制备方法", "一种单一肉源低敏无谷的犬猫用冻干混合零食及其制备方法和应用", "一种有利于提高中老年猫抗氧化能力的猫粮制备方法及其设备", "一种用于成年绝育雄性宠物猫保健的宠物中草药猫粮及其制备方法", "一种零添加剂猫粮配方"],
+  "龙眼肉": ["一种宠物犬猫用食品及其制备方法"],
+};
+function getPapers(herbName) { return LIT_REF[herbName] || []; }
+function getPapers(herbName) { return LIT_REF[herbName] || []; }
+function getPapers(herbName) { return LIT_REF[herbName] || []; }
 
 
 function renderDosageTable() {
@@ -1709,14 +1947,25 @@ function updateStats() {
   const dogRec = allHerbs.filter(function(h) { return h.pet.dog === 'recommended'; }).length;
   const catRec = allHerbs.filter(function(h) { return h.pet.cat === 'recommended'; }).length;
   const avoid = allHerbs.filter(function(h) { return h.pet.dog === 'avoid' || h.pet.cat === 'avoid'; }).length;
+  // Evidence counts (count herb if either species has this tier or better)
+  const rctCount = allHerbs.filter(function(h) {
+    var de = getEvidence(h.name, 'dog'), ce = getEvidence(h.name, 'cat');
+    return de.tier === 'rct' || ce.tier === 'rct';
+  }).length;
+  const expCount = allHerbs.filter(function(h) {
+    var de = getEvidence(h.name, 'dog'), ce = getEvidence(h.name, 'cat');
+    return (de.tier === 'rct' || de.tier === 'experiment' || ce.tier === 'rct' || ce.tier === 'experiment');
+  }).length;
+  const expertCount = 159 - expCount;
 
   document.getElementById('statsBar').innerHTML =
     '<span>共收录 <span class="stat-num">159</span> 种</span>' +
     '<span class="stat-sep">|</span><span>药食同源 <span class="stat-num">' + HERBS.length + '</span></span>' +
     '<span class="stat-sep">|</span><span>饲料目录独有 <span class="stat-num">' + HERBS_76.length + '</span></span>' +
     '<span class="stat-sep">|</span><span>当前筛选 <span class="stat-num">' + filtered.length + '</span> 种</span>' +
-    '<span class="stat-sep">|</span><span>🐕 犬已用 <span class="stat-num">' + dogRec + '</span></span>' +
-    '<span class="stat-sep">|</span><span>🐈 猫已用 <span class="stat-num">' + catRec + '</span></span>' +
+    '<span class="stat-sep">|</span><span>🔬 RCT <span class="stat-num" style="color:#2e7d32;">' + rctCount + '</span></span>' +
+    '<span class="stat-sep">|</span><span>📋 有研究 <span class="stat-num" style="color:#1565c0;">' + (expCount - rctCount) + '</span></span>' +
+    '<span class="stat-sep">|</span><span>📖 理论 <span style="color:#757575;">' + expertCount + '</span></span>' +
     '<span class="stat-sep">|</span><span>⚠️ 避免 <span class="stat-danger">' + avoid + '</span></span>';
 }
 
@@ -1756,7 +2005,11 @@ function renderCards() {
     const dogStatus = h.pet.dog; const catStatus = h.pet.cat;
     const statusIcon = {recommended:'<span class="s-icon s-rec" title="犬已应用">D</span>',available:'<span class="s-icon s-ok" title="犬可用">D</span>',caution:'<span class="s-icon s-warn" title="犬慎用">D</span>',avoid:'<span class="s-icon s-no" title="犬避免">D</span>'};
     const statusIconC = {recommended:'<span class="s-icon s-rec" title="猫已应用">C</span>',available:'<span class="s-icon s-ok" title="猫可用">C</span>',caution:'<span class="s-icon s-warn" title="猫慎用">C</span>',avoid:'<span class="s-icon s-no" title="猫避免">C</span>'};
-    const safetyBadges = `<span class="safety-row">🐕${statusIcon[dogStatus]||''} 🐈${statusIconC[catStatus]||''}</span>`;
+    const safetyBadges = (() => {
+      const dogEvi = getEvidence(h.name, 'dog'); const catEvi = getEvidence(h.name, 'cat');
+      const eviIcon = {rct:'🔬', experiment:'📋', market:'🏪', expert:''};
+      return `<span class="safety-row">🐕${statusIcon[dogStatus]||''}<span class="evi-dot" title="犬证据: ${EVI_TIER_LABEL[dogEvi.tier]} — ${dogEvi.ref}">${eviIcon[dogEvi.tier]}</span> 🐈${statusIconC[catStatus]||''}<span class="evi-dot" title="猫证据: ${EVI_TIER_LABEL[catEvi.tier]} — ${catEvi.ref}">${eviIcon[catEvi.tier]}</span></span>`;
+    })();
     let badgeHtml = '';
     if (h.id >= 107) {
       badgeHtml = '<span class="card-badge" style="background:#7a5a9b;">非药食同源</span>';
@@ -1817,11 +2070,13 @@ function openDetail(id) {
             <span style="font-weight:700;">🐕 犬</span>
             <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${dogStatus==='recommended'?'#3a7d44':dogStatus==='available'?'#5b8c5a':dogStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[dogStatus]}</span>
             <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.dogNote}</p>
+            ${(()=>{const ev=getEvidence(h.name,'dog');const ico={rct:'🔬',experiment:'📋',market:'🏪',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
           </div>
           <div style="flex:1;min-width:120px;">
             <span style="font-weight:700;">🐈 猫</span>
             <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${catStatus==='recommended'?'#3a7d44':catStatus==='available'?'#5b8c5a':catStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[catStatus]}</span>
             <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.catNote}</p>
+            ${(()=>{const ev=getEvidence(h.name,'cat');const ico={rct:'🔬',experiment:'📋',market:'🏪',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
           </div>
         </div>
       </div>
@@ -1888,6 +2143,14 @@ function openDetail(id) {
             </div>`;
           }).join('')}
         </div>`;
+      })()}
+      ${(()=>{
+        const papers = getPapers(h.name);
+        if (papers.length === 0) return '';
+        return '<div style="margin-top:12px;padding:14px;background:#f5f7fa;border-radius:10px;border:1px solid #d8dde8;">' +
+          '<h4 style="margin:0 0 8px;font-size:0.85em;">📚 文献引用（' + papers.length + '篇）</h4>' +
+          papers.map(function(p,i) { return '<p style="font-size:0.7em;color:var(--text-secondary);margin:2px 0;">' + (i+1) + '. ' + p + '</p>'; }).join('') +
+          '</div>';
       })()}
         <h4 style="margin:0 0 8px;font-size:0.9em;">📷 查看图片（植株 / 药材）</h4>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
