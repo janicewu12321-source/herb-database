@@ -1320,7 +1320,7 @@ const DOSAGES = [
 ];
 
 // ==================== 证据等级数据（犬/猫独立标注）====================
-// tier: "rct"=RCT验证 / "experiment"=犬猫实验 / "market"=产品验证 / "expert"=理论外推
+// tier: "rct"=RCT验证 / "experiment"=犬猫实验 / "market"=产品验证 / "case"=病例报告 / "expert"=理论外推
 const HERB_EVIDENCE = {
   "黄芪":{dog:{tier:"rct",ref:"饲料研究2026 RCT"}, cat:{tier:"rct",ref:"中国饲料2024 RCT n=48"}},
   "姜黄":{dog:{tier:"experiment",ref:"C3姜黄软骨素犬实验2024"}, cat:{tier:"rct",ref:"Animals 2024 RCT n=30"}},
@@ -1328,9 +1328,7 @@ const HERB_EVIDENCE = {
   "甘草":{dog:{tier:"rct",ref:"Res Vet Sci 2024 RCT n=60"}, cat:{tier:"experiment",ref:"河北工程大学犬猫各6例"}},
   "地黄":{dog:{tier:"rct",ref:"RCT n=60 2024"}, cat:{}},
   "茯苓":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24"}},
-  "山药":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24"}},
   "菊苣":{dog:{}, cat:{tier:"rct",ref:"猫RCT n=30"}},
-  "百合":{dog:{tier:"experiment",ref:"犬猫各16只 2024"}, cat:{tier:"experiment",ref:"犬猫各16只 2024"}},
   "玉竹":{dog:{tier:"experiment",ref:"犬猫各16只 2024"}, cat:{tier:"experiment",ref:"犬猫各16只 2024"}},
   "马齿苋":{dog:{tier:"experiment",ref:"犬番泻叶腹泻模型"}, cat:{tier:"market",ref:"麦富迪霸弗猫粮核心成分"}},
   "杨树花":{dog:{tier:"experiment",ref:"犬临床试验 n=40"}, cat:{}},
@@ -1351,7 +1349,6 @@ const HERB_EVIDENCE = {
   "白术":{dog:{tier:"experiment",ref:"犬猫肾脏健康专利"}, cat:{tier:"market",ref:"麦富迪霸弗猫粮"}},
   "党参":{dog:{tier:"experiment",ref:"脾虚犬实验 7天"}, cat:{tier:"market",ref:"WUI鲜食罐/元更元猫粮"}},
   "枸杞子":{dog:{tier:"experiment",ref:"犬泪痕实验 2021"}, cat:{tier:"market",ref:"华生维克护眼产品"}},
-  "菊花":{dog:{tier:"experiment",ref:"犬泪痕实验/口腔专利"}, cat:{}},
   "决明子":{dog:{tier:"experiment",ref:"犬泪痕实验 2021"}, cat:{}},
   "山楂":{dog:{tier:"experiment",ref:"犬猫消化实验 p<0.05"}, cat:{tier:"market",ref:"大威宠口腔宝/比瑞吉"}},
   "麦芽":{dog:{tier:"experiment",ref:"犬猫消食专利"}, cat:{tier:"market",ref:"宠物消食产品"}},
@@ -1380,7 +1377,7 @@ const HERB_EVIDENCE = {
   "香附":{dog:{tier:"experiment",ref:"比格犬药动学比较研究 香附四物汤"}, cat:{}},
   "杜仲":{dog:{tier:"experiment",ref:"犬股骨头坏死修复 VEGF/bFGF调控"}, cat:{tier:"experiment",ref:"猫生长/免疫/抗氧化 500-1000mg/kg DOI:10.15906/j.cnki.cn11-2975/s.2024120024-04"}},
   "山药":{dog:{tier:"market",ref:"多品牌宠粮已使用"}, cat:{tier:"rct",ref:"Front Vet Sci 2025 RCT n=24 + 幼猫0.2%生长/抗氧化/免疫"}},
-  "荷叶":{dog:{tier:"experiment",ref:"比格犬肥胖 荷叶碱改善脂代谢"}, cat:{tier:"experiment",ref:"猫肾脏细胞毒性研究"}},
+  "荷叶":{dog:{tier:"experiment",ref:"比格犬肥胖 荷叶碱改善脂代谢"}, cat:{tier:"experiment",ref:"猫肾脏细胞毒性研究 + 比瑞吉体重管理猫粮已使用"}},
   "藿香":{dog:{tier:"case",ref:"犬急性胃肠炎 藿香正气水临床应用"}, cat:{}},
   "淡豆豉":{dog:{tier:"case",ref:"犬瘟热初期临床应用"}, cat:{}},
   "香薷":{dog:{tier:"case",ref:"德国肉犬中暑治疗 香薷散 DOI:10.13823/j.cnki.jtcvm.2003.04.022"}, cat:{}},
@@ -1392,8 +1389,6 @@ const HERB_EVIDENCE = {
   "蜂蜜":{dog:{}, cat:{tier:"case",ref:"宠物烧烫伤外用治疗"}},
   "芥子":{dog:{tier:"case",ref:"小动物癣病/疥疮外用治疗"}, cat:{}},
   "苍术":{dog:{}, cat:{tier:"market",ref:"超人强肠胃护理猫粮"}},
-  "黄精":{dog:{}, cat:{tier:"market",ref:"麦富迪霸弗美毛猫粮"}},
-  "荷叶":{dog:{}, cat:{tier:"market",ref:"比瑞吉体重管理猫粮"}},
   "栀子":{dog:{}, cat:{tier:"market",ref:"青岛农大木宁舒冻干"}},
   "小蓟":{dog:{}, cat:{tier:"market",ref:"青岛农大砾安晴冻干"}},
 };
@@ -1409,8 +1404,8 @@ function getEvidence(herbName, species) {
   return {tier:"expert", ref:"基于中医药理论与经验外推"};
 }
 
-const EVI_TIER_LABEL = {rct:"RCT验证", experiment:"实验研究", market:"产品验证", expert:"理论外推"};
-const EVI_TIER_COLOR = {rct:"#2e7d32", experiment:"#1565c0", market:"#e65100", expert:"#757575"};
+const EVI_TIER_LABEL = {rct:"RCT验证", experiment:"实验研究", market:"产品验证", case:"病例报告", expert:"理论外推"};
+const EVI_TIER_COLOR = {rct:"#2e7d32", experiment:"#1565c0", market:"#e65100", case:"#795548", expert:"#757575"};
 
 // ==================== 文献引用数据（万方378篇提取）====================
 const LIT_REF = {
@@ -1546,8 +1541,6 @@ const LIT_REF = {
   "黑芝麻": ["一种军警工作犬专用犬粮及其制备方法", "一种单一肉源低敏无谷的犬猫用冻干混合零食及其制备方法和应用", "一种有利于提高中老年猫抗氧化能力的猫粮制备方法及其设备", "一种用于成年绝育雄性宠物猫保健的宠物中草药猫粮及其制备方法", "一种零添加剂猫粮配方"],
   "龙眼肉": ["一种宠物犬猫用食品及其制备方法"],
 };
-function getPapers(herbName) { return LIT_REF[herbName] || []; }
-function getPapers(herbName) { return LIT_REF[herbName] || []; }
 function getPapers(herbName) { return LIT_REF[herbName] || []; }
 
 
@@ -2007,7 +2000,7 @@ function renderCards() {
     const statusIconC = {recommended:'<span class="s-icon s-rec" title="猫已应用">C</span>',available:'<span class="s-icon s-ok" title="猫可用">C</span>',caution:'<span class="s-icon s-warn" title="猫慎用">C</span>',avoid:'<span class="s-icon s-no" title="猫避免">C</span>'};
     const safetyBadges = (() => {
       const dogEvi = getEvidence(h.name, 'dog'); const catEvi = getEvidence(h.name, 'cat');
-      const eviIcon = {rct:'🔬', experiment:'📋', market:'🏪', expert:''};
+      const eviIcon = {rct:'🔬', experiment:'📋', market:'🏪', case:'📄', expert:''};
       return `<span class="safety-row">🐕${statusIcon[dogStatus]||''}<span class="evi-dot" title="犬证据: ${EVI_TIER_LABEL[dogEvi.tier]} — ${dogEvi.ref}">${eviIcon[dogEvi.tier]}</span> 🐈${statusIconC[catStatus]||''}<span class="evi-dot" title="猫证据: ${EVI_TIER_LABEL[catEvi.tier]} — ${catEvi.ref}">${eviIcon[catEvi.tier]}</span></span>`;
     })();
     let badgeHtml = '';
@@ -2070,13 +2063,13 @@ function openDetail(id) {
             <span style="font-weight:700;">🐕 犬</span>
             <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${dogStatus==='recommended'?'#3a7d44':dogStatus==='available'?'#5b8c5a':dogStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[dogStatus]}</span>
             <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.dogNote}</p>
-            ${(()=>{const ev=getEvidence(h.name,'dog');const ico={rct:'🔬',experiment:'📋',market:'🏪',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
+            ${(()=>{const ev=getEvidence(h.name,'dog');const ico={rct:'🔬',experiment:'📋',market:'🏪',case:'📄',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
           </div>
           <div style="flex:1;min-width:120px;">
             <span style="font-weight:700;">🐈 猫</span>
             <span style="display:inline-block;margin-left:6px;padding:3px 10px;border-radius:10px;font-size:0.8em;font-weight:700;color:#fff;background:${catStatus==='recommended'?'#3a7d44':catStatus==='available'?'#5b8c5a':catStatus==='caution'?'#d4943a':'#c0392b'};">${STATUS_LABELS[catStatus]}</span>
             <p style="font-size:0.75em;color:var(--text-secondary);margin-top:4px;">${h.pet.catNote}</p>
-            ${(()=>{const ev=getEvidence(h.name,'cat');const ico={rct:'🔬',experiment:'📋',market:'🏪',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
+            ${(()=>{const ev=getEvidence(h.name,'cat');const ico={rct:'🔬',experiment:'📋',market:'🏪',case:'📄',expert:'📖'};return `<p style="font-size:0.7em;color:${EVI_TIER_COLOR[ev.tier]};margin-top:2px;">${ico[ev.tier]} ${EVI_TIER_LABEL[ev.tier]} · ${ev.ref}</p>`;})()}
           </div>
         </div>
       </div>
